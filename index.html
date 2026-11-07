@@ -728,6 +728,59 @@
 }
 @media(prefers-reduced-motion:reduce){.cal-date,.cal-slot{transition:none!important}}
 
+
+
+/* PJM-011 — clinic discovery > profile > explicit booking */
+.clinic-catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;border-top:0!important}
+.clinic-list-hint{font-size:12px;color:#68796c;line-height:1.5;text-align:right}
+.clinic-explore-card{background:#fffefa;border:1px solid #e9e8df;border-radius:22px;padding:23px 24px;display:flex;flex-direction:column;align-items:stretch;gap:20px;text-align:left;color:#344239;min-width:0;min-height:245px;box-shadow:0 8px 23px #405b4610;transition:border-color .18s,transform .18s,box-shadow .18s}
+.clinic-explore-card:hover,.clinic-explore-card:focus-visible{border-color:#a7bda4;box-shadow:0 13px 28px #405b461c;transform:translateY(-2px)}
+.clinic-explore-top,.clinic-explore-footer{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.clinic-explore-index{font-size:10px;letter-spacing:.12em;font-weight:760;color:#a3aaa0}
+.clinic-explore-badge,.clinic-profile-badge{font-size:10px;font-weight:740;color:#617d66;background:#eff3eb;padding:6px 10px;border-radius:999px;line-height:1.4}
+.clinic-explore-main{display:flex;flex-direction:column;gap:9px}
+.clinic-explore-main strong{font-size:clamp(19px,2.1vw,25px);letter-spacing:-.05em;line-height:1.35}
+.clinic-explore-main small{color:#758076;font-size:12px;line-height:1.6}
+.clinic-explore-tags,.clinic-profile-tags{display:flex;flex-wrap:wrap;gap:6px}
+.clinic-explore-tags span,.clinic-profile-tags span{font-size:11px;color:#69776a;border:1px solid #e1e7df;border-radius:8px;padding:7px 10px;background:#f4f6f1}
+.clinic-explore-footer{margin-top:auto;padding-top:17px;border-top:1px solid #ecede7;color:#7d887b;font-size:11px;flex-wrap:wrap}
+.clinic-explore-footer>span{display:flex;align-items:center;gap:5px}
+.clinic-explore-link{color:#405f47;font-weight:770}
+.clinic-detail-screen .clinic-detail-wrap{max-width:1200px}
+.clinic-back-link{display:flex;align-items:center;gap:9px;border:0;background:none;color:#49614f;font-size:13px;font-weight:740;padding:7px 0;margin-bottom:30px}
+.clinic-detail-overline{letter-spacing:.18em;color:#aa775f;font-size:11px;font-weight:800;margin-bottom:13px}
+.clinic-detail-overline span{letter-spacing:0;color:#778274;font-weight:600}
+.clinic-detail-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(285px,.65fr);gap:22px;align-items:start}
+.clinic-profile-card,.clinic-visit-card{background:#fffefa;border:1px solid #eae8df;border-radius:25px;overflow:hidden;box-shadow:0 12px 34px #596b4e0d;min-width:0}
+.clinic-profile-banner{height:205px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;padding:21px 27px;color:#f6f7ed;background:linear-gradient(138deg,#8c9b84,#506d58 52%,#314f40);font-size:10px;letter-spacing:.15em;font-weight:760}
+.clinic-banner-mark{border-radius:50%;width:73px;height:73px;border:1px solid #ffffff85;display:grid;place-items:center;align-self:center;background:#ffffff19}
+.clinic-profile-body{padding:30px}
+.clinic-profile-body h2{font-size:clamp(25px,3.2vw,41px);letter-spacing:-.05em;line-height:1.3;margin:14px 0 5px}
+.clinic-profile-subtitle{font-size:14px;color:#7f877d;line-height:1.8;margin:0 0 27px}
+.clinic-profile-body h3{font-size:15px;margin:23px 0 10px;color:#394c3d}
+.clinic-staff-list{display:flex;flex-wrap:wrap;gap:7px}
+.clinic-staff-tag{display:flex;flex-direction:column;gap:3px;padding:10px 12px;background:#f3f5ef;border:1px solid #e1e8de;border-radius:11px;font-size:12px;font-weight:770;color:#445d49}
+.clinic-staff-tag small{font-size:10px;font-weight:600;color:#798979}
+.clinic-profile-caution{font-size:11px;line-height:1.65;color:#929386;margin:24px 0 0}
+.clinic-visit-card{padding:30px;display:flex;flex-direction:column;gap:16px}
+.clinic-visit-kicker{letter-spacing:.13em;color:#a16d52;font-size:10px;font-weight:760}
+.clinic-visit-card h3{font-size:23px;letter-spacing:-.05em;margin:0}
+.clinic-visit-card dl{margin:4px 0 0}
+.clinic-visit-card dl div{padding:12px 0;border-bottom:1px solid #ebeee8}
+.clinic-visit-card dt{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:750;color:#788576;margin-bottom:7px}
+.clinic-visit-card dd{margin:0;font-size:13px;color:#48554b;line-height:1.7;word-break:keep-all}
+.clinic-visit-card>p{font-size:12px;line-height:1.7;color:#747e73;margin:0}
+.clinic-reserve-button{width:100%;min-height:51px;border:0;background:#3e6149;color:white;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:13px;font-size:14px;font-weight:790}
+.clinic-reserve-button:hover{background:#53745b}
+.clinic-visit-card .clinic-visit-note{font-size:10px;color:#999688}
+.clinic-booking-section{padding-top:39px;margin-top:34px;border-top:1px solid #d8ddd4;scroll-margin-top:20px}
+.clinic-booking-heading span{letter-spacing:.13em;color:#a16d52;font-size:11px;font-weight:800}
+.clinic-booking-heading h3{font-size:clamp(22px,3vw,31px);letter-spacing:-.05em;margin:11px 0 5px;color:#344a39}
+.clinic-booking-heading p{font-size:13px;color:#879184;line-height:1.7;margin:0 0 19px}
+@media(max-width:900px){.clinic-detail-layout{grid-template-columns:1fr}}
+@media(max-width:650px){.clinic-catalog{grid-template-columns:1fr}.clinic-list-hint{width:100%;text-align:left}.clinic-explore-card{padding:20px;min-height:218px;gap:16px;border-radius:19px}.clinic-back-link{margin-bottom:21px}.clinic-profile-banner{height:158px;padding:18px 20px}.clinic-profile-body{padding:22px 19px}.clinic-profile-body h2{font-size:26px}.clinic-visit-card{padding:22px 19px}.clinic-detail-layout{gap:12px}.clinic-profile-card,.clinic-visit-card{border-radius:20px}.clinic-booking-section{padding-top:26px;margin-top:25px}}
+@media(prefers-reduced-motion:reduce){.clinic-explore-card{transition:none}}
+
 </style></head>
 <body>
   <div id="root"></div>
@@ -833,7 +886,7 @@ function evaluateInsurance(insurer, care) {
 
 
 const root = document.querySelector('#root');
-const state = { mode:'all', specialty:'전체', search:'', weekOffset:0, clinicWeeks:{}, selectedDates:{}, selectedDoctors:{}, selectedSlots:{}, insurer:'meritz-dog', care:'illness', insuranceEvaluated:false, booking:null, bookingDone:false, patient:'', reason:'', otherReason:'', menu:false, map:false, loading:false, phrase:0, serviceIndex:0 };
+const state = { mode:'all', specialty:'전체', search:'', weekOffset:0, clinicWeeks:{}, selectedDates:{}, selectedDoctors:{}, selectedSlots:{}, activeClinic:null, bookingClinic:null, insurer:'meritz-dog', care:'illness', insuranceEvaluated:false, booking:null, bookingDone:false, patient:'', reason:'', otherReason:'', menu:false, map:false, loading:false, phrase:0, serviceIndex:0 };
 const dogPhrases=['리드줄 찾는 중…','발톱 정리하는 중…','간식 챙기는 중…','꼬리 흔들 준비 중…'];
 const catPhrases=['감자 캐는 중…','맛동산 캐는 중…','꾹꾹이 준비하는 중…','집사 부르는 중…'];
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -950,10 +1003,77 @@ function card(c,i){return `<article class="clinic-row calendar-clinic" id="clini
   ${calendarDoctor(c)}<p class="calendar-demo-note"><strong>예약 시연 안내</strong><br>표시된 병원·수의사·예약 시간은 가상 데이터이며 실제 접수되지 않습니다.</p></div>
   <div class="clinic-slots">${timeline(c)}</div>
 </article>`}
+
+/* PJM-011: hospital discovery and detail first; booking calendar is opt-in. */
+function clinicPreview(c,i){
+  return `<button type="button" class="clinic-explore-card" data-act="clinic-open" data-val="${escapeHtml(c.id)}" aria-label="${escapeHtml(c.name)} 상세 보기">
+    <span class="clinic-explore-top"><span class="clinic-explore-index">${String(i+1).padStart(2,'0')} / CLINIC</span><span class="clinic-explore-badge">${escapeHtml(c.ratingTag)}</span></span>
+    <span class="clinic-explore-main"><strong>${escapeHtml(c.name)}</strong><small>${escapeHtml(c.subtitle)}</small></span>
+    <span class="clinic-explore-tags">${c.specialties.map(sp=>`<span>${escapeHtml(sp)}</span>`).join('')}</span>
+    <span class="clinic-explore-footer"><span>${icon('pin',15)}${escapeHtml(c.location)}</span><span class="clinic-explore-link">병원 상세 보기 ${icon('arrow',16)}</span></span>
+  </button>`;
+}
+function clinicDetail(c){
+  const expanded=state.bookingClinic===c.id;
+  const staff=c.doctors?.length
+    ? c.doctors.map(d=>`<span class="clinic-staff-tag">${escapeHtml(d.name)} 수의사 <small>${escapeHtml(d.field)}</small></span>`).join('')
+    : '<span class="clinic-staff-tag">진료 담당 의료진은 예약 단계에서 확인해 주세요.</span>';
+  const species=c.species.includes('dog')&&c.species.includes('cat')?'강아지 · 고양이':c.species.includes('cat')?'고양이':'강아지';
+  return `<section class="section clinic-section clinic-detail-screen" id="hospitals">
+    <div class="site-width clinic-detail-wrap">
+      <button class="clinic-back-link" type="button" data-act="clinic-back">${icon('back',17)} 병원 목록으로 돌아가기</button>
+      <div class="clinic-detail-overline">CLINIC PROFILE <span>· 가상 병원 정보</span></div>
+      <div class="clinic-detail-layout">
+        <article class="clinic-profile-card">
+          <div class="clinic-profile-banner" aria-hidden="true">
+            <span>PRZIMA / CLINIC</span>
+            <div class="clinic-banner-mark">${icon('pin',31)}</div>
+            <span>우리 아이에게 맞는 진료</span>
+          </div>
+          <div class="clinic-profile-body">
+            <span class="clinic-profile-badge">${escapeHtml(c.badge)} · ${escapeHtml(species)}</span>
+            <h2>${escapeHtml(c.name)}</h2>
+            <p class="clinic-profile-subtitle">${escapeHtml(c.subtitle)}</p>
+            <h3>진료 과목</h3>
+            <div class="clinic-profile-tags">${c.specialties.map(sp=>`<span>${escapeHtml(sp)}</span>`).join('')}</div>
+            <h3>담당 의료진</h3>
+            <div class="clinic-staff-list">${staff}</div>
+            <p class="clinic-profile-caution">이 병원과 의료진 정보는 화면 시연을 위한 가상 예시입니다.</p>
+          </div>
+        </article>
+        <aside class="clinic-visit-card">
+          <span class="clinic-visit-kicker">VISIT INFORMATION</span>
+          <h3>병원 안내</h3>
+          <dl>
+            <div><dt>${icon('pin',17)} 위치</dt><dd>${escapeHtml(c.location)}</dd></div>
+            <div><dt>${icon('clock',17)} 진료 시간</dt><dd>${escapeHtml(c.hours)}</dd></div>
+            <div><dt>휴진 안내</dt><dd>${escapeHtml(c.closed)}</dd></div>
+          </dl>
+          <p>예약 일정은 아래 버튼을 눌렀을 때만 표시됩니다.</p>
+          <button type="button" class="clinic-reserve-button" data-act="${expanded?'clinic-collapse':'clinic-reserve'}" data-val="${escapeHtml(c.id)}" aria-expanded="${expanded}" aria-controls="clinic-booking">${expanded?'예약 일정 접기':'예약하기'} ${icon(expanded?'back':'arrow',18)}</button>
+          <p class="clinic-visit-note">예약 기능은 시연용이며 실제 병원에 접수되지 않습니다.</p>
+        </aside>
+      </div>
+      ${expanded?`<section id="clinic-booking" class="clinic-booking-section" aria-label="${escapeHtml(c.name)} 예약 일정">
+        <div class="clinic-booking-heading"><span>BOOKING / DEMO</span><h3>예약 날짜와 시간을 선택하세요.</h3><p>의료진을 선택한 뒤 7일 날짜 바와 시간표에서 가능한 예시 시간을 확인할 수 있습니다.</p></div>
+        <div class="clinic-row calendar-clinic" id="clinic-${escapeHtml(c.id)}">
+          <div class="calendar-clinic-info">
+            <div class="clinic-identity"><span class="clinic-overline">${escapeHtml(c.ratingTag)} · 가상 병원</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.subtitle)}</p></div>
+            ${calendarDoctor(c)}
+            <p class="calendar-demo-note"><strong>예약 시연 안내</strong><br>표시된 병원·의료진·예약 시간은 가상 데이터이며 실제 접수되지 않습니다.</p>
+          </div>
+          <div class="clinic-slots">${timeline(c)}</div>
+        </div>
+      </section>`:''}
+    </div>
+  </section>`;
+}
+
 function hospitals(){
+  if(state.activeClinic){const chosen=clinics.find(c=>c.id===state.activeClinic);if(chosen)return clinicDetail(chosen);state.activeClinic=null;}
   const filtered=clinics.filter(c=>(state.mode==='all'||c.species.includes(state.mode))&&(state.specialty==='전체'||c.specialties.includes(state.specialty))&&(!state.search.trim()||[c.name,c.location,...c.specialties].join(' ').toLocaleLowerCase().includes(state.search.trim().toLocaleLowerCase())));
   const days=weekDates();
-  return `<section class="section clinic-section" id="hospitals"><div class="site-width"><div class="section-top"><div><h2>잘 맞는 병원,<br><em>여기서 만나세요.</em></h2></div><p class="section-side">지역부터 진료과, 진료 가능 시간까지.<br>선택은 조금 더 쉬워집니다.</p></div><div class="search-panel"><label class="search-field">${icon('search',19)}<input id="hospitalSearch" aria-label="병원 검색" placeholder="병원명, 지역 또는 진료과를 검색하세요" value="${escapeHtml(state.search)}"></label><label class="select-field"><span>진료과</span><select id="specialtySelect"><option value="전체">전체</option>${specialties.map(sp=>`<option value="${escapeHtml(sp.name)}" ${state.specialty===sp.name?'selected':''}>${sp.label}</option>`).join('')}</select>${icon('down',15)}</label></div><div class="results-bar"><span>검색 결과 <strong>${filtered.length}</strong>곳 <small>가상 병원 데이터</small></span><div class="week-control"><span>7일 예약 일정</span><button data-act="prev-week" ${state.weekOffset===0?'disabled':''} aria-label="이전 일주일">${icon('back',16)}</button><b>${dateLabel(days[0]).replace('요일','')} – ${days[6].slice(5).replace('-','/')}</b><button data-act="next-week" ${state.weekOffset===7?'disabled':''} aria-label="다음 일주일">${icon('chevron',16)}</button></div></div><div class="clinic-list">${filtered.length?filtered.map((c,i)=>card(c,i)).join(''):`<div class="no-result"><h3>해당 조건의 병원이 없습니다.</h3><p>검색어 또는 진료과를 바꿔보세요.</p><button class="primary-btn" data-act="reset">전체 병원 보기</button></div>`}</div><p class="clinic-disclaimer">표시된 병원, 의료진 및 예약 가능한 날짜·시간은 모두 가상의 예시입니다. 실제 예약이나 확정 안내가 아닙니다.</p></div></section>`
+  return `<section class="section clinic-section" id="hospitals"><div class="site-width"><div class="section-top"><div><h2>잘 맞는 병원,<br><em>여기서 만나세요.</em></h2></div><p class="section-side">지역부터 진료과, 진료 가능 시간까지.<br>선택은 조금 더 쉬워집니다.</p></div><div class="search-panel"><label class="search-field">${icon('search',19)}<input id="hospitalSearch" aria-label="병원 검색" placeholder="병원명, 지역 또는 진료과를 검색하세요" value="${escapeHtml(state.search)}"></label><label class="select-field"><span>진료과</span><select id="specialtySelect"><option value="전체">전체</option>${specialties.map(sp=>`<option value="${escapeHtml(sp.name)}" ${state.specialty===sp.name?'selected':''}>${sp.label}</option>`).join('')}</select>${icon('down',15)}</label></div><div class="results-bar"><span>검색 결과 <strong>${filtered.length}</strong>곳 <small>가상 병원 데이터</small></span><span class="clinic-list-hint">병원을 선택하면 상세 정보와 예약 버튼을 볼 수 있습니다.</span></div><div class="clinic-list clinic-catalog">${filtered.length?filtered.map((c,i)=>clinicPreview(c,i)).join(''):`<div class="no-result"><h3>해당 조건의 병원이 없습니다.</h3><p>검색어 또는 진료과를 바꿔보세요.</p><button class="primary-btn" data-act="reset">전체 병원 보기</button></div>`}</div><p class="clinic-disclaimer">표시된 병원, 의료진 및 예약 가능한 날짜·시간은 모두 가상의 예시입니다. 실제 예약이나 확정 안내가 아닙니다.</p></div></section>`
 }
 function insurance(){const selectable=insurers.filter(i=>state.mode==='all'||i.species===state.mode);if(!selectable.some(i=>i.id===state.insurer))state.insurer=selectable[0].id;const result=evaluateInsurance(state.insurer,state.care),obj=insurers.find(i=>i.id===state.insurer);return `<section class="section insurance" id="insurance"><div class="site-width insurance-grid"><div><h2>보험이 될까?<br><em>가기 전에 확인.</em></h2><p class="insurance-intro">보험마다 다른 보장 범위와 조건.<br>진료받기 전에 놓치기 쉬운 확인 사항을 정리했습니다.</p><div class="insurance-stat"><span>보험사 상품 안내 기준<br>메리츠화재 · 현대해상 · DB손해보험</span></div></div><div class="insurance-card"><div class="form-head"><span>PRE-CHECK / 2026</span><span>${icon('shield',20)}</span></div><h3>우리 아이의 보험,<br>먼저 살펴볼까요?</h3><label>01. 가입한 펫보험<select id="insurerSelect">${selectable.map(i=>`<option value="${i.id}" ${state.insurer===i.id?'selected':''}>${i.name} · ${i.product}</option>`).join('')}</select></label><label>02. 진료 예정 항목<select id="careSelect">${careTypes.map(c=>`<option value="${c.id}" ${state.care===c.id?'selected':''}>${c.name}</option>`).join('')}</select></label><button type="button" class="primary-btn insurance-button" data-act="insurance">보장 조건 살펴보기 ${icon('arrow',17)}</button>${state.insuranceEvaluated?`<div class="insurance-result" role="status"><small>${result.level==='review'?'보장 검토 가능':result.level==='check'?'추가 확인 필요':'일반적으로 보장 어려움'}</small><b>${result.title}</b><p>${result.desc}</p><ul>${result.points.map(p=>`<li>${p}</li>`).join('')}</ul><a href="${obj.url}" target="_blank" rel="noopener noreferrer">${obj.name} 공식 상품 안내 ${icon('arrow',13)}</a></div>`:`<p class="form-footnote">상품·특약·면책기간에 따라 실제 적용 여부가 달라집니다.</p>`}</div><p class="insurance-disclaimer">보험 안내는 일반적인 상품 설명을 바탕으로 한 참고 정보입니다. 보험금 지급을 보장하거나 진단을 대체하지 않습니다.</p></div></section>`}
 function footer(){return `<footer class="footer"><div class="site-width footer-grid"><div><p class="footer-label">STAY WELL, STAY TOGETHER.</p><h2>아프지마.<br>우리, 오래 보자.</h2></div><div>${brand('footer-brand')}<p>사랑하는 존재와 함께하는 시간을 위해.</p><button data-act="top">맨 위로 ${icon('arrow',15)}</button></div></div><div class="site-width footer-bottom"><span>© PRZIMA 2026</span><span>CONCEPT DEMONSTRATION ONLY</span><span>DESIGN v0.4.1 · BOOKING v0.6.0</span></div></footer>`}
@@ -993,7 +1113,7 @@ function bookModal(){
 function render(){root.innerHTML=`<div class="app theme-${state.mode}">${header()}${hero()}${featureStrip()}${specialtiesSection()}${hospitals()}${insurance()}${footer()}${mapModal()}${bookModal()}${loader()}</div>`}
 const scroll=id=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
 let loaderTimeout;
-function changeMode(m){if(state.mode===m)return;state.mode=m;state.specialty='전체';state.search='';state.weekOffset=0;state.clinicWeeks={};state.selectedDates={};state.selectedDoctors={};state.selectedSlots={};state.insurer=m==='cat'?'meritz-cat':'meritz-dog';state.insuranceEvaluated=false;state.loading=true;state.phrase=0;render();clearTimeout(loaderTimeout);loaderTimeout=setTimeout(()=>{state.loading=false;render();},window.matchMedia('(prefers-reduced-motion:reduce)').matches?50:1100)}
+function changeMode(m){if(state.mode===m)return;state.mode=m;state.activeClinic=null;state.bookingClinic=null;state.specialty='전체';state.search='';state.weekOffset=0;state.clinicWeeks={};state.selectedDates={};state.selectedDoctors={};state.selectedSlots={};state.insurer=m==='cat'?'meritz-cat':'meritz-dog';state.insuranceEvaluated=false;state.loading=true;state.phrase=0;render();clearTimeout(loaderTimeout);loaderTimeout=setTimeout(()=>{state.loading=false;render();},window.matchMedia('(prefers-reduced-motion:reduce)').matches?50:1100)}
 setInterval(()=>{if(!state.loading)return;state.phrase++;let phrases=state.mode==='dog'?dogPhrases:state.mode==='cat'?catPhrases:dogPhrases.flatMap((a,i)=>[a,catPhrases[i]]);const el=document.getElementById('loaderPhrase');if(el)el.textContent=phrases[state.phrase%phrases.length]},360);
 function setService(n){state.serviceIndex=(n+services.length)%services.length;document.querySelectorAll('.service-slide').forEach((el,i)=>{const active=i===state.serviceIndex;el.classList.toggle('active',active);el.setAttribute('aria-hidden',String(!active));el.querySelector('button')?.setAttribute('tabindex',active?'0':'-1')});document.querySelectorAll('.service-dots button').forEach((el,i)=>{el.classList.toggle('selected',i===state.serviceIndex);el.setAttribute('aria-pressed',String(i===state.serviceIndex))})}
 setInterval(()=>{if(!document.hidden&&!state.menu&&!state.map&&!state.booking&&!state.loading)setService(state.serviceIndex+1)},5200);
@@ -1007,12 +1127,31 @@ function renderClinicKeepingPosition(id,action,val){
   focus?.focus({preventScroll:true});
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,v=b.dataset.val;if(a==='close-bg'&&e.target!==b)return;
+  if(a==='clinic-open'){
+    if(!clinics.some(c=>c.id===v))return;
+    state.activeClinic=v;state.bookingClinic=null;state.menu=false;
+    render();return scroll('hospitals');
+  }
+  if(a==='clinic-back'){
+    state.activeClinic=null;state.bookingClinic=null;
+    render();return scroll('hospitals');
+  }
+  if(a==='clinic-reserve'){
+    if(state.activeClinic!==v||!clinics.some(c=>c.id===v))return;
+    state.bookingClinic=v;delete state.selectedSlots[v];
+    render();return scroll('clinic-booking');
+  }
+  if(a==='clinic-collapse'){
+    if(state.bookingClinic!==v||state.activeClinic!==v)return;
+    state.bookingClinic=null;delete state.selectedSlots[v];
+    render();return scroll('hospitals');
+  }
   if(a==='mode')return changeMode(v);
   if(a==='service')return setService(Number(v));
-  if(a==='health-check'){state.specialty='내과';state.search='';state.menu=false;render();return scroll('hospitals')}
+  if(a==='health-check'){state.activeClinic=null;state.bookingClinic=null;state.specialty='내과';state.search='';state.menu=false;render();return scroll('hospitals')}
   if(a==='top')return window.scrollTo({top:0,behavior:'smooth'});
-  if(a==='to-specialties'){state.menu=false;render();return scroll('specialties')}if(a==='to-hospitals'){state.menu=false;render();return scroll('hospitals')}if(a==='to-insurance'){state.menu=false;render();return scroll('insurance')}
-  if(a==='specialty'){state.specialty=v;state.menu=false;render();return scroll('hospitals')}
+  if(a==='to-specialties'){state.activeClinic=null;state.bookingClinic=null;state.menu=false;render();return scroll('specialties')}if(a==='to-hospitals'){state.activeClinic=null;state.bookingClinic=null;state.menu=false;render();return scroll('hospitals')}if(a==='to-insurance'){state.menu=false;render();return scroll('insurance')}
+  if(a==='specialty'){state.activeClinic=null;state.bookingClinic=null;state.specialty=v;state.menu=false;render();return scroll('hospitals')}
   if(a==='menu'){state.menu=!state.menu;return render()}
   if(a==='map'){state.map=true;return render()}
   if(a==='close'||a==='close-bg'){state.map=false;state.booking=null;return render()}
@@ -1058,7 +1197,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
     state.booking={clinic:c,date:slot.date,time:slot.time,doctor};state.bookingDone=false;
     state.patient='';state.reason='';state.otherReason='';return render();
   }
-  if(a==='reset'){state.specialty='전체';state.search='';return render()}
+  if(a==='reset'){state.activeClinic=null;state.bookingClinic=null;state.specialty='전체';state.search='';return render()}
   if(a==='book'){
     const [id,date,time,doctorId='']=v.split('|'),clinic=clinics.find(c=>c.id===id);
     if(!clinic||!weekDatesForClinic(clinic).includes(date)||!slotsFor(clinic,date,doctorId).includes(time))return;
@@ -1086,7 +1225,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   if(a==='insurance'){state.insuranceEvaluated=true;render();return scroll('insurance')}
   if(a==='skip'){clearTimeout(loaderTimeout);state.loading=false;return render()}
 });
-document.addEventListener('submit',e=>{if(e.target.id==='heroSearchForm'){e.preventDefault();state.search=document.getElementById('heroSearchInput')?.value.trim()||'';state.specialty='전체';render();scroll('hospitals')}});
+document.addEventListener('submit',e=>{if(e.target.id==='heroSearchForm'){e.preventDefault();state.search=document.getElementById('heroSearchInput')?.value.trim()||'';state.activeClinic=null;state.bookingClinic=null;state.specialty='전체';render();scroll('hospitals')}});
 document.addEventListener('input',e=>{if(e.target.id==='hospitalSearch'){state.search=e.target.value;const n=e.target.selectionStart;render();const f=document.getElementById('hospitalSearch');f?.focus();f?.setSelectionRange(n,n)}if(e.target.id==='patientInput')state.patient=e.target.value;
   if(e.target.id==='otherReasonInput'){
     state.otherReason=e.target.value;
