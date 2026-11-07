@@ -48,7 +48,7 @@
     const seen=new Set();
     return (Array.isArray(items)?items:[]).filter(p=>{
       const category=String(p?.category_name||''),name=String(p?.place_name||'');
-      return category.includes('동물병원')||name.includes('동물병원')||name.includes('동물의료센터')||name.includes('동물메디컬센터')||name.includes('동물클리닉');
+      return category ? (category.includes('동물병원')||category.includes('동물의료')) : (name.includes('동물병원')||name.includes('동물의료센터')||name.includes('동물메디컬센터')||name.includes('동물클리닉'));
     }).map(p=>{
       const lat=Number(p.y),lng=Number(p.x),id=String(p.id||'');
       if(!id||!Number.isFinite(lat)||!Number.isFinite(lng)||seen.has(id))return null;
