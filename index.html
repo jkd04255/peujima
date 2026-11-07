@@ -617,6 +617,117 @@
   .hero-v4-visual::after{height:40%}
   .hero-v4-inner{margin-top:-16px;padding-top:16px}
 }
+/* PJM-010 | G1+G2 approved — calendar booking integration, preview branch only. */
+.clinic-row.calendar-clinic {
+  display:grid!important;
+  grid-template-columns:minmax(245px,.70fr) minmax(0,1.30fr)!important;
+  align-items:stretch;gap:18px!important;padding:20px 0 23px!important;
+  background:transparent;border-bottom:1px solid #d9ded6;
+}
+.calendar-clinic .calendar-clinic-info {
+  background:#fffefa;border:1px solid #eee8df;border-radius:24px;padding:26px 24px;
+  display:flex;flex-direction:column;gap:17px;min-width:0;
+  box-shadow:0 12px 28px #5b674c0c;
+}
+.calendar-clinic .clinic-identity {min-width:0;}
+.calendar-clinic .clinic-identity h3 {margin:10px 0 7px;font-size:clamp(18px,2vw,24px)}
+.calendar-clinic .clinic-identity p {font-size:12px;line-height:1.8;margin:0 0 12px}
+.calendar-clinic .clinic-overline{letter-spacing:0;color:#927d6a}
+.calendar-clinic .clinic-details {grid-column:auto!important;display:flex;flex-direction:column;gap:10px!important;padding:13px 0!important;border-block:1px solid #efede6;min-width:0}
+.calendar-clinic .clinic-details span {line-height:1.6;font-size:12px;min-width:0;overflow-wrap:anywhere}
+.calendar-clinic .clinic-slots{
+  grid-column:2!important;grid-row:1!important;min-width:0!important;border:1px solid #eee8df!important;
+  background:#fffefa;border-radius:24px;padding:26px 28px 22px!important;
+  box-shadow:0 12px 28px #5b674c0c;margin:0!important;display:block!important;
+}
+.calendar-clinic .doctor-picker {margin:4px 0 0;}
+.calendar-clinic .doctor-picker .schedule-label {display:block;margin:0 0 11px}
+.calendar-clinic .doctor-picker .schedule-label b {font-size:14px;color:#384d3c;font-weight:780}
+.calendar-clinic .doctor-picker .schedule-label small{display:block;margin-top:4px;font-size:10px;text-align:left;color:#929187}
+.calendar-clinic .doctor-list {display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.calendar-clinic .doctor-choice {width:100%;min-width:0;min-height:69px;padding:12px!important;border-radius:13px;gap:5px!important}
+.calendar-clinic .doctor-choice strong{font-size:12px}
+.calendar-clinic .doctor-choice span{font-size:10px}
+.calendar-clinic .calendar-demo-note {font-size:11px;line-height:1.7;color:#817d70;background:#f8f3eb;border-radius:12px;padding:13px 14px;margin:auto 0 0}
+.calendar-clinic .calendar-demo-note strong{color:#596959}
+.results-bar .week-control{display:none}
+.cal-topbar{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:18px}
+.cal-month{font-size:18px;font-weight:800;letter-spacing:-.055em;color:#324a38}
+.cal-week-nav{display:flex;gap:8px;align-items:center}
+.cal-week-nav button{border:1px solid #e1e5dc;background:#fbfbf7;color:#506451;border-radius:10px;width:34px;height:34px;display:grid;place-items:center;padding:0}
+.cal-week-nav button:disabled{opacity:.35}
+.cal-week-nav small{font-size:10px;color:#879086;white-space:nowrap;font-weight:650}
+.cal-date-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:18px}
+.cal-date{border:1px solid transparent;border-radius:14px;background:transparent;color:#737c72;min-width:0;min-height:74px;padding:5px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:background .15s,border-color .15s}
+.cal-date .cal-weekday{font-size:10px;font-weight:700}
+.cal-date .cal-daynum{width:36px;height:36px;border-radius:999px;display:grid;place-items:center;font-size:18px;font-weight:740;color:#3e5344;font-variant-numeric:tabular-nums}
+.cal-date[aria-pressed="true"]{background:#edf3ed;border-color:#dde9da}
+.cal-date[aria-pressed="true"] .cal-daynum{background:#405b46;color:#fff}
+.cal-date.empty .cal-daynum{color:#a9aea4}
+.cal-date.empty[aria-pressed="true"] .cal-daynum{color:#fff}
+.cal-date .cal-date-dot{width:4px;height:4px;background:#8aa58b;border-radius:50%}
+.cal-date.empty .cal-date-dot{background:transparent}
+.cal-daybar{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #ecebe5;padding:17px 0 16px}
+.cal-daybar h4{font-size:18px;font-weight:790;letter-spacing:-.055em;color:#354b3a;margin:0 0 4px}
+.cal-daybar p{font-size:11px;color:#8b9388;line-height:1.5;margin:0}
+.cal-count{font-size:10px;white-space:nowrap;border-radius:999px;background:#eaf1e8;color:#4f7154;font-weight:760;padding:8px 10px}
+.cal-hour-row{display:grid;grid-template-columns:64px minmax(0,1fr);min-height:54px;gap:11px;align-items:start}
+.cal-hour-label{text-align:right;font-size:11px;color:#8b9489;white-space:nowrap;padding-top:1px;font-variant-numeric:tabular-nums}
+.cal-hour-track{border-top:1px solid #e8ebe5;min-height:54px;display:flex;flex-wrap:wrap;gap:5px;padding:5px 0 4px;min-width:0}
+.cal-slot{border:1px solid #cfdfcb;border-left:4px solid #85a185;background:#eef5ec;color:#34583b;border-radius:12px;min-height:43px;display:flex;align-items:center;justify-content:space-between;gap:6px;flex:1 1 118px;min-width:0;max-width:100%;font-size:12px;font-weight:750;text-align:left;padding:9px 12px;line-height:1.3;transition:background .15s}
+.cal-slot small{font-size:10px;color:#728e78;font-weight:600;white-space:nowrap}
+.cal-slot[aria-pressed="true"]{background:#405b46;color:white;border-color:#405b46;border-left-color:#cadac9;box-shadow:0 8px 18px #354f3730}
+.cal-slot[aria-pressed="true"] small{color:#dceadd}
+.cal-slot:hover{border-color:#9bb69a}
+.cal-empty{font-size:12px;line-height:1.8;color:#69786b;background:#f5f7f1;border:1px dashed #d9e4d7;padding:15px;border-radius:12px;margin:5px 0 15px}
+.cal-selected-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #e5e9e1;margin-top:14px;padding-top:17px}
+.cal-selection-label{display:block;font-size:10px;color:#8c968d;margin-bottom:6px}
+.cal-selected-detail{font-size:13px;font-weight:760;color:#314d37;overflow-wrap:anywhere;line-height:1.45}
+.cal-next{border:0;border-radius:12px;background:#405b46;color:white;font-size:12px;font-weight:760;padding:12px 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;min-height:45px}
+.cal-next:disabled{background:#abb8aa;color:#eaf0e9;opacity:.68}
+.cal-bottom-note{font-size:10px;color:#9a948b;line-height:1.6;margin:13px 0 0}
+@media(max-width:950px){
+ .clinic-row.calendar-clinic{grid-template-columns:minmax(0,1fr)!important;gap:12px!important}
+ .calendar-clinic .clinic-slots{grid-column:1!important;grid-row:auto!important;}
+ .calendar-clinic .calendar-clinic-info{padding:20px 22px;}
+ .calendar-clinic .doctor-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:560px){
+ .clinic-row.calendar-clinic{padding:10px 0 17px!important;gap:11px!important;border-radius:0;background:transparent}
+ .calendar-clinic .calendar-clinic-info{border-radius:20px;padding:19px 16px;gap:12px}
+ .calendar-clinic .clinic-slots{border-radius:21px;padding:18px 14px 15px!important}
+ .calendar-clinic .clinic-identity h3{font-size:18px}
+ .calendar-clinic .clinic-details{padding:11px 0!important}
+ .calendar-clinic .doctor-list{gap:6px}
+ .calendar-clinic .doctor-choice{padding:9px 5px!important;min-height:64px;text-align:center;align-items:center;border-radius:11px}
+ .calendar-clinic .doctor-choice strong{font-size:10px}
+ .calendar-clinic .doctor-choice span{font-size:9px}
+ .cal-topbar{margin-bottom:12px}
+ .cal-month{font-size:17px}
+ .cal-date-strip{gap:1px;margin-bottom:13px}
+ .cal-date{min-height:69px;border-radius:11px}
+ .cal-date .cal-daynum{width:34px;height:34px;font-size:17px}
+ .cal-daybar h4{font-size:15px}
+ .cal-daybar p{font-size:10px}
+ .cal-count{font-size:9px;padding:6px 8px}
+ .cal-hour-row{grid-template-columns:51px minmax(0,1fr);gap:7px}
+ .cal-hour-label{font-size:10px}
+ .cal-slot{font-size:11px;padding:9px 8px}
+ .cal-slot small{font-size:9px}
+ .cal-selected-footer{position:sticky;bottom:0;background:#fffefaef;z-index:2;backdrop-filter:blur(8px);padding:14px 4px 5px; margin:10px -4px 0}
+ .cal-selected-detail{font-size:11px}
+ .cal-next{font-size:11px;padding:10px 12px}
+}
+@media(max-width:355px){
+ .calendar-clinic .clinic-slots{padding:15px 10px!important}
+ .calendar-clinic .calendar-clinic-info{padding:17px 11px}
+ .cal-date .cal-daynum{width:29px;height:29px;font-size:15px}
+ .cal-date{min-height:63px}
+ .cal-hour-row{grid-template-columns:46px minmax(0,1fr);gap:5px}
+ .cal-slot small{display:none}
+}
+@media(prefers-reduced-motion:reduce){.cal-date,.cal-slot{transition:none!important}}
+
 </style></head>
 <body>
   <div id="root"></div>
@@ -630,7 +741,7 @@ const clinics = [
         hours: '월–토 09:00–19:00', closed: '일요일 휴진',
         // 다인 의료진이 있는 가상 센터: 의료진별 시간표는 데모용입니다.
         doctors: [
-          {id:'cozy-lee',name:'이하린',field:'내과·피부',schedule:{0:[],1:['10:00','11:30'],2:['09:30','11:00'],3:['10:30','13:00'],4:['10:00'],5:['11:00'],6:['09:30','11:30']}},
+          {id:'cozy-lee',name:'이하린',field:'내과·피부',schedule:{0:[],1:['10:00','11:30'],2:['09:30','11:00'],3:['10:30','13:00'],4:['10:00'],5:['11:00','13:00'],6:['09:30','11:30']}},
           {id:'cozy-park',name:'박도윤',field:'영상진단·내과',schedule:{0:[],1:['14:00','16:00'],2:['15:30'],3:['16:30'],4:['14:30','17:00'],5:['15:00','17:30'],6:['14:00']}}
         ],
 
@@ -722,7 +833,7 @@ function evaluateInsurance(insurer, care) {
 
 
 const root = document.querySelector('#root');
-const state = { mode:'all', specialty:'전체', search:'', weekOffset:0, selectedDates:{}, selectedDoctors:{}, insurer:'meritz-dog', care:'illness', insuranceEvaluated:false, booking:null, bookingDone:false, patient:'', reason:'', otherReason:'', menu:false, map:false, loading:false, phrase:0, serviceIndex:0 };
+const state = { mode:'all', specialty:'전체', search:'', weekOffset:0, clinicWeeks:{}, selectedDates:{}, selectedDoctors:{}, selectedSlots:{}, insurer:'meritz-dog', care:'illness', insuranceEvaluated:false, booking:null, bookingDone:false, patient:'', reason:'', otherReason:'', menu:false, map:false, loading:false, phrase:0, serviceIndex:0 };
 const dogPhrases=['리드줄 찾는 중…','발톱 정리하는 중…','간식 챙기는 중…','꼬리 흔들 준비 중…'];
 const catPhrases=['감자 캐는 중…','맛동산 캐는 중…','꾹꾹이 준비하는 중…','집사 부르는 중…'];
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -772,33 +883,80 @@ function slotsFor(c,date,doctorId=''){
   return (c.schedule[weekday(date)]||[]).filter(valid).sort();
 }
 function weekDates(){return Array.from({length:7},(_,i)=>datePlus(state.weekOffset+i))}
+function weekDatesForClinic(c){
+  const offset=state.clinicWeeks[c.id]??state.weekOffset;
+  return Array.from({length:7},(_,i)=>datePlus(offset+i));
+}
 function selectedDateForClinic(c){
-  const week=weekDates(),doctorId=state.selectedDoctors[c.id]||'';
+  const week=weekDatesForClinic(c), doctorId=state.selectedDoctors[c.id]||'';
   const chosen=state.selectedDates[c.id];
-  if(chosen&&week.includes(chosen))return chosen;
+  if(chosen && week.includes(chosen))return chosen;
   return week.find(day=>slotsFor(c,day,doctorId).length)||week[0];
 }
-function timeline(c){
-  const days=weekDates(),doctorId=state.selectedDoctors[c.id]||'',date=selectedDateForClinic(c),hasDoctors=(c.doctors?.length||0)>1;
-  const chosenDoctor=c.doctors?.find(d=>d.id===doctorId);
-  const doctors=hasDoctors?`<div class="doctor-picker" aria-label="${escapeHtml(c.name)} 담당 수의사 선택"><div class="schedule-label"><b>진료 선생님 선택</b><small>가상 의료진</small></div><div class="doctor-list">${c.doctors.map(d=>`<button type="button" class="doctor-choice ${doctorId===d.id?'selected':''}" aria-pressed="${doctorId===d.id}" data-act="doctor" data-val="${c.id}|${d.id}"><strong>${escapeHtml(d.name)} 수의사</strong><span>${escapeHtml(d.field)}</span></button>`).join('')}</div></div>`:'';
-  const buttons=days.map(day=>{
-    const available=slotsFor(c,day,doctorId),isSelected=day===date;
-    const d=Number(day.slice(8,10));
-    return `<button type="button" class="timeline-day ${isSelected?'selected':''} ${available.length?'has-slots':'empty'}" data-act="clinic-date" data-val="${c.id}|${day}" aria-label="${dateLabel(day)} ${available.length?'예약 가능 '+available.length+'개':'예약 시간 없음'}" aria-pressed="${isSelected}" ${!available.length?'disabled':''}><span class="timeline-weekday">${dayName[weekday(day)]}</span><b>${d}</b><span class="timeline-availability">${available.length?available[0]:'마감'}</span>${available.length?`<i>${available.length}개</i>`:''}</button>`;
-  }).join('');
-  const times=slotsFor(c,date,doctorId);
-  const timeContent=(hasDoctors&&!chosenDoctor)?'<p class="schedule-help">수의사를 선택하면 해당 선생님의 예약 가능 시간이 표시됩니다.</p>':times.length?`<div class="slot-list" role="group" aria-label="${dateLabel(date)} 예약 시간">${times.map(t=>`<button type="button" data-act="book" data-val="${c.id}|${date}|${t}|${doctorId}" aria-label="${dateLabel(date)} ${t} 예약 미리보기">${t}</button>`).join('')}</div>`:'<p class="schedule-help">선택한 날짜에는 예약 가능한 시간이 없습니다. 다른 날짜를 선택해 주세요.</p>';
-  return `${doctors}<div class="week-timeline"><div class="schedule-label"><b>일주일 예약 타임라인</b><small>${days[0].slice(5).replace('-','/')} – ${days[6].slice(5).replace('-','/')} · 시연용</small></div><div class="timeline-days" role="group" aria-label="${escapeHtml(c.name)} 일주일 예약 가능 날짜">${buttons}</div></div><div class="day-slots"><div class="schedule-label"><b>${dateLabel(date)} 예약 시간</b><small>${chosenDoctor?escapeHtml(chosenDoctor.name)+' 수의사':'예약 가능한 시간'}</small></div>${timeContent}</div>`;
+function calendarDoctor(c){
+  if(!c.doctors?.length || c.doctors.length<=1)return '';
+  const doctorId=state.selectedDoctors[c.id]||'';
+  return `<div class="doctor-picker" aria-label="${escapeHtml(c.name)} 담당 수의사 선택">
+    <div class="schedule-label"><b>담당 수의사 선택</b><small>수의사를 먼저 선택하면 해당 시간표가 표시됩니다.</small></div>
+    <div class="doctor-list">${c.doctors.map(d=>`<button type="button" class="doctor-choice ${doctorId===d.id?'selected':''}" aria-pressed="${doctorId===d.id}" data-act="doctor" data-val="${c.id}|${d.id}"><strong>${escapeHtml(d.name)} 수의사</strong><span>${escapeHtml(d.field)}</span></button>`).join('')}</div>
+  </div>`;
 }
-function card(c,i){return `<article class="clinic-row" id="clinic-${c.id}"><div class="clinic-identity"><span class="clinic-overline">${c.ratingTag} <span>·</span> SAMPLE HOSPITAL</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.subtitle)}</p><div class="spec-tags">${c.specialties.map(sp=>`<span>${escapeHtml(sp)}</span>`).join('')}</div></div><div class="clinic-details"><span>${icon('pin',15)}${escapeHtml(c.location)}</span><span>${icon('clock',15)}${escapeHtml(c.hours)}</span><span class="closed-day">${escapeHtml(c.closed)}</span></div><div class="clinic-slots">${timeline(c)}</div></article>`}
+function timeBounds(c,doctor){
+  const source=doctor?.schedule||c.schedule||{};
+  const all=Object.values(source).flat().filter(t=>/^\d{2}:\d{2}$/.test(t)).map(t=>Number(t.slice(0,2)));
+  const start=Math.max(0,Math.min(9,...all)-1);
+  const end=Math.min(24,Math.max(18,...all)+2);
+  // Night-shift clinicians should not see a large empty 09:00–20:00 period.
+  const lo=doctor && all.length && Math.min(...all)>=19?Math.max(0,Math.min(...all)-1):start;
+  return {start:lo,end};
+}
+function dayTitle(date){const [y,m,d]=date.split('-').map(Number);return `${y}년 ${m}월 ${d}일 ${dayName[weekday(date)]}요일`}
+function timeline(c){
+  const days=weekDatesForClinic(c), offset=state.clinicWeeks[c.id]??state.weekOffset;
+  const doctorId=state.selectedDoctors[c.id]||'', doctor=c.doctors?.find(d=>d.id===doctorId)||null;
+  const needsDoctor=(c.doctors?.length||0)>1;
+  const date=selectedDateForClinic(c), times=needsDoctor&&!doctor?[]:slotsFor(c,date,doctorId);
+  const slot=state.selectedSlots[c.id];
+  const isPicked=Boolean(slot&&slot.date===date&&slot.doctorId===doctorId&&times.includes(slot.time));
+  const month=Number(days[0].slice(5,7)),year=days[0].slice(0,4);
+  const dates=days.map(day=>{
+    const available=needsDoctor&&!doctor?[]:slotsFor(c,day,doctorId);
+    const selected=day===date;
+    const count=available.length;
+    return `<button class="cal-date ${count?'has-slots':'empty'}" type="button" data-act="clinic-date" data-val="${c.id}|${day}" aria-pressed="${selected}" aria-label="${dateLabel(day)}, ${needsDoctor&&!doctor?'수의사 선택 필요':count?'예약 예시 '+count+'개':'예약 시간 없음'}"><span class="cal-weekday">${dayName[weekday(day)]}</span><span class="cal-daynum">${Number(day.slice(8))}</span><span class="cal-date-dot" aria-hidden="true"></span></button>`;
+  }).join('');
+  const bounds=timeBounds(c,doctor);
+  const hourly=needsDoctor&&!doctor?'':Array.from({length:Math.max(1,bounds.end-bounds.start)},(_,i)=>bounds.start+i).map(hour=>{
+    const h=String(hour).padStart(2,'0');
+    const within=times.filter(t=>t.startsWith(h+':'));
+    const blocks=within.map(t=>{
+      const chosen=isPicked&&slot.time===t;
+      return `<button class="cal-slot" type="button" data-act="calendar-slot" data-val="${c.id}|${date}|${t}|${doctorId}" aria-pressed="${chosen}" aria-label="${dateLabel(date)} ${t} ${chosen?'선택됨':'예약 가능 예시'}"><span>${t} ${chosen?'선택됨':'예약 가능'}</span><small>${chosen?'선택한 시간':'시연용 시간'}</small></button>`;
+    }).join('');
+    return `<div class="cal-hour-row"><span class="cal-hour-label">${hour<12?'오전 '+(hour||12):hour===12?'오후 12': '오후 '+(hour-12)}시</span><div class="cal-hour-track">${blocks}</div></div>`;
+  }).join('');
+  const help=needsDoctor&&!doctor?'<p class="cal-empty" role="status">수의사를 선택하면 해당 선생님의 예약 가능 예시 시간이 표시됩니다.</p>':times.length?'':'<p class="cal-empty" role="status">이 날짜에는 예약 가능한 예시 시간이 없습니다. 다른 날짜 또는 수의사를 선택해 주세요.</p>';
+  const selection=isPicked?`${dateLabel(date)} ${slot.time}${doctor?' · '+escapeHtml(doctor.name)+' 수의사':''}`:'시간을 선택해 주세요';
+  return `<div class="cal-topbar"><span class="cal-month">${year}년 ${month}월</span><div class="cal-week-nav"><button data-act="calendar-week" data-val="${c.id}|-7" type="button" aria-label="이전 7일" ${offset===0?'disabled':''}>${icon('back',17)}</button><small>7일 보기</small><button data-act="calendar-week" data-val="${c.id}|7" type="button" aria-label="다음 7일" ${offset>=7?'disabled':''}>${icon('chevron',17)}</button></div></div>
+  <div class="cal-date-strip" role="group" aria-label="${escapeHtml(c.name)} 예약 날짜 선택">${dates}</div>
+  <div class="cal-daybar"><div><h4>${dayTitle(date)}</h4><p>선택한 날짜의 예약 예시 시간표</p></div><span class="cal-count">${needsDoctor&&!doctor?'수의사 선택 필요':times.length?'예약 가능 '+times.length+'개':'시간 없음'}</span></div>
+  <div class="cal-hours" role="group" aria-label="${dateLabel(date)} 시간별 예약 일정">${hourly}${help}</div>
+  <div class="cal-selected-footer"><div><span class="cal-selection-label">선택한 예약 시간</span><div class="cal-selected-detail" aria-live="polite">${selection}</div></div><button class="cal-next" type="button" data-act="calendar-continue" data-val="${c.id}" ${!isPicked?'disabled':''}>선택 확인 ${icon('arrow',16)}</button></div>
+  <p class="cal-bottom-note">가상 병원·의료진·시간표를 사용하는 시연입니다. 실제 예약 가능한 시간이 아닙니다.</p>`;
+}
+function card(c,i){return `<article class="clinic-row calendar-clinic" id="clinic-${c.id}">
+  <div class="calendar-clinic-info"><div class="clinic-identity"><span class="clinic-overline">${escapeHtml(c.ratingTag)} · 가상 병원</span><h3>${escapeHtml(c.name)}</h3><p>${escapeHtml(c.subtitle)}</p><div class="spec-tags">${c.specialties.map(sp=>`<span>${escapeHtml(sp)}</span>`).join('')}</div></div>
+  <div class="clinic-details"><span>${icon('pin',15)}${escapeHtml(c.location)}</span><span>${icon('clock',15)}${escapeHtml(c.hours)}</span><span class="closed-day">${escapeHtml(c.closed)}</span></div>
+  ${calendarDoctor(c)}<p class="calendar-demo-note"><strong>예약 시연 안내</strong><br>표시된 병원·수의사·예약 시간은 가상 데이터이며 실제 접수되지 않습니다.</p></div>
+  <div class="clinic-slots">${timeline(c)}</div>
+</article>`}
 function hospitals(){
   const filtered=clinics.filter(c=>(state.mode==='all'||c.species.includes(state.mode))&&(state.specialty==='전체'||c.specialties.includes(state.specialty))&&(!state.search.trim()||[c.name,c.location,...c.specialties].join(' ').toLocaleLowerCase().includes(state.search.trim().toLocaleLowerCase())));
   const days=weekDates();
   return `<section class="section clinic-section" id="hospitals"><div class="site-width"><div class="section-top"><div><h2>잘 맞는 병원,<br><em>여기서 만나세요.</em></h2></div><p class="section-side">지역부터 진료과, 진료 가능 시간까지.<br>선택은 조금 더 쉬워집니다.</p></div><div class="search-panel"><label class="search-field">${icon('search',19)}<input id="hospitalSearch" aria-label="병원 검색" placeholder="병원명, 지역 또는 진료과를 검색하세요" value="${escapeHtml(state.search)}"></label><label class="select-field"><span>진료과</span><select id="specialtySelect"><option value="전체">전체</option>${specialties.map(sp=>`<option value="${escapeHtml(sp.name)}" ${state.specialty===sp.name?'selected':''}>${sp.label}</option>`).join('')}</select>${icon('down',15)}</label></div><div class="results-bar"><span>검색 결과 <strong>${filtered.length}</strong>곳 <small>가상 병원 데이터</small></span><div class="week-control"><span>7일 예약 일정</span><button data-act="prev-week" ${state.weekOffset===0?'disabled':''} aria-label="이전 일주일">${icon('back',16)}</button><b>${dateLabel(days[0]).replace('요일','')} – ${days[6].slice(5).replace('-','/')}</b><button data-act="next-week" ${state.weekOffset===7?'disabled':''} aria-label="다음 일주일">${icon('chevron',16)}</button></div></div><div class="clinic-list">${filtered.length?filtered.map((c,i)=>card(c,i)).join(''):`<div class="no-result"><h3>해당 조건의 병원이 없습니다.</h3><p>검색어 또는 진료과를 바꿔보세요.</p><button class="primary-btn" data-act="reset">전체 병원 보기</button></div>`}</div><p class="clinic-disclaimer">표시된 병원, 의료진 및 예약 가능한 날짜·시간은 모두 가상의 예시입니다. 실제 예약이나 확정 안내가 아닙니다.</p></div></section>`
 }
 function insurance(){const selectable=insurers.filter(i=>state.mode==='all'||i.species===state.mode);if(!selectable.some(i=>i.id===state.insurer))state.insurer=selectable[0].id;const result=evaluateInsurance(state.insurer,state.care),obj=insurers.find(i=>i.id===state.insurer);return `<section class="section insurance" id="insurance"><div class="site-width insurance-grid"><div><h2>보험이 될까?<br><em>가기 전에 확인.</em></h2><p class="insurance-intro">보험마다 다른 보장 범위와 조건.<br>진료받기 전에 놓치기 쉬운 확인 사항을 정리했습니다.</p><div class="insurance-stat"><span>보험사 상품 안내 기준<br>메리츠화재 · 현대해상 · DB손해보험</span></div></div><div class="insurance-card"><div class="form-head"><span>PRE-CHECK / 2026</span><span>${icon('shield',20)}</span></div><h3>우리 아이의 보험,<br>먼저 살펴볼까요?</h3><label>01. 가입한 펫보험<select id="insurerSelect">${selectable.map(i=>`<option value="${i.id}" ${state.insurer===i.id?'selected':''}>${i.name} · ${i.product}</option>`).join('')}</select></label><label>02. 진료 예정 항목<select id="careSelect">${careTypes.map(c=>`<option value="${c.id}" ${state.care===c.id?'selected':''}>${c.name}</option>`).join('')}</select></label><button type="button" class="primary-btn insurance-button" data-act="insurance">보장 조건 살펴보기 ${icon('arrow',17)}</button>${state.insuranceEvaluated?`<div class="insurance-result" role="status"><small>${result.level==='review'?'보장 검토 가능':result.level==='check'?'추가 확인 필요':'일반적으로 보장 어려움'}</small><b>${result.title}</b><p>${result.desc}</p><ul>${result.points.map(p=>`<li>${p}</li>`).join('')}</ul><a href="${obj.url}" target="_blank" rel="noopener noreferrer">${obj.name} 공식 상품 안내 ${icon('arrow',13)}</a></div>`:`<p class="form-footnote">상품·특약·면책기간에 따라 실제 적용 여부가 달라집니다.</p>`}</div><p class="insurance-disclaimer">보험 안내는 일반적인 상품 설명을 바탕으로 한 참고 정보입니다. 보험금 지급을 보장하거나 진단을 대체하지 않습니다.</p></div></section>`}
-function footer(){return `<footer class="footer"><div class="site-width footer-grid"><div><p class="footer-label">STAY WELL, STAY TOGETHER.</p><h2>아프지마.<br>우리, 오래 보자.</h2></div><div>${brand('footer-brand')}<p>사랑하는 존재와 함께하는 시간을 위해.</p><button data-act="top">맨 위로 ${icon('arrow',15)}</button></div></div><div class="site-width footer-bottom"><span>© PRZIMA 2026</span><span>CONCEPT DEMONSTRATION ONLY</span><span>DESIGN v0.4.1 · BOOKING v0.5.2</span></div></footer>`}
+function footer(){return `<footer class="footer"><div class="site-width footer-grid"><div><p class="footer-label">STAY WELL, STAY TOGETHER.</p><h2>아프지마.<br>우리, 오래 보자.</h2></div><div>${brand('footer-brand')}<p>사랑하는 존재와 함께하는 시간을 위해.</p><button data-act="top">맨 위로 ${icon('arrow',15)}</button></div></div><div class="site-width footer-bottom"><span>© PRZIMA 2026</span><span>CONCEPT DEMONSTRATION ONLY</span><span>DESIGN v0.4.1 · BOOKING PJM-010 DEV</span></div></footer>`}
 function mapModal(){if(!state.map)return '';return `<div class="modal-bg" data-act="close-bg"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mapTitle"><button data-act="close" class="modal-x" aria-label="닫기">${icon('close',22)}</button><span class="eyebrow">LOCATION SEARCH</span><h2 id="mapTitle">근처 동물병원 찾기</h2><p>현재는 실제 병원 위치를 제공하지 않는 디자인 시연입니다. 외부 지도 서비스에서 실제 병원을 검색할 수 있습니다.</p><a class="primary-btn modal-cta" href="https://map.naver.com/p/search/%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90" target="_blank" rel="noopener noreferrer">네이버 지도에서 검색하기 ${icon('arrow',17)}</a></div></div>`}
 function bookModal(){
   if(!state.booking)return '';
@@ -835,10 +993,19 @@ function bookModal(){
 function render(){root.innerHTML=`<div class="app theme-${state.mode}">${header()}${hero()}${featureStrip()}${specialtiesSection()}${hospitals()}${insurance()}${footer()}${mapModal()}${bookModal()}${loader()}</div>`}
 const scroll=id=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
 let loaderTimeout;
-function changeMode(m){if(state.mode===m)return;state.mode=m;state.specialty='전체';state.search='';state.weekOffset=0;state.selectedDates={};state.selectedDoctors={};state.insurer=m==='cat'?'meritz-cat':'meritz-dog';state.insuranceEvaluated=false;state.loading=true;state.phrase=0;render();clearTimeout(loaderTimeout);loaderTimeout=setTimeout(()=>{state.loading=false;render();},window.matchMedia('(prefers-reduced-motion:reduce)').matches?50:1100)}
+function changeMode(m){if(state.mode===m)return;state.mode=m;state.specialty='전체';state.search='';state.weekOffset=0;state.clinicWeeks={};state.selectedDates={};state.selectedDoctors={};state.selectedSlots={};state.insurer=m==='cat'?'meritz-cat':'meritz-dog';state.insuranceEvaluated=false;state.loading=true;state.phrase=0;render();clearTimeout(loaderTimeout);loaderTimeout=setTimeout(()=>{state.loading=false;render();},window.matchMedia('(prefers-reduced-motion:reduce)').matches?50:1100)}
 setInterval(()=>{if(!state.loading)return;state.phrase++;let phrases=state.mode==='dog'?dogPhrases:state.mode==='cat'?catPhrases:dogPhrases.flatMap((a,i)=>[a,catPhrases[i]]);const el=document.getElementById('loaderPhrase');if(el)el.textContent=phrases[state.phrase%phrases.length]},360);
 function setService(n){state.serviceIndex=(n+services.length)%services.length;document.querySelectorAll('.service-slide').forEach((el,i)=>{const active=i===state.serviceIndex;el.classList.toggle('active',active);el.setAttribute('aria-hidden',String(!active));el.querySelector('button')?.setAttribute('tabindex',active?'0':'-1')});document.querySelectorAll('.service-dots button').forEach((el,i)=>{el.classList.toggle('selected',i===state.serviceIndex);el.setAttribute('aria-pressed',String(i===state.serviceIndex))})}
 setInterval(()=>{if(!document.hidden&&!state.menu&&!state.map&&!state.booking&&!state.loading)setService(state.serviceIndex+1)},5200);
+function renderClinicKeepingPosition(id,action,val){
+  const old=document.getElementById('clinic-'+id);
+  const y=old?.getBoundingClientRect().top??0;
+  render();
+  const next=document.getElementById('clinic-'+id);
+  if(next)window.scrollBy(0,next.getBoundingClientRect().top-y);
+  const focus=Array.from(next?.querySelectorAll('[data-act]')||[]).find(el=>el.dataset.act===action&&el.dataset.val===val);
+  focus?.focus({preventScroll:true});
+}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,v=b.dataset.val;if(a==='close-bg'&&e.target!==b)return;
   if(a==='mode')return changeMode(v);
   if(a==='service')return setService(Number(v));
@@ -851,22 +1018,50 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   if(a==='close'||a==='close-bg'){state.map=false;state.booking=null;return render()}
   if(a==='prev-week'||a==='next-week'){
     state.weekOffset=Math.max(0,Math.min(7,state.weekOffset+(a==='next-week'?7:-7)));
-    state.selectedDates={};return render();
+    state.clinicWeeks={};state.selectedDates={};state.selectedSlots={};return render();
+  }
+  if(a==='calendar-week'){
+    const [id,change]=v.split('|'),c=clinics.find(x=>x.id===id);
+    if(!c)return;
+    const old=state.clinicWeeks[id]??state.weekOffset;
+    state.clinicWeeks[id]=Math.max(0,Math.min(7,old+Number(change)));
+    delete state.selectedDates[id];delete state.selectedSlots[id];
+    return renderClinicKeepingPosition(id,a,v);
   }
   if(a==='clinic-date'){
     const [id,date]=v.split('|'),c=clinics.find(x=>x.id===id);
-    if(!c||!weekDates().includes(date)||!slotsFor(c,date,state.selectedDoctors[id]||'').length)return;
-    state.selectedDates[id]=date;return render();
+    if(!c||!weekDatesForClinic(c).includes(date))return;
+    state.selectedDates[id]=date;delete state.selectedSlots[id];
+    return renderClinicKeepingPosition(id,a,v);
   }
   if(a==='doctor'){
     const [id,doctorId]=v.split('|'),c=clinics.find(x=>x.id===id);
     if(!c||!c.doctors?.some(x=>x.id===doctorId))return;
-    state.selectedDoctors[id]=doctorId;delete state.selectedDates[id];return render();
+    state.selectedDoctors[id]=doctorId;
+    delete state.selectedSlots[id];delete state.selectedDates[id];
+    return renderClinicKeepingPosition(id,a,v);
+  }
+  if(a==='calendar-slot'){
+    const [id,date,time,doctorId='']=v.split('|'),c=clinics.find(x=>x.id===id);
+    if(!c||!weekDatesForClinic(c).includes(date)||!slotsFor(c,date,doctorId).includes(time))return;
+    if(c.doctors?.length>1&&(!doctorId||state.selectedDoctors[id]!==doctorId))return;
+    if(selectedDateForClinic(c)!==date)return;
+    state.selectedSlots[id]={date,time,doctorId};
+    return renderClinicKeepingPosition(id,a,v);
+  }
+  if(a==='calendar-continue'){
+    const c=clinics.find(x=>x.id===v),slot=state.selectedSlots[v];
+    if(!c||!slot||!weekDatesForClinic(c).includes(slot.date)||!slotsFor(c,slot.date,slot.doctorId).includes(slot.time))return;
+    if(selectedDateForClinic(c)!==slot.date)return;
+    const doctor=c.doctors?.find(d=>d.id===slot.doctorId)||null;
+    if(c.doctors?.length>1&&(!doctor||state.selectedDoctors[v]!==slot.doctorId))return;
+    state.booking={clinic:c,date:slot.date,time:slot.time,doctor};state.bookingDone=false;
+    state.patient='';state.reason='';state.otherReason='';return render();
   }
   if(a==='reset'){state.specialty='전체';state.search='';return render()}
   if(a==='book'){
     const [id,date,time,doctorId='']=v.split('|'),clinic=clinics.find(c=>c.id===id);
-    if(!clinic||!weekDates().includes(date)||!slotsFor(clinic,date,doctorId).includes(time))return;
+    if(!clinic||!weekDatesForClinic(clinic).includes(date)||!slotsFor(clinic,date,doctorId).includes(time))return;
     // Multi-doctor facilities require an explicit clinician choice.
     const doctor=clinic.doctors?.find(d=>d.id===doctorId)||null;
     if(clinic.doctors?.length>1&&(!doctor||state.selectedDoctors[id]!==doctorId))return;
