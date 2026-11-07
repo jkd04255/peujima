@@ -1,0 +1,42 @@
+name: PJM-012 GPS nearby hospitals QA (branch and PR only)
+on:
+  push:
+    branches:
+      - feature/pjm-012-kakao-nearby
+  pull_request:
+    branches:
+      - main
+    paths:
+      - index.html
+      - pjm012-nearby.js
+      - pjm012-nearby.css
+      - tests/test_pjm_012.py
+      - .github/workflows/pjm-012-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    name: Chromium responsive Kakao mock and PJM-011 regression
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install "playwright==1.56.0"
+      - run: python -m playwright install --with-deps chromium
+      - name: PJM-012 mock Kakao SDK, GPS and responsive QA
+        run: python tests/test_pjm_012.py
+      - name: PJM-011 legacy booking regression QA
+        run: python tests/test_pjm_011.py
+      - name: QA screenshots (simulated locations, never live Kakao)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pjm-012-mock-qa-screenshots
+          path: qa-screenshots/
+          if-no-files-found: ignore
