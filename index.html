@@ -926,7 +926,7 @@ function timeline(c){
     return `<button class="cal-date ${count?'has-slots':'empty'}" type="button" data-act="clinic-date" data-val="${c.id}|${day}" aria-pressed="${selected}" aria-label="${dateLabel(day)}, ${needsDoctor&&!doctor?'수의사 선택 필요':count?'예약 예시 '+count+'개':'예약 시간 없음'}"><span class="cal-weekday">${dayName[weekday(day)]}</span><span class="cal-daynum">${Number(day.slice(8))}</span><span class="cal-date-dot" aria-hidden="true"></span></button>`;
   }).join('');
   const bounds=timeBounds(c,doctor);
-  const hourly=Array.from({length:Math.max(1,bounds.end-bounds.start)},(_,i)=>bounds.start+i).map(hour=>{
+  const hourly=needsDoctor&&!doctor?'':Array.from({length:Math.max(1,bounds.end-bounds.start)},(_,i)=>bounds.start+i).map(hour=>{
     const h=String(hour).padStart(2,'0');
     const within=times.filter(t=>t.startsWith(h+':'));
     const blocks=within.map(t=>{
