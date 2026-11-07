@@ -3,8 +3,8 @@
 - 날짜: 2026-11-07 (KST)
 - 기준선: 공개 v0.6.0
 - 기능 브랜치: `feature/pjm-011-clinic-detail-flow`
-- 검토 PR: https://github.com/jkd04255/peujima/pull/5 (draft / main 미병합)
-- 브라우저 테스트 실행: https://github.com/jkd04255/peujima/actions/runs/42346282486
+- 검토 PR: https://github.com/jkd04255/peujima/pull/5 (G3 승인 후 main squash 병합 완료)
+- 브라우저 테스트 실행: https://github.com/jkd04255/peujima/actions/runs/42346388537 (최신 브랜치 커밋 PASS), https://github.com/jkd04255/peujima/actions/runs/42346395046 (PR 재검증 PASS)
 - 테스트 대상 구현 커밋: `f81504d3cfe6b088bbd38fd454dd057c91b1f370`
 - 테스트 워크플로 커밋: `ee5f30d6bf9bc32f17011ed45016b0d122b910c7`
 - 테스트 소스: `tests/test_pjm_011.py`
@@ -43,7 +43,7 @@ ALL PJM-011 browser cases passed
 ## 남은 위험
 - 실제 iPhone Safari/Android WebView 실기기 검증하지 않음.
 - 키보드/스크린리더 전체 조합과 모든 필터/병원/휴진일 조합에 대한 완전 회귀 테스트는 아님.
-- GitHub Pages 공개 URL에 기능이 반영된 상태가 아니므로 공개 주소 QA 없음.
+- GitHub Pages 배포 워크플로 https://github.com/jkd04255/peujima/actions/runs/42354599119 는 성공, 단 공개 URL을 직접 HTTP 요청하여 최신 버전을 수신했는지 검증하는 작업은 접속 제약으로 미완료.
 - 실제 예약/의료진/보험 자료는 합성 예시이며 진료 가능 정보가 아님.
 - 제공된 레퍼런스 스크린샷은 예약 캘린더만 보여주는 이미지이며, 병원 상세 페이지는 승인된 색·레이아웃 방향을 기반으로 구현. 실제 병원 사진은 사용하지 않음.
 
@@ -52,8 +52,10 @@ ALL PJM-011 browser cases passed
 - [x] G2 디자인 승인
 - [x] 브랜치 구현
 - [x] Playwright 자동 QA 4/4
-- [ ] 사용자 G3 배포 승인
-- [ ] main 병합
-- [ ] GitHub Pages/실기기 배포 QA
+- [x] 사용자 G3 배포 승인 — 2026-11-07 17:13 KST
+- [x] main 병합 — `6b66d1b9af4c2664ab6a7502ca5b735e5605b332`
+- [x] GitHub Pages build/deploy/report 워크플로 성공 — 실행 #42354599119
+- [ ] 공개 사이트 HTTP 본문 최신 여부 직접 확인
+- [ ] 실제 iPhone Safari 실기기 최종 QA
 
-**사용자 G3 승인 전 main 병합하지 않는다.**
+**배포 작업 성공과 실기기 검증 완료는 별개이다.**
