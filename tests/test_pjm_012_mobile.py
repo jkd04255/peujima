@@ -38,7 +38,7 @@ def run_device(browser,device,origin,name):
     page.route("**/v2/maps/sdk.js?**",lambda route:route.fulfill(status=200,content_type="application/javascript",body=MOCK_SDK))
     try:
         page.goto(origin+"#nearby",wait_until="domcontentloaded")
-        page.locator("#nearbyTitle").wait_for()
+        page.locator("#nearbyRegionForm").wait_for()
         check(page.evaluate("Boolean(window.PRZIMA_KAKAO_JS_KEY)"),f"{name}: runtime JS key not injected")
         check(page.locator("#nearbyKeyForm").count()==0,f"{name}: unexpected developer key field")
         check(page.locator(".nearby-place").count()==0,f"{name}: unexpected place list before user action")
