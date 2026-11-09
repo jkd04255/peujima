@@ -46,3 +46,8 @@
 - [ ] 실제 카카오 API 연동·iPhone Safari 추가 검증
 - [ ] **G3 공개 배포 승인**
 - [ ] `main` 병합 및 GitHub Pages 배포
+
+## 실제 API 시험 준비(2026-11-09)
+- 추가 시험: `tests/test_pjm_012_live.py`, GitHub Actions **기능 브랜치 push에서만** `PJM012_KAKAO_JS_KEY` 비공개 Secret 주입.
+- `http://localhost:8000` JavaScript SDK 도메인 등록과 Secret 등록 필요. 카카오 서버의 실제 장소 응답은 두 설정 후 확인할 예정임.
+- 키 미등록 시 live 시험은 **SKIP**이며 합성 QA 결과와 혼동하면 안 됨.
