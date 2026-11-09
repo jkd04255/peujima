@@ -68,7 +68,7 @@
       ${/^[+0-9 -]{7,25}$/.test(p.phone)?`<a href="tel:${p.phone.replace(/[^0-9+]/g,'')}">전화 걸기</a>`:''}</div>
     </article>`).join(''):`<div class="nearby-no-results">${n.status==='empty'?'선택한 반경에서 동물병원 검색 결과가 없습니다. 다른 지역 또는 반경을 선택해 주세요.':'아직 실제 병원 검색 결과가 없습니다. GPS 버튼 또는 지역명 검색을 이용해 주세요.'}</div>`;
     return `<section id="nearby-hospitals" class="nearby-section" aria-labelledby="nearbyTitle"><div class="site-width">
-      <div class="nearby-head"><div><div class="nearby-eyebrow">NEARBY / REAL PLACES</div><h2 id="nearbyTitle">내 주변,<br>가까운 동물병원.</h2><p>내 위치 또는 원하는 지역의 카카오맵 등록 동물병원을 찾아보세요.</p></div>
+      <div class="nearby-head"><div><h2 id="nearbyTitle">주변 동물병원</h2></div>
       <span class="nearby-real-badge">카카오맵 · 실제 장소 검색</span></div>
       <div class="nearby-panel"><div class="nearby-actions">
         <button class="nearby-geo" type="button" data-act="nearby-locate" ${busy?'disabled':''}>${icon('pin',17)} 내 위치로 동물병원 찾기</button>
@@ -82,7 +82,7 @@
         <p>카카오맵 JavaScript SDK 도메인 등록 후 JavaScript 키만 입력하세요. 이 입력값은 현재 브라우저 탭에만 보관합니다. Admin/REST 키는 입력하지 마세요.</p>
         <form id="nearbyKeyForm" class="nearby-key-form"><input id="nearbyKeyInput" aria-label="카카오맵 JavaScript 키" placeholder="JavaScript 키" pattern="[A-Za-z0-9]{20,64}" autocomplete="off" required><button type="submit">키 적용</button></form>
       </details>`:'' }<a href="https://map.naver.com/p/search/%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90" target="_blank" rel="noopener noreferrer">네이버 지도에서 검색하기</a></div>
-      <p class="nearby-endnote">이 구역은 실제 지도에 등록된 장소 정보로, 영업·진료 여부는 병원에 확인해 주세요. <strong>이곳에서는 실제 예약을 지원하지 않습니다.</strong> 기존 예약 기능은 아래의 <strong>가상 병원 체험</strong>을 이용해 주세요. 위치 좌표는 검색에만 이용하며 프지마 서버에 저장하지 않습니다.</p>
+      <p class="nearby-endnote">실제 장소 정보입니다. 영업·진료 여부는 병원에 확인해 주세요. <strong>실제 예약은 지원하지 않습니다.</strong> 위치는 검색에만 사용하며 저장하지 않습니다.</p>
       </div></div></section>`;
   }
   function paint(){
