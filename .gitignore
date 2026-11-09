@@ -3,3 +3,8 @@ dist/
 .env.*
 __pycache__/
 qa-screenshots/
+# Local Safari TLS test certificates (NEVER commit private keys or CA keys)
+.local-qa-*.pem
+.local-qa-*.cer
+.local-qa-*.key
+rootCA-key.pem
