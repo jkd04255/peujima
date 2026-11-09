@@ -88,3 +88,28 @@
 - [ ] 사용자의 명시적 G3 공개 배포 승인.
 - [ ] GitHub Pages Source 변경 → main 병합 → 수동 배포 (승인 전 모두 금지).
 - [ ] 실제 무료 쿼터 소진 시 대응 및 카카오 개발자 콘솔 사용량 재확인. 유료 서비스는 미승인.
+
+
+## G3 HOLD: 공개/스테이징 배포 없는 실제 iPhone Safari 테스트 준비 (2026-11-09)
+
+**사용자 결정:** G3 승인 보류. PR #7 Draft 유지. main 병합, Pages 게시 소스 변경, 공개/스테이징 배포, 유료 API 활성화 금지.
+
+### 준비한 실행 수단
+- scripts/ios_safari_lan.py: **사설 IPv4 주소에만 바인딩되는 HTTPS 테스트 서버**. 수동 입력받은 카카오 웹 JavaScript 키를 서버 RAM에만 보관, 임시 토큰 경로에서만 index/JS/CSS 제공. 접속·위치정보 로깅 및 디렉터리/인증서·키 제공 없음.
+- Windows 11 + iPhone Safari 실제 연결/인증서 설치/카카오 JS SDK 사설 IP 등록/검증 체크리스트/종료·제거 절차: **docs/QA_PJM-012_IPHONE_LAN.md**
+- 테스트 서버 실행 시 생성되는 HTTP/TLS 내용은 개발 PC의 사설 LAN에서만 제공되며, 외부 호스팅·터널/포트 포워딩은 사용하지 않음.
+- 테스트 완료 후 mkcert 테스트 인증서·iPhone 신뢰 설정과 카카오 사설 IP 도메인을 임시 설정에서 제거하도록 문서화함.
+- 실제 기기 테스트에 앞서 Kakao 실제 API 호출 시 사용자가 허용한 위치가 **카카오 서버에 전달됨**을 고지.
+
+### 준비 검증
+- tests/test_pjm_012_lan.py: 사설 IP 검증, 접근 토큰 없을 때 404, 디렉터리·키파일 접근 차단, HTTP 캐시 방지, 메모리 키 주입 테스트(가짜 테스트 키만 사용).
+- GitHub Actions의 기존 Chromium/WebKit/axe/카카오 실 API/가상 예약 QA와 함께 성공: https://github.com/jkd04255/peujima/actions/runs/42578947736
+- 단위 테스트는 로컬 HTTP fixture로 경로 검증을 수행함. 실제 iPhone Safari의 신뢰된 LAN HTTPS와 GPS 호출을 **실행했다고 간주하지 않음**.
+
+### 실제 기기 검증 대기
+- [ ] Windows PC·iPhone 동일 Wi-Fi / 신뢰된 HTTPS / SDK 도메인 허용 실험
+- [ ] 실제 iPhone Safari에서 사용자 위치 권한 요청/허용/거부, 실제 카카오 병원 검색
+- [ ] 지도 터치·지역 입력·반경 변경·가로 넘침·모바일 화면 확대
+- [ ] 기존 프지마 강아지·고양이·전체 모드 및 가상 예약/보험 회귀
+- [ ] 사용자 시험 결과를 개인정보·실제 위치·키·토큰 없이 PASS/FAIL로 기록
+- [ ] **G3는 시험이 완료돼도 별도 명시적 사용자 승인이 있을 때까지 HOLD**
