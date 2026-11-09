@@ -148,3 +148,16 @@
   .pjm013-bottom-nav .pjm013-nav-name{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.pjm013-service-card,.pjm013-nav-item{transition:none}}
+
+/* Sticky service navigation must not be trapped by the legacy .app overflow scroller. */
+.app:has(.pjm013-header){overflow:clip}
+/* WCAG contrast hardening of 11-12px secondary copy on cream and white. */
+.pjm013-eyebrow{color:#4e6252}
+.pjm013-nav-item small{color:#546457}
+.pjm013-home-title>p{color:#526254}
+.pjm013-panel-heading span{color:#4c6451}
+.pjm013-panel-note{color:#4a5c4e}
+.pjm013-home-divider{color:#4e6254}
+.pjm013-condition-row>p{color:#566656}
+.pjm013-card-num{opacity:1}
+.pjm013-service-card.is-real .pjm013-card-num{color:#edf5ed}
