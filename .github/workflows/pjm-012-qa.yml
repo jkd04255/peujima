@@ -1,0 +1,64 @@
+name: PJM-012 GPS nearby hospitals QA (branch and PR only)
+on:
+  push:
+    branches:
+      - feature/pjm-012-kakao-nearby
+  pull_request:
+    branches:
+      - main
+    paths:
+      - index.html
+      - pjm012-nearby.js
+      - pjm012-nearby.css
+      - tests/test_pjm_012.py
+      - tests/test_pjm_012_live.py
+      - tests/test_pjm_012_build.py
+      - tests/test_pjm_012_mobile.py
+      - tests/test_pjm_012_accessibility.py
+      - tests/test_pjm_012_lan.py
+      - scripts/ios_safari_lan.py
+      - scripts/build_pages.py
+      - .github/workflows/pjm-012-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    name: Chromium responsive Kakao mock and PJM-011 regression
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install "playwright==1.56.0"
+      - name: Verify LAN-only Safari test access is restricted
+        run: python tests/test_pjm_012_lan.py
+      - name: Verify release output has auto JS key and fails closed if key missing
+        run: python tests/test_pjm_012_build.py
+      - run: python -m playwright install --with-deps chromium webkit
+      - name: Install axe-core for local WCAG test (runner only)
+        run: npm install --no-save --no-package-lock --ignore-scripts axe-core@4.10.3
+      - name: PJM-012 mock Kakao SDK, GPS and responsive QA
+        run: python tests/test_pjm_012.py
+      - name: PJM-012 iPhone/iPad WebKit touch and GPS-denial checks
+        run: python tests/test_pjm_012_mobile.py
+      - name: PJM-012 axe WCAG 2.2 A/AA and keyboard focus QA
+        run: python tests/test_pjm_012_accessibility.py
+      - name: PJM-011 legacy booking regression QA
+        run: python tests/test_pjm_011.py
+      - name: PJM-012 REAL Kakao SDK smoke QA (only branch push, no deploy)
+        if: github.event_name == 'push'
+        env:
+          PJM012_KAKAO_JS_KEY: ${{ secrets.PJM012_KAKAO_JS_KEY }}
+        run: python tests/test_pjm_012_live.py
+      - name: QA screenshots (simulated locations, never live Kakao)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pjm-012-mock-qa-screenshots
+          path: qa-screenshots/
+          if-no-files-found: ignore
