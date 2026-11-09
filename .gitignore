@@ -8,3 +8,4 @@ qa-screenshots/
 .local-qa-*.cer
 .local-qa-*.key
 rootCA-key.pem
+rootCA.pem
