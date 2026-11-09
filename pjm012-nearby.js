@@ -78,10 +78,10 @@
       <div class="nearby-map-wrap"><div id="nearbyKakaoMap" role="region" aria-label="카카오맵 주변 동물병원 지도"><div class="nearby-map-placeholder">${icon('pin',25)}<strong>주변 동물병원 지도</strong><span>API 연결 및 검색 후 실제 장소 마커가 표시됩니다.</span></div></div></div>
       <div class="nearby-results-title"><h3>검색된 동물병원</h3><span>${n.status==='ready'?n.results.length+'곳 · 가까운 순':'카카오맵 검색 결과'}</span></div>
       <div class="nearby-results" aria-live="polite">${list}</div>
-      <div class="nearby-settings"><details ${n.status==='key-required'?'open':''}><summary>개발용 JavaScript 키 설정</summary>
+      <div class="nearby-settings">${!window.PRZIMA_KAKAO_JS_KEY?`<details ${n.status==='key-required'?'open':''}><summary>개발용 JavaScript 키 설정</summary>
         <p>카카오맵 JavaScript SDK 도메인 등록 후 JavaScript 키만 입력하세요. 이 입력값은 현재 브라우저 탭에만 보관합니다. Admin/REST 키는 입력하지 마세요.</p>
         <form id="nearbyKeyForm" class="nearby-key-form"><input id="nearbyKeyInput" aria-label="카카오맵 JavaScript 키" placeholder="JavaScript 키" pattern="[A-Za-z0-9]{20,64}" autocomplete="off" required><button type="submit">키 적용</button></form>
-      </details><a href="https://map.naver.com/p/search/%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90" target="_blank" rel="noopener noreferrer">네이버 지도에서 검색하기</a></div>
+      </details>`:'' }<a href="https://map.naver.com/p/search/%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90" target="_blank" rel="noopener noreferrer">네이버 지도에서 검색하기</a></div>
       <p class="nearby-endnote">이 구역은 실제 지도에 등록된 장소 정보로, 영업·진료 여부는 병원에 확인해 주세요. <strong>이곳에서는 실제 예약을 지원하지 않습니다.</strong> 기존 예약 기능은 아래의 <strong>가상 병원 체험</strong>을 이용해 주세요. 위치 좌표는 검색에만 이용하며 프지마 서버에 저장하지 않습니다.</p>
       </div></div></section>`;
   }
