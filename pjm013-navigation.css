@@ -299,3 +299,105 @@
   .pjm013-service-card strong{font-size:16px}
   .pjm013-service-card>span:last-child{font-size:9px}
 }
+
+
+/* PJM-014 / functional-first cleanup
+   The photography, palette, booking controls, live-place search and legally
+   meaningful real-vs-demo disclosures stay untouched. This layer removes
+   presentation-only chapter labels and oversized introductory spacing. */
+.pjm014-sr-only{
+  position:absolute!important;
+  width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;border:0!important;
+}
+/* Preserve a perceivable keyboard focus if a route focuses its h1. */
+.pjm014-sr-only:focus-visible{outline:0}
+
+/* Landing: let the existing pet portraits lead, then show usable controls. */
+.pjm013-home{padding-top:21px;padding-bottom:42px}
+.pjm013-search-panel{box-shadow:0 6px 24px rgba(46,66,49,.055)}
+.pjm013-home-top{margin-bottom:16px}
+.pjm013-home-services{gap:10px}
+.pjm013-service-card,.pjm013-service-card.is-real{min-height:154px;padding:19px 21px}
+.pjm013-service-card strong{margin:20px 0 7px;font-size:clamp(20px,2.1vw,27px)}
+.pjm013-condition-row{margin-top:30px}
+.pjm013-desktop-nav .pjm013-nav-item{align-items:center;min-width:105px}
+
+/* Nearby: remove the redundant full-page introduction entirely. The existing
+   title, search, GPS, map and real-booking warning remain in the tool itself. */
+.pjm013-page--nearby .nearby-section{padding:33px 0 66px}
+.pjm013-page--nearby .nearby-head{align-items:center;margin-bottom:20px}
+.pjm013-page--nearby .nearby-head h2{
+  font-size:clamp(25px,3.1vw,34px);line-height:1.3;
+  letter-spacing:-.055em;margin:0
+}
+.pjm013-page--nearby .nearby-head p,
+.pjm013-page--nearby .nearby-eyebrow{display:none}
+.pjm013-page--nearby .nearby-real-badge{
+  border:0;border-radius:7px;padding:7px 10px;
+  background:#e7efe5;color:#385a40;font-size:11px
+}
+.pjm013-page--nearby .nearby-panel{box-shadow:none}
+
+/* Booking and specialties: keep interactive categories, catalog, 7-day
+   scheduling, doctors and synthetic-data warnings; suppress sales-like copy. */
+.pjm013-page--clinics .specialties{padding-top:35px;padding-bottom:34px}
+.pjm013-page--clinics .clinic-section{padding-top:35px}
+.pjm013-page--clinics .section-top{margin-bottom:22px;align-items:center}
+.pjm013-page--clinics .section-top h2{
+  font-size:clamp(24px,3.2vw,34px);
+  line-height:1.3;letter-spacing:-.055em
+}
+.pjm013-page--clinics .section-side,
+.pjm013-page--clinics .clinic-list-hint,
+.pjm013-page--clinics .clinic-detail-overline,
+.pjm013-page--clinics .clinic-visit-kicker,
+.pjm013-page--clinics .clinic-booking-heading>span,
+.pjm013-page--clinics .clinic-booking-heading>p,
+.pjm013-page--clinics .clinic-profile-banner>span:first-child,
+.pjm013-page--clinics .clinic-visit-card>p:not(.clinic-visit-note){display:none}
+.pjm013-page--clinics .clinic-detail-screen{padding-top:29px}
+.pjm013-page--clinics .clinic-booking-heading{margin-bottom:18px}
+
+/* Insurance: users can begin from the selectors; all terms and disclaimers
+   remain visible in their original positions. */
+.pjm013-page--insurance .insurance{padding-top:37px;padding-bottom:58px}
+.pjm013-page--insurance .insurance h2{
+  font-size:clamp(27px,3.7vw,40px);
+  letter-spacing:-.055em
+}
+.pjm013-page--insurance .insurance-intro,
+.pjm013-page--insurance .insurance-stat,
+.pjm013-page--insurance .insurance-card .form-head{display:none}
+.pjm013-page--insurance .insurance-card h3{
+  font-size:clamp(20px,2.3vw,26px);
+  line-height:1.35;margin:0 0 19px
+}
+/* Pop-ups: remove decorative English series labels, not the functional
+   headings, receipt values, caution text or '시연' badges. */
+.modal-bg .eyebrow,
+.booking-receipt-caption{display:none}
+@media(max-width:850px){
+  .pjm013-home{padding:18px 0 38px}
+  .pjm013-home-top{margin-bottom:12px}
+  .pjm013-service-card,.pjm013-service-card.is-real{min-height:138px;padding:16px}
+  .pjm013-service-card strong{font-size:21px;margin:21px 0 5px}
+  .pjm013-condition-row{margin-top:27px}
+  .pjm013-page--nearby .nearby-section{padding:26px 0 60px}
+  .pjm013-page--clinics .specialties{padding-top:26px;padding-bottom:28px}
+  .pjm013-page--clinics .clinic-section{padding-top:28px}
+  .pjm013-page--insurance .insurance{padding-top:30px}
+}
+@media(max-width:620px){
+  .pjm013-home{padding:16px 0 35px}
+  .pjm013-service-card,.pjm013-service-card.is-real{min-height:131px;padding:14px 12px}
+  .pjm013-service-card strong{font-size:17px;margin:23px 0 5px}
+  .pjm013-condition-row{margin-top:25px}
+  .pjm013-page--nearby .nearby-head{align-items:flex-start;gap:9px}
+  .pjm013-page--nearby .nearby-head h2{font-size:26px}
+  .pjm013-page--nearby .nearby-real-badge{font-size:10px;padding:5px 7px}
+  .pjm013-page--clinics .section-top h2{font-size:25px}
+  .pjm013-page--clinics .clinic-section{padding-top:26px}
+}
