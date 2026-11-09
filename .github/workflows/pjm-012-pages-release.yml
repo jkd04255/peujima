@@ -1,0 +1,58 @@
+name: PJM-012 G3-only manual Pages release
+# IMPORTANT: Intentionally no push/PR triggers. G3 approval required.
+# This workflow remains dormant on the feature branch.
+on:
+  workflow_dispatch:
+    inputs:
+      g3_release:
+        description: "Only after explicit PJM-012 G3 approval and Pages Source switched to GitHub Actions"
+        type: choice
+        options:
+          - NOT_APPROVED
+          - PJM-012_G3_APPROVED
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: przima-pages-manual
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main' && inputs.g3_release == 'PJM-012_G3_APPROVED'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify static build logic without real keys
+        run: python tests/test_pjm_012_build.py
+      - name: Build deployable site using domain-restricted PUBLIC Kakao JS key
+        env:
+          PJM012_KAKAO_JS_KEY: ${{ secrets.PJM012_KAKAO_JS_KEY }}
+        run: python scripts/build_pages.py --output dist
+      - name: Upload prepared Pages files (only on approved manual release)
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && inputs.g3_release == 'PJM-012_G3_APPROVED'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy explicitly approved release
+        id: deployment
+        uses: actions/deploy-pages@v4
