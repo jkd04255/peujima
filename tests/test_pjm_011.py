@@ -21,7 +21,7 @@ def run_case(browser, width, height):
     errors=[]
     page.on("pageerror", lambda e: errors.append(str(e)))
     try:
-        page.goto(APP.as_uri(), wait_until="load")
+        page.goto(APP.as_uri()+"#clinics", wait_until="load")
         page.locator(".clinic-explore-card").first.wait_for(timeout=15000)
         require(page.locator(".clinic-explore-card").count()==5, f"{width}: all-mode catalog should show five synthetic clinics")
         require(page.locator(".cal-date").count()==0, f"{width}: catalog unexpectedly includes calendar")
@@ -57,6 +57,8 @@ def run_case(browser, width, height):
         require("포근한 동물메디컬센터" in page.locator(".booking-receipt").inner_text(), f"{width}: booking receipt points at wrong clinic")
         page.locator('[data-act="booking-insurance"]').click()
         require(not page.locator(".booking-modal").count(), f"{width}: insurance transition left modal open")
+        require(page.locator("#insurance").count()==1, f"{width}: insurance page missing after booking transition")
+        page.locator('[data-act="nav-page"][data-val="clinics"]:visible').first.click()
 
         page.locator('[data-act="clinic-collapse"]').click()
         require(page.locator(".cal-date").count()==0, f"{width}: calendar remained visible after collapse")
