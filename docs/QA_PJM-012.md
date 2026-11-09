@@ -60,3 +60,31 @@
 - 실제 Kakao 응답: 동물병원 14곳, 지도 로드 성공, 카카오맵 상세보기 링크 및 가로 넘침·JS 오류 확인 통과.
 - 기존 320/390/768/1440 모의 API 및 PJM-011 가상 예약 회귀는 동일 재실행에서 통과.
 - **실서비스 도메인 `https://jkd04255.github.io`의 실 API, iPhone Safari 현장 GPS 및 배포 사이트 검증은 아직 미실시.** PJM-012는 main 미병합, G3 미승인.
+
+## PJM-012 G3 전 필수 보완 및 모바일/접근성 QA (2026-11-09)
+
+### 구현/릴리스 게이트
+- `scripts/build_pages.py`: Actions Secret의 **공개 가능한 Kakao JS 키**를 `dist/index.html`에서만 `pjm012-nearby.js` 로딩 이전에 주입. 저장소 소스는 미변경, 키가 없으면 빌드 실패.
+- `.github/workflows/pjm-012-pages-release.yml`: **G3 승인 후 main에서만 수동 실행**. `workflow_dispatch` 외 push/PR 배포 트리거 없음; main + `PJM-012_G3_APPROVED` 입력 두 조건에서만 빌드/배포. 현재 실행되지 않음.
+- **중요**: 실제 G3 때 `main` 병합 **전에** Pages 설정을 branch source에서 `GitHub Actions`로 변경해야 함. 그렇지 않으면 branch 자동 게시로 키 없는 화면이 공개될 위험. 이번 단계에서 Pages 설정/배포 전혀 변경 없음.
+- 일반 방문자는 승인된 정식 빌드에서 키 입력창을 볼 필요가 없으며, `window.PRZIMA_KAKAO_JS_KEY`가 미리 주입됨. JS 키는 공개 HTML의 웹키로 보이는 것이 정상이며 도메인 제한·무료 쿼터 관리가 중요.
+
+### 실패 및 수정 기록
+- axe 첫 실행 https://github.com/jkd04255/peujima/actions/runs/42558477077 — **신규 주변 병원 영역의 낮은 보조 문구 대비** 위반 발견. PJM-012 전용 CSS에서 보조 글자색 대비를 개선하고 재검증.
+- 모바일 Safari 유사 환경에서 입력창 자동 확대를 방지하기 위해 620px 이하 입력 글자 크기 `16px` 및 터치 영역 `44px` 조정.
+
+### 최종 자동검사
+- **실제 기능 브랜치 push QA 성공**: https://github.com/jkd04255/peujima/actions/runs/42558621988
+- 빌드 단위: synthetic 공개 키 사전 주입, key absent fail-closed, 변경 전 소스 보존 — **PASS**.
+- Playwright Chromium: 320×700, 390×844, 768×1024, 1440×900, mock Kakao/GPS 승인·거절·지역 검색·반경/결과 0건, 기존 가상 예약 회귀 — **PASS**.
+- **Playwright WebKit** (Linux, Safari 엔진 근사): iPhone 13 및 iPad 7세대 viewport, 탭/터치 GPS, 자동 키 제공, 지도 마커·지역 입력·반경, GPS 권한 거부 대안 — **PASS**. *실제 iPhone Safari 기기 검증 아님*.
+- **axe-core 4.10.3**, 신규 `#nearby-hospitals` 영역만: WCAG 2.2 A/AA tag 기반 검사, 320/390/768/1440px 각각 초기/결과 상태 **총 8회에서 자동 위반 0건**. 키보드 지역검색 입력→검색 버튼 포커스 이동 확인 — **PASS**. *전체 사이트·실제 스크린리더 모든 접근성 기준 충족으로 간주하지 않음*.
+- **실제 카카오 서버 검증**: `http://localhost:8000`에서 Actions Secret을 빌드 주입한 후 별도 방문자 키 입력 없이 **고정 서울시청 위치 기준 동물병원 14곳** 검색, 지도 로드/스크립트 오류 없음 — **PASS**. 실사용자 GPS 미사용. 최종 GitHub Pages 도메인 검증 아님.
+- 전체 테스트 로그와 두 모의 모바일 스크린샷은 위 성공 실행에서 확인 가능.
+
+### 계속 보류
+- [ ] **실기기 iPhone Safari** 위치 권한 허용/거부·실제 GPS·수동 검색·터치·스크롤·확대/축소 확인.
+- [ ] 실제 GitHub Pages `https://jkd04255.github.io` origin의 JavaScript SDK 허용 확인 및 배포 후 내용 확인(아직 미배포).
+- [ ] 사용자의 명시적 G3 공개 배포 승인.
+- [ ] GitHub Pages Source 변경 → main 병합 → 수동 배포 (승인 전 모두 금지).
+- [ ] 실제 무료 쿼터 소진 시 대응 및 카카오 개발자 콘솔 사용량 재확인. 유료 서비스는 미승인.
