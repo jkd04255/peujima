@@ -58,7 +58,7 @@ def live_search_case(browser,origin,width,height):
     page.route("**/v2/maps/sdk.js?**",lambda route:route.fulfill(status=200,content_type="application/javascript",body=MOCK_SDK))
     try:
         page.goto(origin+"#nearby",wait_until="load")
-        page.locator("#nearbyTitle").wait_for()
+        page.locator("#nearbyRegionForm").wait_for()
         assert_true(page.locator(".clinic-explore-card").count()==0,f"{width}: live search must not mix with demo bookings")
         assert_true(page.locator(".nearby-place").count()==0,f"{width}: should not invent live places")
         assert_true(page.evaluate("window.__kakaoCalls===undefined"),f"{width}: SDK loaded before explicit user request")

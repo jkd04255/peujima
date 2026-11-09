@@ -83,9 +83,9 @@ def verify(browser,origin,width,height):
 
         tab(page,"nearby",mobile)
         check_page(page,"nearby")
-        check(page.locator("#nearbyTitle").is_visible(),f"{width}: nearby screen missing")
+        check(page.locator("#nearbyRegionForm").is_visible(),f"{width}: nearby search controls missing")
         check(page.locator(".nearby-eyebrow").count()==0,f"{width}: decorative English label still in nearby")
-        check(page.locator("#nearbyTitle").inner_text()=="주변 동물병원",f"{width}: compact nearby title missing")
+        check(page.locator(".nearby-head").count()==0,f"{width}: duplicated nearby heading block remains")
         check("실제 예약" in page.locator(".nearby-endnote").inner_text(),f"{width}: real booking warning missing")
         check(page.locator(".clinic-explore-card").count()==0,f"{width}: live and demo mixed")
 

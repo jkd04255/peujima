@@ -53,7 +53,7 @@ def main():
                     errors=[]
                     page.on("pageerror",lambda exc:errors.append(str(exc)))
                     page.goto("http://localhost:8000/#nearby",wait_until="domcontentloaded")
-                    page.locator("#nearbyTitle").wait_for(timeout=15000)
+                    page.locator("#nearbyRegionForm").wait_for(timeout=15000)
 
                     if not page.evaluate("Boolean(window.PRZIMA_KAKAO_JS_KEY)"):
                         raise AssertionError("Public JS key was not auto-configured by the release build")

@@ -67,9 +67,7 @@
       <div class="nearby-place-links"><a href="https://place.map.kakao.com/${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">카카오맵 상세 보기 ${icon('arrow',13)}</a>
       ${/^[+0-9 -]{7,25}$/.test(p.phone)?`<a href="tel:${p.phone.replace(/[^0-9+]/g,'')}">전화 걸기</a>`:''}</div>
     </article>`).join(''):`<div class="nearby-no-results">${n.status==='empty'?'선택한 반경에서 동물병원 검색 결과가 없습니다. 다른 지역 또는 반경을 선택해 주세요.':'아직 실제 병원 검색 결과가 없습니다. GPS 버튼 또는 지역명 검색을 이용해 주세요.'}</div>`;
-    return `<section id="nearby-hospitals" class="nearby-section" aria-labelledby="nearbyTitle"><div class="site-width">
-      <div class="nearby-head"><div><h2 id="nearbyTitle">주변 동물병원</h2></div>
-      <span class="nearby-real-badge">카카오맵 · 실제 장소 검색</span></div>
+    return `<section id="nearby-hospitals" class="nearby-section" aria-label="주변 동물병원 검색"><div class="site-width">
       <div class="nearby-panel"><div class="nearby-actions">
         <button class="nearby-geo" type="button" data-act="nearby-locate" ${busy?'disabled':''}>${icon('pin',17)} 내 위치로 동물병원 찾기</button>
         <form id="nearbyRegionForm" class="nearby-region-form"><input id="nearbyRegionInput" required maxlength="80" aria-label="동물병원 검색할 지역" placeholder="동네 또는 역 이름 · 예: 수원역"><button type="submit" ${busy?'disabled':''}>지역 검색</button></form>
