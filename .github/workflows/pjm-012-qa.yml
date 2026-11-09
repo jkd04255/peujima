@@ -11,6 +11,7 @@ on:
       - pjm012-nearby.js
       - pjm012-nearby.css
       - tests/test_pjm_012.py
+      - tests/test_pjm_012_live.py
       - .github/workflows/pjm-012-qa.yml
   workflow_dispatch:
 
@@ -33,6 +34,11 @@ jobs:
         run: python tests/test_pjm_012.py
       - name: PJM-011 legacy booking regression QA
         run: python tests/test_pjm_011.py
+      - name: PJM-012 REAL Kakao SDK smoke QA (only branch push, no deploy)
+        if: github.event_name == 'push'
+        env:
+          PJM012_KAKAO_JS_KEY: ${{ secrets.PJM012_KAKAO_JS_KEY }}
+        run: python tests/test_pjm_012_live.py
       - name: QA screenshots (simulated locations, never live Kakao)
         if: always()
         uses: actions/upload-artifact@v4
