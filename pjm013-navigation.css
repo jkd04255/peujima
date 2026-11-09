@@ -161,3 +161,12 @@
 .pjm013-condition-row>p{color:#566656}
 .pjm013-card-num{opacity:1}
 .pjm013-service-card.is-real .pjm013-card-num{color:#edf5ed}
+
+/* Legacy photography remains as a calm brand story; the old hero search,
+   duplicate mode chips, and rotating service links no longer compete
+   with the new primary service navigator. No underlying functions removed. */
+.pjm013-home-legacy .service-rotator,
+.pjm013-home-legacy .service-dots,
+.pjm013-home-legacy .hero-search,
+.pjm013-home-legacy .hero-modes,
+.pjm013-home-legacy .hero-demo-note{display:none}
