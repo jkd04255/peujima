@@ -61,3 +61,9 @@
 .nearby-place-links a:focus-visible,.nearby-settings summary:focus-visible{
   outline:3px solid #ae8259;outline-offset:3px
 }
+
+/* PJM-012 axe contrast findings: muted metadata must remain WCAG-readable. */
+.nearby-radius,.nearby-results-title>span,.nearby-no-results,
+.nearby-head p,.nearby-place p,.nearby-endnote,
+.nearby-map-placeholder,.nearby-settings details,
+.nearby-status{color:#455b49}
