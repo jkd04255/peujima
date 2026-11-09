@@ -59,6 +59,13 @@ def verify(browser,origin,width,height):
         check(page.evaluate("window.__kakaoCalls===undefined"),f"{width}: SDK loaded before user request")
         check(page.locator(".pjm013-bottom-nav").is_visible()==mobile,f"{width}: mobile nav visibility")
         check(not page.evaluate("document.documentElement.scrollWidth>window.innerWidth+2"),f"{width}: home overflow")
+        page.evaluate("window.scrollTo(0, 700)")
+        check(abs(page.evaluate("document.querySelector('.pjm013-header').getBoundingClientRect().top"))<3,
+              f"{width}: sticky service header is not retained on scroll")
+        if mobile:
+            check(page.evaluate("document.querySelector('.pjm013-bottom-nav').getBoundingClientRect().bottom <= window.innerHeight + 1"),
+                  f"{width}: persistent bottom tab bar not at viewport foot")
+        page.evaluate("window.scrollTo(0, 0)")
         if width==390:page.screenshot(path=str(OUT/"pjm-013-390-home.png"),full_page=True)
 
         tab(page,"nearby",mobile)
