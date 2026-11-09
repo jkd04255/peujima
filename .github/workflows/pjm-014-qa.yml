@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/pjm-014-functional-cleanup
+      - feature/pjm-015-remove-duplicate-headers
   pull_request:
     branches:
       - main
@@ -10,6 +11,10 @@ on:
       - index.html
       - pjm013-navigation.css
       - pjm013-navigation.js
+      - pjm012-nearby.js
+      - tests/test_pjm_012_mobile.py
+      - tests/test_pjm_012.py
+      - tests/test_pjm_012_live.py
       - scripts/build_pages.py
       - scripts/ios_safari_lan.py
       - tests/test_pjm_013_navigation.py
