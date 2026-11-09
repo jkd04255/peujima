@@ -31,7 +31,9 @@ def check_page(page,slug):
     check(page.evaluate("state.page")==slug,f"wrong page state: expected {slug}")
     check(page.evaluate("location.hash")=="#"+slug,f"wrong route URL: {slug}")
     check(page.locator(".pjm013-page--"+slug).count()==1,f"no main for {slug}")
-    check(page.locator(".pjm013-page--"+slug+" .pjm013-page-heading").count()==(slug!="home"),"page heading mismatch")
+    check(page.locator(".pjm013-page--"+slug+" .pjm013-page-heading").count()==0,"old PPT introduction is still rendered")
+    if slug!="home":
+        check(page.locator("#pjm013PageTitle.pjm014-sr-only").count()==1,"accessible page title missing")
 
 def verify(browser,origin,width,height):
     mobile=width<=850
@@ -82,6 +84,9 @@ def verify(browser,origin,width,height):
         tab(page,"nearby",mobile)
         check_page(page,"nearby")
         check(page.locator("#nearbyTitle").is_visible(),f"{width}: nearby screen missing")
+        check(page.locator(".nearby-eyebrow").count()==0,f"{width}: decorative English label still in nearby")
+        check(page.locator("#nearbyTitle").inner_text()=="주변 동물병원",f"{width}: compact nearby title missing")
+        check("실제 예약" in page.locator(".nearby-endnote").inner_text(),f"{width}: real booking warning missing")
         check(page.locator(".clinic-explore-card").count()==0,f"{width}: live and demo mixed")
 
         tab(page,"clinics",mobile)
