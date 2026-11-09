@@ -48,7 +48,18 @@ def verify(browser,origin,width,height):
         status=200,content_type="application/javascript",body=MOCK_SDK))
     try:
         page.goto(origin,wait_until="load")
-        check(page.locator(".pjm013-home h1").count()==1,f"{width}: no hub headline")
+        check(page.locator(".pjm013-home h2#pjm013HomeTitle").inner_text()=="동물병원 찾기", f"{width}: primary search heading missing")
+        check(page.locator(".pjm013-home-legacy .hero-v4 h1").count()==1,f"{width}: hero heading missing")
+        check(page.locator(".pjm013-home-legacy .hero-v4 h1").inner_text()=="함께하는 모든 날이 건강하기를.",f"{width}: incorrect hero message")
+        check(page.evaluate("document.querySelector('.pjm013-home-legacy').compareDocumentPosition(document.querySelector('.pjm013-home')) & Node.DOCUMENT_POSITION_FOLLOWING")>0,
+              f"{width}: pet portrait must appear BEFORE search and service cards")
+        visible_text=page.locator("body").inner_text()
+        for removed in ("아프지마.", "우리, 오래 보자.", "THE PRZIMA STORY", "FIND THE RIGHT CARE", "OUR SERVICES", "DISCOVER BY CARE", "필요한 서비스로 바로 이동하세요."):
+            check(removed not in visible_text, f"{width}: noisy copy still visible: {removed}")
+        check("실제 병원" in visible_text and "가상 체험" in visible_text,f"{width}: required real/demo labels were removed")
+        check(page.locator(".pjm013-footer").count()==1,f"{width}: missing slim footer")
+        check(page.evaluate("document.querySelector('.pjm013-footer').getBoundingClientRect().height")<185,
+              f"{width}: oversized slogan footer was not removed")
         check(page.locator("#pjm013RegionForm").is_visible(),f"{width}: primary search missing")
         check(page.locator(".pjm013-home-services .pjm013-service-card").count()==3,f"{width}: service choices missing")
         check(page.locator(".hero-pet").count()>=2,f"{width}: pet images lost")
