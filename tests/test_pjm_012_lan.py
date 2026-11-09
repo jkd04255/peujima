@@ -43,7 +43,7 @@ def main():
     html=html_with_public_js_key(TEST_KEY)
     assert b'window.PRZIMA_KAKAO_JS_KEY = "aaaaaaaa' in html
     assert html.index(b"PRZIMA_KAKAO_JS_KEY")<html.index(b'./pjm012-nearby.js')
-    assert b"nearby-hospitals" in html
+    assert b"pjm012-nearby.js" in html and b"pjm013-navigation.js" in html
 
     server=ThreadingHTTPServer(("127.0.0.1",0),handler_for(TEST_KEY,TOKEN))
     threading.Thread(target=server.serve_forever,daemon=True).start()
