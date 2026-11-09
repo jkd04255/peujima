@@ -170,3 +170,132 @@
 .pjm013-home-legacy .hero-search,
 .pjm013-home-legacy .hero-modes,
 .pjm013-home-legacy .hero-demo-note{display:none}
+
+
+/* PJM-013 minimal home v2 — original pet-photo hero FIRST, zero decorative labels.
+ * Keep one line of branding, a functional search, concise service names and
+ * the real-vs-demo disclosure. Previous design is snapshotted on a backup branch.
+ */
+.pjm013-home-legacy{background:#faf8f4}
+.pjm013-home-legacy .hero-v4{min-height:0}
+.pjm013-home-legacy .hero-v4-inner{padding-bottom:25px}
+.pjm013-home-legacy .hero-v4-heading{
+  font-size:clamp(21px,2.5vw,33px);
+  line-height:1.32;
+  font-weight:670;
+  letter-spacing:-.065em;
+  text-align:center;
+  margin:0;
+}
+.pjm013-home-legacy .hero-v4-heading strong{font-weight:820}
+.pjm013-home{padding:29px 0 66px}
+.pjm013-home-top{display:block;max-width:850px;margin:0 auto 23px}
+.pjm013-search-panel{padding:28px 32px 25px;box-shadow:0 8px 35px #5066530d}
+.pjm013-search-panel h2{
+  margin:0 0 19px;
+  color:#2e4133;
+  font-size:clamp(23px,2.8vw,29px);
+  font-weight:780;
+  line-height:1.35;
+  letter-spacing:-.06em;
+}
+.pjm013-search-form>label{font-size:12px;color:#4c6151}
+.pjm013-panel-note{font-size:11px;line-height:1.6;margin:14px 0 0}
+.pjm013-home-services{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 auto}
+.pjm013-service-card,
+.pjm013-service-card.is-real{
+  min-height:188px;
+  padding:23px 24px;
+}
+.pjm013-service-card strong{
+  font-size:clamp(22px,2.45vw,30px);
+  letter-spacing:-.065em;
+  margin:24px 0 9px;
+  line-height:1.3;
+}
+.pjm013-service-card .pjm013-card-num{font-size:11px;font-weight:750}
+.pjm013-service-card>span:last-child{font-size:12px;line-height:1.5}
+.pjm013-condition-row{grid-template-columns:1fr 2fr;margin-top:48px;gap:16px 24px}
+.pjm013-condition-row h2{
+  margin:0;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+  font-size:24px;
+  line-height:1.25;
+}
+.pjm013-condition-row h2 span{
+  font-size:10px;
+  letter-spacing:0;
+  color:#4c6451;
+  font-weight:650;
+  background:#e7ede3;
+  border-radius:6px;
+  padding:5px 8px;
+}
+.pjm013-condition-chips button{font-size:12px}
+.footer.pjm013-footer{
+  background:#eef1ec!important;
+  padding:30px 0 34px!important;
+  min-height:0!important;
+  border-top:1px solid #e0e5dd;
+}
+.pjm013-footer-row{display:flex;align-items:center;justify-content:space-between;gap:22px}
+.pjm013-footer-row>span{font-size:11px;font-weight:750;letter-spacing:.05em;color:#405246}
+.pjm013-footer-row p{font-size:11px;line-height:1.6;color:#526358;margin:0;word-break:keep-all}
+.pjm013-footer-row button{
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#405c46;
+  font:inherit;
+  font-weight:720;
+  font-size:12px;
+  min-height:44px;
+  padding:8px 2px;
+  background:transparent;
+  border:0;
+  cursor:pointer;
+}
+.pjm013-footer-row button:focus-visible{outline:3px solid #97a77b;outline-offset:3px}
+@media(max-width:850px){
+  .pjm013-home{padding:25px 0 55px}
+  .pjm013-home-top{margin-bottom:13px}
+  .pjm013-home-services{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .pjm013-service-card,.pjm013-service-card.is-real{grid-column:auto;min-height:170px;padding:18px}
+  .pjm013-service-card strong{font-size:23px;margin:20px 0 8px}
+  .pjm013-condition-row{margin-top:38px}
+}
+@media(max-width:620px){
+  .pjm013-home-legacy .hero-v4-inner{padding-bottom:24px}
+  .pjm013-home-legacy .hero-v4-heading{
+    font-size:clamp(20px,5.9vw,27px);
+    margin:0;
+    text-align:center;
+  }
+  .pjm013-home{padding:20px 0 48px}
+  .pjm013-search-panel{padding:22px 19px;border-radius:16px}
+  .pjm013-search-panel h2{font-size:23px;margin-bottom:16px}
+  .pjm013-search-row input{font-size:16px}
+  .pjm013-home-services{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .pjm013-service-card,.pjm013-service-card.is-real{
+    grid-column:auto;min-height:154px;padding:17px 12px 15px;border-radius:13px
+  }
+  .pjm013-service-card strong{font-size:18px;line-height:1.3;margin:27px 0 8px;white-space:normal;word-break:keep-all}
+  .pjm013-service-card .pjm013-card-num{font-size:10px;letter-spacing:-.02em}
+  .pjm013-service-card>span:last-child{font-size:10px;line-height:1.45}
+  .pjm013-card-arrow{right:10px;top:13px}
+  .pjm013-card-arrow svg{width:16px;height:16px}
+  .pjm013-condition-row{grid-template-columns:1fr;gap:16px;margin-top:35px}
+  .pjm013-condition-row h2{font-size:21px}
+  .pjm013-footer-row{flex-wrap:wrap;gap:7px 13px}
+  .pjm013-footer-row p{order:3;flex-basis:100%}
+  .footer.pjm013-footer{padding:22px 0 24px!important}
+}
+@media(max-width:355px){
+  .pjm013-service-card,.pjm013-service-card.is-real{padding:14px 9px}
+  .pjm013-service-card strong{font-size:16px}
+  .pjm013-service-card>span:last-child{font-size:9px}
+}

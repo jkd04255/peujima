@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/pjm-013-discovery-navigation
+      - feature/pjm-013-minimal-home-v2
   pull_request:
     branches:
       - main

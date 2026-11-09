@@ -51,46 +51,38 @@
   function home() {
     return '<section class="pjm013-home" aria-labelledby="pjm013HomeTitle">' +
       '<div class="site-width">' +
-        '<div class="pjm013-home-top"><div class="pjm013-home-title">' +
-          '<span class="pjm013-eyebrow"><span class="pjm013-dot"></span> FIND THE RIGHT CARE</span>' +
-          '<h1 id="pjm013HomeTitle">우리 아이의 오늘,<br><em>어디서부터 알아볼까요?</em></h1>' +
-          '<p>가까운 병원을 찾고, 진료 분야를 살펴보고,<br class="pjm013-desktop-only"> 예약 과정과 보험 조건까지 차근차근 알아보세요.</p>' +
+        '<div class="pjm013-home-top">' +
+          '<div class="pjm013-search-panel">' +
+            '<h2 id="pjm013HomeTitle">동물병원 찾기</h2>' +
+            '<form id="pjm013RegionForm" class="pjm013-search-form" role="search">' +
+              '<label for="pjm013RegionInput">지역 검색</label>' +
+              '<div class="pjm013-search-row">' + search +
+                '<input id="pjm013RegionInput" type="search" maxlength="80" placeholder="지역명 또는 역 이름 · 예: 수원역" autocomplete="off" />' +
+                '<button type="submit" aria-label="입력한 지역으로 실제 동물병원 검색">' + arrow + '</button>' +
+              '</div>' +
+            '</form>' +
+            '<button type="button" class="pjm013-locate" data-act="nav-nearby-locate">' + pin + ' 내 위치로 찾기 ' + arrow + '</button>' +
+            '<p class="pjm013-panel-note">카카오맵 실제 병원 정보 · 위치는 버튼을 누를 때만 확인합니다.</p>' +
+          '</div>' +
         '</div>' +
-        '<div class="pjm013-search-panel">' +
-          '<div class="pjm013-panel-heading"><span>01 / REAL LOCATION</span><strong>먼저, 가까운 병원부터.</strong></div>' +
-          '<form id="pjm013RegionForm" class="pjm013-search-form" role="search">' +
-            '<label for="pjm013RegionInput">찾고 싶은 지역을 입력해 주세요</label>' +
-            '<div class="pjm013-search-row">' + search +
-              '<input id="pjm013RegionInput" type="search" maxlength="80" placeholder="지역명 또는 역 이름 · 예: 수원역" autocomplete="off" />' +
-              '<button type="submit" aria-label="입력한 지역으로 실제 동물병원 검색">' + arrow + '</button>' +
-            '</div>' +
-          '</form>' +
-          '<button type="button" class="pjm013-locate" data-act="nav-nearby-locate">' + pin + ' 내 위치로 가까운 병원 찾기 ' + arrow + '</button>' +
-          '<p class="pjm013-panel-note">카카오맵에 등록된 실제 장소를 검색합니다. 위치는 버튼을 누른 뒤에만 요청합니다.</p>' +
-        '</div></div>' +
-        '<div class="pjm013-home-divider"><span>OUR SERVICES</span><span>필요한 서비스로 바로 이동하세요.</span></div>' +
-        '<div class="pjm013-home-services">' +
+        '<div class="pjm013-home-services" aria-label="서비스 바로가기">' +
           '<button class="pjm013-service-card is-real" type="button" data-act="nav-page" data-val="nearby">' +
-            '<span class="pjm013-card-num">01 / 실제 장소</span><span class="pjm013-card-arrow">' + arrow + '</span>' +
-            '<strong>내 주변<br>동물병원 찾기</strong><span>위치 또는 지역 검색 · 지도와 거리순 목록</span>' +
-            '<span class="pjm013-card-foot">병원 찾기 →</span></button>' +
+            '<span class="pjm013-card-num">실제 병원</span><span class="pjm013-card-arrow">' + arrow + '</span>' +
+            '<strong>병원 찾기</strong><span>지도·거리순 검색</span></button>' +
           '<button class="pjm013-service-card is-demo" type="button" data-act="nav-page" data-val="clinics">' +
-            '<span class="pjm013-card-num">02 / 체험 전용</span><span class="pjm013-card-arrow">' + arrow + '</span>' +
-            '<strong>진료과부터<br>예약 과정까지</strong><span>증상별 진료 분야 · 7일 예약 시연</span>' +
-            '<span class="pjm013-card-foot">가상 예약 체험 →</span></button>' +
+            '<span class="pjm013-card-num">가상 체험</span><span class="pjm013-card-arrow">' + arrow + '</span>' +
+            '<strong>예약 체험</strong><span>진료과·날짜 선택</span></button>' +
           '<button class="pjm013-service-card is-guide" type="button" data-act="nav-page" data-val="insurance">' +
-            '<span class="pjm013-card-num">03 / 정보 안내</span><span class="pjm013-card-arrow">' + arrow + '</span>' +
-            '<strong>펫보험,<br>가기 전에 확인</strong><span>상품별 확인 항목 · 보장 조건 안내</span>' +
-            '<span class="pjm013-card-foot">보험 안내 →</span></button>' +
+            '<span class="pjm013-card-num">정보 안내</span><span class="pjm013-card-arrow">' + arrow + '</span>' +
+            '<strong>펫보험</strong><span>보장 조건 확인</span></button>' +
         '</div>' +
-        '<div class="pjm013-condition-row"><div><span class="pjm013-eyebrow">DISCOVER BY CARE</span>' +
-          '<h2>어떤 진료가 필요하신가요?</h2></div>' +
-          '<div class="pjm013-condition-chips">' +
+        '<div class="pjm013-condition-row">' +
+          '<h2>진료 분야 <span>가상 체험</span></h2>' +
+          '<div class="pjm013-condition-chips" aria-label="가상 병원 진료과 선택">' +
             [["내과","내과"],["외과·정형","외과·정형"],["피부·알레르기","피부·알레르기"],["치과","치과"]].map(([key,label]) =>
               '<button type="button" data-act="nav-specialty" data-val="' + key + '">' + label + arrow + '</button>'
             ).join("") +
           '</div>' +
-          '<p>진료 분야별 병원·예약 정보는 현재 가상 데이터로 체험할 수 있습니다.</p>' +
         '</div>' +
       '</div></section>';
   }
