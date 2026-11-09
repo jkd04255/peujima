@@ -60,7 +60,7 @@ def main():
                     page.route("**/v2/maps/sdk.js?**",
                                lambda route:route.fulfill(status=200,content_type="application/javascript",body=MOCK_SDK))
                     try:
-                        page.goto(origin,wait_until="load")
+                        page.goto(origin+"#nearby",wait_until="load")
                         scan(page,"initial",width)
                         page.locator('[data-act="nearby-locate"]').click()
                         page.locator(".nearby-place").first.wait_for(timeout=10000)
