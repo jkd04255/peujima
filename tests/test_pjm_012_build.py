@@ -26,8 +26,10 @@ def main():
         assert html.index("window.PRZIMA_KAKAO_JS_KEY = ") < html.index(ANCHOR)
         assert (dist/"pjm012-nearby.js").is_file()
         assert (dist/"pjm012-nearby.css").is_file()
+        assert (dist/"pjm013-navigation.js").is_file()
+        assert (dist/"pjm013-navigation.css").is_file()
         assert (dist/".nojekyll").is_file()
-        assert set(x.name for x in dist.iterdir())=={"index.html","pjm012-nearby.js","pjm012-nearby.css",".nojekyll"}
+        assert set(x.name for x in dist.iterdir())=={"index.html","pjm012-nearby.js","pjm012-nearby.css","pjm013-navigation.js","pjm013-navigation.css",".nojekyll"}
         try:
             build_site(dist,"short")
         except ValueError:

@@ -37,12 +37,15 @@ def run_device(browser,device,origin,name):
     page.on("pageerror",lambda e:errors.append(str(e)))
     page.route("**/v2/maps/sdk.js?**",lambda route:route.fulfill(status=200,content_type="application/javascript",body=MOCK_SDK))
     try:
-        page.goto(origin,wait_until="domcontentloaded")
+        page.goto(origin+"#nearby",wait_until="domcontentloaded")
         page.locator("#nearbyTitle").wait_for()
         check(page.evaluate("Boolean(window.PRZIMA_KAKAO_JS_KEY)"),f"{name}: runtime JS key not injected")
         check(page.locator("#nearbyKeyForm").count()==0,f"{name}: unexpected developer key field")
         check(page.locator(".nearby-place").count()==0,f"{name}: unexpected place list before user action")
+        check(page.locator(".clinic-explore-card").count()==0,f"{name}: demo bookings leaked into live search")
+        page.locator('.pjm013-bottom-nav [data-act="nav-page"][data-val="clinics"]').tap()
         check(page.locator(".clinic-explore-card").count()==5,f"{name}: synthetic booking clinics lost")
+        page.locator('.pjm013-bottom-nav [data-act="nav-page"][data-val="nearby"]').tap()
 
         page.locator('[data-act="nearby-locate"]').tap()
         page.locator(".nearby-place").first.wait_for(timeout=10000)
@@ -73,7 +76,7 @@ def denied(browser,device,origin):
         value:{getCurrentPosition(ok,err){err({code:1})}}});
     """)
     try:
-        page.goto(origin,wait_until="domcontentloaded")
+        page.goto(origin+"#nearby",wait_until="domcontentloaded")
         page.locator('[data-act="nearby-locate"]').tap()
         check("거부" in page.locator(".nearby-status").inner_text(),"WebKit: geolocation denial fallback broken")
         check(page.locator("#nearbyRegionInput").is_visible(),"WebKit: manual region fallback missing")

@@ -52,7 +52,7 @@ def main():
                     page=context.new_page()
                     errors=[]
                     page.on("pageerror",lambda exc:errors.append(str(exc)))
-                    page.goto("http://localhost:8000/",wait_until="domcontentloaded")
+                    page.goto("http://localhost:8000/#nearby",wait_until="domcontentloaded")
                     page.locator("#nearbyTitle").wait_for(timeout=15000)
 
                     if not page.evaluate("Boolean(window.PRZIMA_KAKAO_JS_KEY)"):

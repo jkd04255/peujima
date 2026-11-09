@@ -1,0 +1,66 @@
+name: PJM-013 service navigation and legacy regression QA
+on:
+  push:
+    branches:
+      - feature/pjm-013-discovery-navigation
+  pull_request:
+    branches:
+      - main
+    paths:
+      - index.html
+      - pjm013-navigation.css
+      - pjm013-navigation.js
+      - scripts/build_pages.py
+      - scripts/ios_safari_lan.py
+      - tests/test_pjm_013_navigation.py
+      - tests/test_pjm_013_accessibility.py
+      - tests/test_pjm_011.py
+      - tests/test_pjm_012.py
+      - tests/test_pjm_012_mobile.py
+      - tests/test_pjm_012_accessibility.py
+      - tests/test_pjm_012_live.py
+      - .github/workflows/pjm-013-qa.yml
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    name: Service IA Chromium WebKit axe and PJM-011/012 regression
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install "playwright==1.56.0"
+      - run: python -m playwright install --with-deps chromium webkit
+      - name: Install test-only axe-core
+        run: npm install --no-save --no-package-lock --ignore-scripts axe-core@4.10.3
+      - name: Release output and manual G3-only gate regression
+        run: python tests/test_pjm_012_build.py
+      - name: Offline LAN HTTPS access policy regression
+        run: python tests/test_pjm_012_lan.py
+      - name: PJM-013 home nav route history and service boundaries
+        run: python tests/test_pjm_013_navigation.py
+      - name: PJM-013 new navigation WCAG and keyboard
+        run: python tests/test_pjm_013_accessibility.py
+      - name: PJM-012 Kakao mock responsive and GPS
+        run: python tests/test_pjm_012.py
+      - name: PJM-012 iPhone and iPad WebKit
+        run: python tests/test_pjm_012_mobile.py
+      - name: PJM-012 nearby axe WCAG regression
+        run: python tests/test_pjm_012_accessibility.py
+      - name: PJM-011 booking and insurance regression
+        run: python tests/test_pjm_011.py
+      - name: REAL Kakao SDK, fixed nonpersonal Seoul coordinate (feature push only)
+        if: github.event_name == 'push'
+        env:
+          PJM012_KAKAO_JS_KEY: ${{ secrets.PJM012_KAKAO_JS_KEY }}
+        run: python tests/test_pjm_012_live.py
+      - name: Mock-only browser QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pjm-013-navigation-mock-qa
+          path: qa-screenshots/
+          if-no-files-found: ignore
