@@ -68,6 +68,10 @@ def main():
         assert status==200 and b"window.PJM012" in body
         assert TEST_KEY.encode() not in body
         assert headers.get_content_type()=="application/javascript"
+        status,body,_=fetch(base,prefix+"pjm013-navigation.js")
+        assert status==200 and b"PJM013" in body
+        status,body,_=fetch(base,prefix+"pjm013-navigation.css")
+        assert status==200 and b"pjm013" in body
         status,body,_=fetch(base,prefix+"pjm012-nearby.css")
         assert status==200 and b"nearby" in body
         status,body,headers=fetch(base,prefix,method="HEAD")
