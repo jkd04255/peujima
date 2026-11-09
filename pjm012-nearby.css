@@ -49,3 +49,15 @@
 @media(max-width:850px){.nearby-head{align-items:flex-start}.nearby-section{padding:55px 0 68px}}
 @media(max-width:620px){.nearby-head{flex-direction:column;gap:10px}.nearby-head h2{font-size:32px}.nearby-panel{padding:16px;border-radius:20px}.nearby-geo{width:100%}.nearby-region-form{min-width:100%}.nearby-radius{width:100%;justify-content:flex-end}.nearby-results{grid-template-columns:1fr}.nearby-map-wrap{height:240px}.nearby-results-title h3{font-size:17px}.nearby-section{padding:46px 0 60px}}
 @media(max-width:355px){.nearby-panel{padding:12px}.nearby-region-form button{font-size:11px;padding-inline:8px}.nearby-map-wrap{height:215px}}
+
+/* PJM-012 touch + WCAG 2.2 usability: avoid iOS form-focus zoom and small targets. */
+@media(max-width:620px){
+  .nearby-region-form input,.nearby-key-form input{font-size:16px;min-height:44px}
+  .nearby-region-form button,.nearby-place-links a,.nearby-settings summary{min-height:44px;display:inline-flex;align-items:center}
+  .nearby-place-links a{padding:10px 13px}
+}
+.nearby-region-form input:focus-visible,.nearby-radius select:focus-visible,
+.nearby-geo:focus-visible,.nearby-region-form button:focus-visible,
+.nearby-place-links a:focus-visible,.nearby-settings summary:focus-visible{
+  outline:3px solid #ae8259;outline-offset:3px
+}
