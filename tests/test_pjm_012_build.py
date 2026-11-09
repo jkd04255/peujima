@@ -42,6 +42,13 @@ def main():
         assert without_key.returncode != 0
         assert not (Path(tmp)/"bad"/"index.html").exists()
         assert (ROOT/"index.html").read_text(encoding="utf-8")==original
+    workflow=(ROOT/".github/workflows/pjm-012-pages-release.yml").read_text(encoding="utf-8")
+    assert "\\n  workflow_dispatch:" in workflow
+    assert "\\n  push:" not in workflow and "\\n  pull_request:" not in workflow
+    assert workflow.count("github.ref == 'refs/heads/main'")==2
+    assert workflow.count("inputs.g3_release == 'PJM-012_G3_APPROVED'")==2
+    assert "actions/deploy-pages@v4" in workflow
+    print("PASS: Pages release workflow requires explicit G3 input on main and has no automatic trigger")
     print("PASS: build injects synthetic public JS key BEFORE nearby script and excludes secrets from committed source")
     print("PASS: deployment build fails closed when the real release key is missing")
     print("PASS: no deployment or persistent release artifact created")
