@@ -40,3 +40,14 @@ python -m http.server 8000
 
 ## 5. 공개·유료 사용 보류
 PJM-012는 G3 승인 전까지 `main`과 GitHub Pages에 병합/배포하지 않음. 유료 카카오맵 사용 설정, 비즈월렛 연결, 실예약/DB/인증/개인정보 보관 기능 모두 금지.
+
+## 6. 실서비스 배포 없이 실제 카카오맵 SDK 확인 (2026-11-09 추가)
+- 카카오 개발자 콘솔의 `JavaScript SDK 도메인`에 `http://localhost:8000` 등록 (GitHub Pages용 `https://jkd04255.github.io`와는 별개).
+- GitHub 저장소 `jkd04255/peujima` → **Settings → Secrets and variables → Actions → New repository secret**:
+  - Name: `PJM012_KAKAO_JS_KEY`
+  - Secret: 카카오 개발자 콘솔에서 발급된 **JavaScript 키** (REST/Admin 키 아님)
+- 키는 대화에 게시하지 말 것. GitHub Actions의 비공개 secret에만 저장할 것.
+- 비밀값 생성만으로 테스트는 자동 실행되지 않음. 사용자 설정 완료 통지 후 기능 브랜치에 QA용 커밋을 만들어 `push` 테스트를 실행할 수 있음.
+- GitHub Actions `PJM-012 GPS nearby hospitals QA` 워크플로의 **기능 브랜치 push 이벤트에 한하여** `tests/test_pjm_012_live.py`를 실제 카카오 SDK로 실행. 키 미등록 시 SKIP 메시지로 종료함.
+- 테스트 브라우저는 **고정 시험 위치 서울시청**, `http://localhost:8000`을 사용하며 방문자 또는 사용자의 실제 위치를 취득하지 않음. 지도 로드 + 실제 장소 검색 응답과 근접 결과를 확인함.
+- `main` 병합, GitHub Pages 배포, 유료 API 활성화, 키의 공개 소스 코드 삽입은 진행하지 않음.
