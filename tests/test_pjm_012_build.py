@@ -43,8 +43,8 @@ def main():
         assert not (Path(tmp)/"bad"/"index.html").exists()
         assert (ROOT/"index.html").read_text(encoding="utf-8")==original
     workflow=(ROOT/".github/workflows/pjm-012-pages-release.yml").read_text(encoding="utf-8")
-    assert "\\n  workflow_dispatch:" in workflow
-    assert "\\n  push:" not in workflow and "\\n  pull_request:" not in workflow
+    assert "  workflow_dispatch:" in workflow.splitlines()
+    assert "  push:" not in workflow.splitlines() and "  pull_request:" not in workflow.splitlines()
     assert workflow.count("github.ref == 'refs/heads/main'")==2
     assert workflow.count("inputs.g3_release == 'PJM-012_G3_APPROVED'")==2
     assert "actions/deploy-pages@v4" in workflow
