@@ -27,6 +27,8 @@ RFC1918 = tuple(ipaddress.ip_network(net) for net in (
 FILES = {
     "pjm012-nearby.js": ("application/javascript; charset=utf-8", ROOT / "pjm012-nearby.js"),
     "pjm012-nearby.css": ("text/css; charset=utf-8", ROOT / "pjm012-nearby.css"),
+    "pjm013-navigation.js": ("application/javascript; charset=utf-8", ROOT / "pjm013-navigation.js"),
+    "pjm013-navigation.css": ("text/css; charset=utf-8", ROOT / "pjm013-navigation.css"),
 }
 
 
