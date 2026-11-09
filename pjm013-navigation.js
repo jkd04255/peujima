@@ -28,7 +28,7 @@
       ' class="pjm013-nav-item' + (current === key ? ' is-current' : '') + '"' +
       ' aria-current="' + (current === key ? 'page' : 'false') + '">' +
       '<span class="pjm013-nav-icon">' + ic + '</span><span class="pjm013-nav-name">' +
-      name + '</span>' + (!mobile ? '<small>' + sub + '</small>' : '') + '</button>'
+      name + '</span></button>'
     ).join("");
   }
   function modeSwitch(mode) {
@@ -86,19 +86,16 @@
         '</div>' +
       '</div></section>';
   }
-  const headings = {
-    nearby: ["FIND / 01", "주변 동물병원", "정말 가까운 병원부터 찾아보세요.", "카카오맵 실제 장소 정보 · 이 페이지에서 예약하지 않습니다."],
-    clinics: ["EXPLORE / 02", "진료과·예약 체험", "필요한 진료부터, 예약 과정까지.", "가상 병원 5곳의 시연용 정보이며 실제 예약은 접수되지 않습니다."],
-    insurance: ["GUIDE / 03", "펫보험 안내", "진료 전에 챙겨볼 보장 조건.", "참고용 조건 안내이며 실제 지급 여부를 보장하지 않습니다."]
+  // PJM-014: no slide-like introductory sections. Keep one screen-reader
+  // heading per route; all visible content begins with the actual tool.
+  const accessiblePageTitles = {
+    nearby: "주변 동물병원",
+    clinics: "진료과·예약 체험",
+    insurance: "펫보험 안내"
   };
   function pageHeading(page) {
-    const h = headings[page];
-    if (!h) return "";
-    return '<section class="pjm013-page-heading" aria-labelledby="pjm013PageTitle"><div class="site-width">' +
-      '<span class="pjm013-eyebrow"><span class="pjm013-dot"></span> ' + h[0] + '</span>' +
-      '<h1 id="pjm013PageTitle" tabindex="-1">' + h[1] + '</h1><p>' + h[2] + '</p>' +
-      '<span class="pjm013-heading-disclosure">' + h[3] + '</span>' +
-      '</div></section>';
+    const title = accessiblePageTitles[page];
+    return title ? '<h1 id="pjm013PageTitle" class="pjm014-sr-only" tabindex="-1">' + title + '</h1>' : "";
   }
   window.PJM013 = {pages, route, header, bottom, home, pageHeading};
 })();
