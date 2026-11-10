@@ -81,7 +81,10 @@ def run_case(browser,base,w,h,kind):
         require("65,800원" in txt and "47,000원" in txt,"DB example payment labels absent")
         require("한도 적용 전" in txt and "가상" in txt,"DB numbers not marked hypothetical/pre-cap")
         require("30일" in txt and "50%" in txt and "70%" in txt,"DB main policy conditions hidden")
-        require(result.locator("a[href]").count()==0,"in-app policy explanation cannot force a redirect")
+        require(result.locator("a[href]").count()==
+                result.locator(".pjm030-fineprint .pjm032-sources a[href]").count() and
+                result.locator("a[target='_blank']").count()==0,
+                "only optional cost-source links may appear inside collapsed fine print")
         require(result.locator(".pjm020-details.pjm022-db-details").count()==1,"DB details missing")
         require(result.locator(".pjm020-details:not(.pjm022-db-details)").count()==0,
                 "Meritz plan detail erroneously shown for DB")
