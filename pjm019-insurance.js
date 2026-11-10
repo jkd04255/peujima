@@ -141,12 +141,14 @@
     const isBenefit=!!care&&care.group==="기타 보장";
     const sourceIds=new Set();
     let hasPublicMedian=false;
+    let hasBudgetEstimate=false;
     const sum=rows.map(([stage,title,detail,medianKey])=>{
       const median=MEDIANS[medianKey];
       // These two published fee categories are dog-specific; never copy them to cats.
       const published=median&&!((medianKey==="inpatient"||medianKey==="vaccine")&&isCat);
       const band=published?null:window.PJM032?.estimate(careId,[stage,title,detail,medianKey],isCat?"cat":"dog");
       if(published)hasPublicMedian=true;
+      if(band?.kind==="estimate")hasBudgetEstimate=true;
       if(band?.source&&window.PJM032?.anchors?.[band.source])sourceIds.add(band.source);
       const wonToUnit=(value)=>(value/10000).toLocaleString("ko-KR",{maximumFractionDigits:1})+"만";
       const price=published?
@@ -171,7 +173,7 @@
     const cited=Array.from(sourceIds).map(id=>
       '<a href="'+esc(window.PJM032.anchors[id])+'">'+esc(sourceNames[id]||"비용 참고자료")+'</a>').join(" · ");
     const sources='<p class="pjm032-sources"><b>비용 참고자료</b> · '+
-      (cited||"세부 공개 시세가 없는 진료는 서비스의 넓은 예산 가정")+
+      (cited||(hasBudgetEstimate?"세부 공식 통계가 없어 넓은 예산 가정 적용":"보장·서류 항목으로 진료비 산정 대상이 아님"))+
       '. 특정 병원의 청구액이나 전국 평균이 아닙니다.</p>';
     return '<section class="pjm031-procedures" aria-label="선택한 진료의 세부 검사와 치료">'+
       '<div class="pjm031-heading"><h4>'+(isBenefit?'관련 보장·청구 세부 항목':'세부 검사·치료 항목')+'</h4>'+
