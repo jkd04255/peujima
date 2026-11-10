@@ -33,11 +33,11 @@ def run_case(browser,url,w,h,engine):
           official:!!PJM019.insurers.find(x=>x.id==="samsung-dog")
         })""")
         need(stats["catalog"] and stats["i"]==14 and stats["c"]==35 and
-             stats["care"]==45 and stats["species"] and stats["official"],
+             stats["care"]==52 and stats["species"] and stats["official"],
              f"catalog counts or data failed: {stats}")
         need(page.locator("#careSelect optgroup").count()>=7,"grouped care taxonomy absent")
-        need(page.locator("#careSelect option").count()==40,
-             "dog should show 10 base and 30 non-cat-specific conditions")
+        need(page.locator("#careSelect option").count()==47,
+             "dog should display 10 base, 30 shared conditions and 7 extra-benefit/claims topics")
         policyFacts=page.evaluate("""() => {
           const p=PJM023;
           return {
@@ -81,7 +81,7 @@ def run_case(browser,url,w,h,engine):
 
         page.locator("#insurerSelect").select_option("nh-cat")
         need(page.locator(".pjm020-result").count()==0,"stale KB result after insurer change")
-        need(page.locator("#careSelect option").count()==45,"cat topic choices not present")
+        need(page.locator("#careSelect option").count()==49,"cat topic choices and shared benefits not present")
         page.locator("#careSelect").select_option("hospital")
         page.locator(".insurance-button").click()
         need("반려견 입원비" not in page.locator(".pjm021-fee-guide").inner_text(),
@@ -95,7 +95,7 @@ def run_case(browser,url,w,h,engine):
 
         page.locator("#insurerSelect").select_option("samsung-dog")
         need(page.locator("#careSelect").input_value()=="illness","cat-only care must reset for dog")
-        need(page.locator("#careSelect option").count()==40,"cat-only care leaked to dog")
+        need(page.locator("#careSelect option").count()==47,"cat-only care leaked to dog")
         page.locator("#careSelect").select_option("allergy")
         page.locator(".insurance-button").click()
         need("삼성화재" in page.locator(".pjm020-result").inner_text(),
@@ -116,7 +116,45 @@ def run_case(browser,url,w,h,engine):
         need(page.locator(".pjm021-plan-amounts").count()==0,
              "KakaoPay must not reuse Meritz/DB payout examples")
 
+        # PJM-025: optional nonmedical benefit choices do not fabricate a claim or
+        # assume a dog-only coverage applies to cats or unrelated insurers.
+        page.locator("#insurerSelect").select_option("db-dog")
+        page.locator("#careSelect").select_option("dog_bite_training")
+        page.locator(".insurance-button").click()
+        txt=page.locator(".pjm020-result").inner_text()
+        need("15만원" in txt and "10회" in txt and "2주" in txt,
+             "DB dog bite training rider public conditions missing")
+        need(page.locator(".pjm023-extra-warning").is_visible(),
+             "separately insured benefit not visually separated from medical")
+        need(page.locator(".pjm021-plan-amounts").count()==0,
+             "no non-medical benefit payout without actual contract")
+        need(page.locator(".pjm021-fee-guide").count()==0,
+             "non-medical benefits must not show vet fee medians")
+        page.locator("#careSelect").select_option("dog_large")
+        page.locator(".insurance-button").click()
+        need("10회" in page.locator(".pjm023-focus").inner_text(),
+             "DB dog large-dog rider annual limit missing")
+        page.locator("#careSelect").select_option("mri")
+        page.locator(".insurance-button").click()
+        need("90일" in page.locator(".pjm023-focus").inner_text(),
+             "DB MRI/CT disease waiting period omitted")
+        page.locator("#insurerSelect").select_option("kb-dog")
+        page.locator("#careSelect").select_option("claim_docs")
+        page.locator(".insurance-button").click()
+        need("30만원" in page.locator(".pjm023-focus").inner_text(),
+             "KB 30만원 claim documentation threshold omitted")
+        need("업로드" in page.locator(".pjm020-result").inner_text(),
+             "user must not be prompted to upload personal claim records")
+        page.locator("#insurerSelect").select_option("nh-cat")
+        page.locator("#careSelect").select_option("boarding")
+        page.locator(".insurance-button").click()
+        need("판매 대리점" in page.locator(".pjm023-focus").inner_text(),
+             "NH seller evidence must not be called official terms")
+        page.locator("#insurerSelect").select_option("meritz-cat")
+        need(page.locator("#careSelect option[value='dog_bite_training']").count()==0,
+             "dog-only bite benefit leaked to cat")
         page.locator("#insurerSelect").select_option("meritz-dog")
+
         page.locator("#careSelect").select_option("illness")
         page.locator(".insurance-button").click()
         need(page.locator(".pjm021-plan-amounts > div").count()==3,
@@ -130,7 +168,7 @@ def run_case(browser,url,w,h,engine):
         page.goto(url+"#nearby",wait_until="load")
         need(page.locator(".nearby-geo").is_visible(),"map entry changed")
         need(not errors,f"JavaScript exceptions {engine} {w}: {errors}")
-        print(f"PASS PJM-023 {engine} {w}px 14 products / 45 care topics / sourced details")
+        print(f"PASS PJM-025 {engine} {w}px 14 products / 52 care and supplemental benefit topics / sourced details")
     finally:
         context.close()
 
@@ -149,6 +187,6 @@ def main():
                 run_case(webkit,url,390,844,"WebKit")
             finally:chromium.close();webkit.close()
     finally:srv.shutdown();srv.server_close()
-    print("PJM-023 full insurance catalog QA passed")
+    print("PJM-025 extended insurance benefits and QA passed")
 
 if __name__=="__main__":main()
