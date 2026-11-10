@@ -43,6 +43,14 @@ def assert_suit(page, selector, label):
     require("SUIT Variable" in family, f"{label}: unexpected mixed font: {family}")
 
 
+def assert_suite_display(page, selector, label):
+    el=page.locator(selector)
+    require(el.count()>0, f"{label}: missing display selector {selector}")
+    family=computed(page, selector)["family"]
+    first=family.split(",")[0].strip().strip(chr(34)).strip(chr(39))
+    require(first=="SUITE Variable", f"{label}: expected SUITE display, got {family}")
+
+
 def no_overflow(page, name, width):
     require(not page.evaluate(
         "document.documentElement.scrollWidth > innerWidth + 2"),
@@ -63,6 +71,8 @@ def run_screen(browser, origin, width, height, name):
     # the production CDN declaration is verified below, not replaced in source.
     page.route("**/SUIT-Variable.css", lambda route: route.fulfill(
         status=200, content_type="text/css", body="/* SUIT external font CSS test stub */"))
+    page.route("**/SUITE-Variable.css", lambda route: route.fulfill(
+        status=200, content_type="text/css", body="/* SUITE external font CSS test stub */"))
     try:
         page.goto(origin, wait_until="load")
         require(page.locator(".pjm013-header").is_visible(), "home header missing")
@@ -77,6 +87,8 @@ def run_screen(browser, origin, width, height, name):
             ".pjm013-search-row input",
         ]:
             assert_suit(page, sel, "home")
+        for sel in [".pjm013-header .brand-all-focus", ".pjm013-home-legacy .hero-v4-heading", ".pjm013-service-card strong"]:
+            assert_suite_display(page, sel, "home display")
         nav = ".pjm013-bottom-nav" if mobile else ".pjm013-desktop-nav"
         assert_suit(page, nav+" .pjm013-nav-name", "navigation")
         heading = computed(page, ".pjm013-home-legacy .hero-v4-heading")
@@ -91,6 +103,7 @@ def run_screen(browser, origin, width, height, name):
         assert_suit(page, ".nearby-results-title h3", "nearby result heading")
         require("실제 예약" in page.locator(".nearby-endnote").inner_text(),
                 "real booking unavailable notice missing")
+        assert_suite_display(page, ".nearby-results-title h3", "nearby display")
         no_overflow(page, "nearby", width)
 
         page.goto(origin+"#clinics",wait_until="load")
@@ -98,12 +111,14 @@ def run_screen(browser, origin, width, height, name):
         assert_suit(page, ".clinic-explore-main strong", "clinic card")
         page.locator(".clinic-explore-card").first.click()
         assert_suit(page, ".clinic-profile-body h2", "clinic detail title")
+        assert_suite_display(page, ".clinic-profile-body h2", "clinic display")
         require(page.locator(".clinic-profile-caution").is_visible(),
                 "virtual clinic warning missing")
         no_overflow(page, "clinic detail", width)
 
         page.goto(origin+"#insurance",wait_until="load")
         assert_suit(page, ".insurance h2", "insurance heading")
+        assert_suite_display(page, ".insurance h2", "insurance display")
         assert_suit(page, ".insurance-card select", "insurance select")
         require(page.locator("#insurerSelect").is_visible(), "insurance dropdown missing")
         require(page.locator(".insurance-disclaimer").is_visible(),
@@ -122,6 +137,9 @@ def main():
     css=(ROOT/"pjm013-navigation.css").read_text(encoding="utf-8")
     require(css.startswith(f'@import url("{FONT_CSS_URL}");'),
             "official SUIT v2 stylesheet URL must be loaded before other CSS")
+    require('SUITE@2/fonts/variable/woff2/SUITE-Variable.css' in css,
+            "official SUITE display font stylesheet must be imported")
+    require("--przima-display-typeface" in css, "SUITE display token missing")
     require("OFL" in css and "--przima-typeface" in css,
             "font license or fallback token missing")
     server = http.server.ThreadingHTTPServer(

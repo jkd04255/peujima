@@ -1,4 +1,5 @@
 @import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css");
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.css");
 /* PJM-013 / service navigation redesign
    Dedicated routes: 홈 / 실제 병원 찾기 / 가상 예약 체험 / 보험 안내.
    Retains original pet photographs, brand, 7-day calendar and PJM-012 Kakao.
@@ -529,4 +530,26 @@ body{
   .pjm013-page--insurance .insurance h2{
     letter-spacing:-.044em;
   }
+}
+
+/* PJM-018 PR #16 conflict resolution — preserves PR #15 SUIT body and type scale.
+   SUITE supplies only a restrained display face for brand and headings;
+   body, buttons, forms, navigation, tracking and all layouts remain PR #15. */
+:root{
+  --przima-display-typeface:"SUITE Variable",var(--przima-typeface);
+}
+#root :is(
+  .pjm013-brand,.pjm013-brand *,
+  .pjm013-home-legacy .hero-v4-heading,
+  .pjm013-home-legacy .hero-v4-heading *,
+  .pjm013-service-card strong,.pjm013-search-panel h2,
+  .pjm013-panel-heading strong,.pjm013-condition-row h2,
+  .pjm013-page--clinics .section-top h2,
+  .clinic-explore-main strong,.clinic-profile-body h2,
+  .clinic-booking-heading h3,.clinic-visit-card h3,
+  .nearby-results-title h3,.nearby-place-heading b,
+  .pjm013-page--insurance .insurance h2,.insurance-card h3,
+  .section h2,.section h2 em,.footer h2,.booking-modal h2
+){
+  font-family:var(--przima-display-typeface)!important;
 }

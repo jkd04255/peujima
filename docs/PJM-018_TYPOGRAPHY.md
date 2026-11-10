@@ -30,3 +30,11 @@
 - 테스트는 가짜 Kakao 결과만 사용하며 실예약 또는 실사용자 위치를 전송하지 않음
 - CDN은 실 서비스에서만 실제 로드하고, 자동 테스트에서는 외부 CSS 요청을 대체해 서체 지정/폴백을 결정론적으로 검증함. **실제 iPhone Safari 폰트 로딩은 배포 후 별도 검증**
 - QA 성공 시 PR 생성. 사용자 별도 승인 전 main 병합·GitHub Pages 배포 보류
+
+
+## PR #16 · 충돌 해결 후 SUITE 제목 서체 추가
+- PR #15가 SUIT Variable 통일 작업을 먼저 main에 병합했으므로 해당 본문 서체·굵기·기존 테스트를 보존합니다.
+- 본 PR은 공식 SUITE Variable을 브랜드·제목·병원명에만 추가합니다. 메뉴·본문·버튼·입력 등은 SUIT를 유지합니다.
+- SUITE 공식 배포: https://github.com/sun-typeface/SUITE (SIL OFL 1.1); CSS: https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.css
+- 기존 Chromium·WebKit 테스트에 실제 화면별 계산 서체가 SUITE인지 확인하는 검사만 추가했습니다.
+- 사용자 별도 승인 전 main 병합 및 Pages 배포 보류, 실제 iPhone Safari QA 미확인.

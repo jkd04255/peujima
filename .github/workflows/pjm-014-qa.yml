@@ -7,6 +7,7 @@ on:
       - feature/pjm-016-map-marker-selection
       - feature/pjm-017-subtle-map-selection
       - feature/pjm-018-suit-typography
+      - feature/pjm-018-typography-system
   pull_request:
     branches:
       - main
