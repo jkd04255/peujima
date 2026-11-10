@@ -107,7 +107,11 @@ def run_case(browser,origin,width,height,name):
         page.locator(".insurance-button").click()
         reveal_notes(page)
         require("반려묘" in page.locator(".pjm020-result").inner_text(),"cat warning missing")
-        require("30만원" not in page.locator(".pjm020-result").inner_text(),"dog numeric limit copied to cat")
+        # A cat estimate may legitimately include 30만원; verify species-specific
+        # official fee entries, not an arbitrary numeral in medical price bands.
+        require("반려견 1일 입원비" not in page.locator(".pjm031-procedures").inner_text() and
+                "반려견 종합백신 접종" not in page.locator(".pjm031-procedures").inner_text(),
+                "dog-only published medical cost copied to cat")
         require(not page.evaluate("document.documentElement.scrollWidth > innerWidth+2"),f"{name} {width}px horizontal overflow")
         page.goto(origin+"#home",wait_until="load")
         require(page.locator(".pjm013-service-card").count()==3,"home services broken")

@@ -309,3 +309,20 @@
   .pjm020-result .pjm031-procedure-title{gap:3px}
   .pjm020-result .pjm031-heading{margin-bottom:11px}
 }
+
+/* PJM-032: show broad price bands as estimates, separate from official median. */
+.pjm020-result .pjm031-price{font-variant-numeric:tabular-nums}
+.pjm020-result .pjm032-grade{
+  font-size:10px!important;font-weight:450!important;color:#8a948b!important;
+  word-break:keep-all;white-space:normal
+}
+.pjm020-result .pjm031-price.pjm031-published{color:#437757!important}
+.pjm030-note-group .pjm032-sources{
+  margin:9px 0 5px!important;padding:0!important;font-size:11px!important;
+  line-height:1.8!important;color:#68796b!important;overflow-wrap:anywhere;word-break:keep-all
+}
+.pjm030-note-group .pjm032-sources a{
+  font-size:11px!important;color:#426d53!important;text-decoration:underline!important;
+  text-underline-offset:2px
+}
+.pjm030-note-group .pjm032-sources a:focus-visible{outline:2px solid #3b6551;outline-offset:3px}
