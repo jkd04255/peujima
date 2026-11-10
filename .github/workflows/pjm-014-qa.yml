@@ -12,6 +12,7 @@ on:
       - feature/pjm-020-simple-insurance-summary
       - feature/pjm-021-insurance-common-care
       - feature/pjm-022-db-dog-verified-guide
+      - feature/pjm-023-expanded-insurance-catalog
   pull_request:
     branches:
       - main
@@ -22,6 +23,7 @@ on:
       - pjm012-nearby.js
       - pjm012-nearby.css
       - pjm019-insurance.js
+      - pjm023-catalog.js
       - pjm019-insurance.css
       - tests/test_pjm_016_marker_selection.py
       - tests/test_pjm_012_mobile.py
@@ -42,6 +44,7 @@ on:
       - tests/test_pjm_019_insurance.py
       - tests/test_pjm_021_guides.py
       - tests/test_pjm_022_db_guides.py
+      - tests/test_pjm_023_catalog.py
 permissions:
   contents: read
 jobs:
@@ -76,6 +79,8 @@ jobs:
         run: python tests/test_pjm_021_guides.py
       - name: PJM-022 DB 2610 official public benefit guide Chromium WebKit
         run: python tests/test_pjm_022_db_guides.py
+      - name: PJM-023 expanded pet insurance catalog and condition matrix Chromium WebKit
+        run: python tests/test_pjm_023_catalog.py
       - name: PJM-016 map marker selected-card feedback Chromium WebKit
         run: python tests/test_pjm_016_marker_selection.py
       - name: PJM-012 Kakao mock responsive and GPS
