@@ -27,6 +27,15 @@
     {id:"vaccine",label:"예방접종·정기검진"},
     {id:"groom",label:"미용·발톱 관리"}
   ];
+  const catalog=window.PJM023||{insurers:[],cares:[],products:{},focus:{},groups:[]};
+  INSURERS.push(...catalog.insurers);
+  CARES.push(...catalog.cares);
+  function careOptions(selected){
+    const base='<optgroup label="주요 진료 항목">'+options(CARES.filter(c=>!c.group),selected)+'</optgroup>';
+    return base+catalog.groups.map(group=>
+      '<optgroup label="'+esc(group)+'">'+options(CARES.filter(c=>c.group===group),selected)+'</optgroup>'
+    ).join("");
+  }
   const PLAN_LIMITS=[
     ["고급형","70%","30만원","250만원","1,500만원","100만원"],
     ["기본형","70%","15만원","250만원","1,000만원","50만원"],
@@ -93,6 +102,13 @@
       others:["발톱 관리·미용·일반 목욕 (전국 공개 통계 없음)"],scenario:false,
       caveat:"치료 목적이 아닌 관리 비용은 일반적으로 보장되지 않으며 표준 진료비 통계가 없습니다."}
   };
+  for(const c of catalog.cares){
+    CARE_GUIDES[c.id]={
+      caption:c.label+" 관련 공개 비용 항목",items:c.items,
+      others:[c.other+" (전국 공개 중간값 확인 불가)"],scenario:false,
+      caveat:"표시된 항목별 공개 중간값은 "+c.label+" 진료의 평균 총비용이나 필수 검사 목록이 아닙니다."
+    };
+  }
   const PLAN_RULES=[
     {name:"고급형",ratio:.7,daily:300000,annual:15000000,surgery:2500000,scan:1000000},
     {name:"기본형",ratio:.7,daily:150000,annual:10000000,surgery:2500000,scan:500000},
@@ -165,6 +181,25 @@
     '<p>2026년 펫블리 반려견보험2610(CM) 공식 상품 안내 기준입니다. 의료비 특약을 가입했다고 가정하며 50% 또는 70% 보상비율과 3만원 또는 5만원 자기부담금이 선택 가능합니다.</p>'+
     '<p>질병은 최초 30일 경과 후, 슬관절·고관절 탈구 등은 1년 경과 후 보장 개시합니다. 치과·특정피부 약물치료·MRI/CT 검사비 확대는 해당 특약 가입 여부를 확인해야 합니다.</p>'+
     '<p>개별 계약의 일일·연간 한도, 이전 보험금 지급액 및 다른 보험 보유 여부는 확인되지 않습니다. 화면의 DB 가상 계산은 한도 적용 전 금액입니다.</p></details>';
+  function coverageInfo(insurerId,careId){
+    const p=catalog.products[insurerId];if(!p)return "";
+    const ins=INSURERS.find(i=>i.id===insurerId);
+    const note=(catalog.focus[insurerId]||{})[careId]||
+      "이 진료의 검사·약제·처치가 보장되는지는 진단명, 치료 목적, 실제 가입한 특약 및 면책기간에 따라 달라집니다.";
+    const [version,scope,ratio,deductible,limit,waiting,riders,source]=p;
+    const row=(label,detail)=>'<div class="pjm023-fact"><dt>'+esc(label)+'</dt><dd>'+esc(detail)+'</dd></div>';
+    const caution=insurerId.startsWith("nh-")||insurerId==="kb-cat";
+    return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
+      '<div class="pjm023-head"><h4>보험사의 공개 보장 조건</h4><span>'+esc(caution?"세부 약관 미검증":"상품 안내 기준")+'</span></div>'+
+      '<p class="pjm023-version">'+esc(version)+'</p>'+
+      '<dl class="pjm023-facts">'+row("어떤 진료",scope)+row("보상비율",ratio)+row("자기부담금",deductible)+'</dl>'+
+      '<p class="pjm023-focus"><b>선택한 진료의 확인 사항</b> '+esc(note)+'</p>'+
+      '<details class="pjm023-more"><summary>한도·면책기간·특약 자세히 보기</summary><dl>'+
+      row("일일·연간 한도",limit)+row("보장개시·면책",waiting)+row("확장보장",riders)+
+      '</dl><p>검토 자료: '+esc(source)+'</p>'+
+      '<p>가입 시점의 증권·약관 및 진료 영수증을 대조한 결과가 아닙니다. 해당 진료의 보장 여부나 지급액을 확정하지 않습니다.</p></details>'+
+      '</section>';
+  }
   function summarize(insurerId,careId){
     const insurer=INSURERS.find(i=>i.id===insurerId);
     if(!insurer||!CARES.find(c=>c.id===careId))return {status:"추가 확인 필요",title:"선택한 상품을 확인해 주세요",description:"상품과 진료 항목을 다시 선택해 주세요.",points:[],source:null,showPlans:false};
@@ -174,6 +209,16 @@
       description:"보험사 이름만으로 보장 금액이나 지급 여부를 확정할 수 없습니다.",
       points:["가입 시점의 상품 약관과 의료비 특약을 확인하세요.","보장비율·공제금·회당 및 연간 한도는 계약마다 다를 수 있습니다."],
       source:insurer.source,showPlans:false};
+    if(catalog.cares.some(i=>i.id===careId)){
+      const term=catalog.cares.find(i=>i.id===careId);
+      const preventive=careId==="neuter"||careId==="healthcheck";
+      return {...base,status:preventive?"일반적으로 보장 제외":"특약·진단 확인 필요",
+        title:term.label,
+        description:preventive?"예방·일상 관리 목적의 진료는 일반 의료비 특약에서 보장하지 않을 수 있습니다. 치료 목적의 예외는 계약별 확인이 필요합니다.":
+          "이 진료의 검사·처치·약제비가 모두 같은 보장에 포함되는 것은 아닙니다. 아래 상품별 보장 조건과 면책을 확인해 주세요.",
+        points:["실제 보장 여부는 가입 담보와 진단명·치료 목적에 따라 달라집니다.","개별 영수증 항목과 공제금·한도·기지급금액 등은 확인되지 않았습니다."],
+        showPlans:false,showDBDetails:false};
+    }
     if(careId==="vaccine"||careId==="groom"){
       return {...base,status:"일반적으로 보장 제외",title:careId==="vaccine"?"예방 목적의 진료는 대부분 제외됩니다":"단순 미용·일상 관리는 대부분 제외됩니다",
         description:careId==="vaccine"?"예방접종과 증상이 없는 정기검진은 일반적으로 의료비 보장 대상이 아닙니다.":"미용·발톱 정리처럼 치료 목적이 아닌 관리는 일반적으로 의료비 보장 대상이 아닙니다.",
@@ -235,7 +280,7 @@
     const pts=x.points.map(s=>'<li>'+esc(s)+'</li>').join("");
     return '<article class="insurance-result pjm020-result" role="status" aria-live="polite">'+
       '<span class="pjm020-status">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3>'+
-      '<p>'+esc(x.description)+'</p>'+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
+      '<p>'+esc(x.description)+'</p>'+coverageInfo(state.insurer,state.care)+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
       (x.showPlans?planDetails:"")+(x.showDBDetails?dbDetails:"")+
       '<p class="pjm020-note">해당 상품의 공개 안내를 요약한 내용이며, 가입 계약에 따라 결과가 달라질 수 있습니다.</p>'+
       ''+
@@ -254,7 +299,7 @@
       '<label for="insurerSelect">가입 보험·상품<select id="insurerSelect">'+
       options(INSURERS,state.insurer)+'</select></label>'+
       '<label for="careSelect">궁금한 치료·검사<select id="careSelect">'+
-      options(CARES,state.care)+'</select></label>'+
+      careOptions(state.care)+'</select></label>'+
       '<button type="button" class="primary-btn insurance-button">보장 내용 확인하기</button>'+
       '<div class="pjm020-output" id="pjm020Output">'+output()+'</div>'+
       '</div>'+
