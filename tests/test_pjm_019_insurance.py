@@ -39,6 +39,13 @@ def verify_summary_engine(page):
     require(q("hyundai-cat","mri")["showPlans"] is False,"cat policy is not dog rider")
     require(q("missing","unknown")["status"]=="추가 확인 필요","invalid selection must fail closed")
 
+def reveal_notes(page):
+    """Open the new single footer disclosure for legacy policy-detail checks."""
+    panel=page.locator(".pjm030-fineprint")
+    assert panel.count()==1, "bottom evidence disclosure must exist"
+    if panel.get_attribute("open") is None:
+        page.locator(".pjm030-fineprint > summary").click()
+
 def run_case(browser,origin,width,height,name):
     context=browser.new_context(viewport={"width":width,"height":height},locale="ko-KR",
         reduced_motion="reduce",has_touch=name=="WebKit",is_mobile=name=="WebKit")
@@ -67,6 +74,7 @@ def run_case(browser,origin,width,height,name):
         verify_summary_engine(page)
 
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         require(page.locator(".insurance-result").is_visible(),"summary not rendered after click")
         result=page.locator(".insurance-result").inner_text()
         require("질병 통원·입원 의료비" in result,"wrong first default summary")
@@ -85,16 +93,19 @@ def run_case(browser,origin,width,height,name):
         require(page.locator(".pjm020-result").count()==0,"stale result after changing treatment")
         require(page.locator("#insurerSelect").input_value()=="meritz-dog","selection lost after care change")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         require("1년" in page.locator(".pjm020-result").inner_text(),"patella summary missing")
         page.locator("#insurerSelect").select_option("hyundai-dog")
         require(page.locator(".pjm020-result").count()==0,"stale Meritz result after insurer change")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         require("특약" in page.locator(".pjm020-result").inner_text(),"Hyundai optional clause missing")
         require(page.locator(".pjm020-details").count()==0,"unverified insurer has plan comparison")
 
         page.locator("#insurerSelect").select_option("meritz-cat")
         page.locator("#careSelect").select_option("illness")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         require("반려묘" in page.locator(".pjm020-result").inner_text(),"cat warning missing")
         require("30만원" not in page.locator(".pjm020-result").inner_text(),"dog numeric limit copied to cat")
         require(not page.evaluate("document.documentElement.scrollWidth > innerWidth+2"),f"{name} {width}px horizontal overflow")

@@ -311,18 +311,82 @@
       description:"반려견 상품에 표시된 비율과 한도를 반려묘 계약에 그대로 적용하지 않습니다."};
     return base;
   }
+  /* PJM-030 — collect non-essential copy into ONE opt-in, small-print
+     area at the very end of each result. Existing source/term elements
+     retain their classes and interactions for policy traceability. */
+  function compactSupplementalNotes(markup){
+    const template=document.createElement("template");
+    template.innerHTML=markup;
+    const result=template.content.querySelector(".pjm020-result");
+    if(!result)return markup;
+    const groups=[
+      {label:"진료비·가상 계산 기준",selectors:[
+        ".pjm021-cost-notice",".pjm021-fees .pjm021-unpriced",
+        ".pjm021-example .pjm021-calc-note",
+        ".pjm021-imaging small",".pjm021-pending"
+      ]},
+      {label:"가입·보장 유의사항",selectors:[
+        ".pjm023-extra-warning",".pjm021-conditions",".pjm020-note"
+      ]},
+      {label:"보험 상품 버전과 출처",selectors:[
+        ".pjm023-head > span",".pjm026-source-meta",
+        ".pjm026-version-warning",".pjm029-kb-editions",
+        ".pjm027-clause-origin"
+      ]},
+      {label:"약관·한도·청구 조건",selectors:[
+        ".pjm023-more",".pjm021-policy-details",".pjm020-details"
+      ]}
+    ];
+    const notes=document.createElement("details");
+    notes.className="pjm030-fineprint";
+    const summary=document.createElement("summary");
+    summary.textContent="추가 안내 · 출처와 계산 기준 보기";
+    notes.appendChild(summary);
+    const content=document.createElement("div");
+    content.className="pjm030-fineprint-content";
+    for(const group of groups){
+      const block=document.createElement("section");
+      block.className="pjm030-note-group";
+      let count=0;
+      for(const selector of group.selectors){
+        // Nodes are moved, never cloned: no duplicate notices or DOM IDs.
+        for(const element of Array.from(result.querySelectorAll(selector))){
+          if(element.closest(".pjm030-fineprint"))continue;
+          if(selector===".pjm023-head > span"){
+            const label=document.createElement("p");
+            label.className="pjm030-evidence-note";
+            label.textContent="근거 확인 수준 · "+element.textContent.trim();
+            element.remove();
+            block.appendChild(label);
+          }else{
+            block.appendChild(element);
+          }
+          count++;
+        }
+      }
+      if(!count)continue;
+      const heading=document.createElement("h5");
+      heading.textContent=group.label;
+      block.prepend(heading);
+      content.appendChild(block);
+    }
+    if(!content.children.length)return markup;
+    notes.appendChild(content);
+    result.appendChild(notes);
+    return template.innerHTML;
+  }
   function output(){
     if(!state.showResult)return '<p class="pjm020-instruction">보험과 치료 항목을 선택한 뒤 결과를 확인하세요.</p>';
     const x=summarize(state.insurer,state.care);
     const extra=guidance(state.insurer,state.care);
     const pts=x.points.map(s=>'<li>'+esc(s)+'</li>').join("");
-    return '<article class="insurance-result pjm020-result" role="status" aria-live="polite">'+
+    return compactSupplementalNotes('<article class="insurance-result pjm020-result" role="status" aria-live="polite">'+
       '<span class="pjm020-status">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3>'+
       '<p>'+esc(x.description)+'</p>'+coverageInfo(state.insurer,state.care)+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
       (x.showPlans?planDetails:"")+(x.showDBDetails?dbDetails:"")+
       '<p class="pjm020-note">해당 상품의 공개 안내를 요약한 내용이며, 가입 계약에 따라 결과가 달라질 수 있습니다.</p>'+
       ''+
-      '</article>';
+      '</article>');
   }
   function section(mode,legacyCare){
     if(mode!==state.mode){state.mode=mode;state.insurer=mode==="cat"?"meritz-cat":"meritz-dog";if((mode!=="cat"&&state.care.startsWith("feline_"))||(mode==="cat"&&state.care.startsWith("dog_")))state.care="illness";state.showResult=false;}

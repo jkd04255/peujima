@@ -15,6 +15,13 @@ class Silent(http.server.SimpleHTTPRequestHandler):
 def need(x,msg):
     if not x:raise AssertionError(msg)
 
+def reveal_notes(page):
+    """Open the new single footer disclosure for legacy policy-detail checks."""
+    panel=page.locator(".pjm030-fineprint")
+    assert panel.count()==1, "bottom evidence disclosure must exist"
+    if panel.get_attribute("open") is None:
+        page.locator(".pjm030-fineprint > summary").click()
+
 def run_case(browser,url,w,h,engine):
     context=browser.new_context(viewport={"width":w,"height":h},locale="ko-KR",
        reduced_motion="reduce",has_touch=(engine=="WebKit"),is_mobile=(engine=="WebKit"))
@@ -81,24 +88,27 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("db-dog")
         page.locator("#careSelect").select_option("chemo")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("2610" in page.locator(".pjm026-source-meta").inner_text()
              and "2607" in page.locator(".pjm026-version-warning").inner_text(),
              "DB version conflict not visible in simplified in-app answer")
-        need("상품 안내 확인" in page.locator(".pjm023-head").inner_text(),
+        need("상품 안내 확인" in page.locator(".pjm030-evidence-note").inner_text(),
              "B grade wrongly presented as original policy PDF")
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("chemo")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("26.01" in page.locator(".pjm026-version-warning").inner_text()
              and "26.07" in page.locator(".pjm026-version-warning").inner_text(),
              "KB original policy mismatch not communicated on screen")
-        need("A · 일부 약관 원문 확인" in page.locator(".pjm023-head").inner_text(),
+        need("A · 일부 약관 원문 확인" in page.locator(".pjm030-evidence-note").inner_text(),
              "KB policy PDF audit badge missing")
         need(page.locator(".pjm020-result a[target='_blank']").count()==0,
              "in-app policy explanation must not redirect to insurer")
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("chemo")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         result=page.locator(".pjm020-result")
         need(result.is_visible(),"new policy guidance missing")
         need("금쪽같은" in result.inner_text(),"KB-specific official summary not shown")
@@ -141,6 +151,7 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("mri")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("25343" in page.locator(".pjm029-kb-editions").inner_text() and
              "25357" in page.locator(".pjm029-kb-editions").inner_text() and
              "25344" in page.locator(".pjm029-kb-editions").inner_text(),
@@ -156,6 +167,7 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("kb-cat")
         page.locator("#careSelect").select_option("feline_cystitis")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("25345" in page.locator(".pjm029-kb-editions").inner_text() and
              "25358" in page.locator(".pjm029-kb-editions").inner_text() and
              "25346" in page.locator(".pjm029-kb-editions").inner_text() and
@@ -172,6 +184,7 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("nh-dog")
         page.locator("#careSelect").select_option("mri")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need(page.locator(".pjm029-kb-editions").count()==0,
              "KB 26.07 label must not leak into another insurer")
         
@@ -184,6 +197,7 @@ def run_case(browser,url,w,h,engine):
         ]:
             page.locator("#careSelect").select_option(care)
             page.locator(".insurance-button").click()
+            reveal_notes(page)
             detail=page.locator(".pjm023-focus").inner_text()
             for word in words:
                 need(word in detail,f"KB 26.01 {care} term {word} missing")
@@ -218,12 +232,14 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("kb-cat")
         page.locator("#careSelect").select_option("boarding")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need(page.locator(".pjm027-clause-origin").count()==0 and
              page.locator(".pjm028-clause-details").count()==0,
              "KB 26.01 dog boarding terms must never be copied to KB cat")
         page.locator("#insurerSelect").select_option("samsung-dog")
         page.locator("#careSelect").select_option("funeral")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need(page.locator(".pjm027-clause-origin").count()==0,
              "KB 26.01 clause must not appear in other insurers")
 
@@ -232,10 +248,12 @@ def run_case(browser,url,w,h,engine):
         need(page.locator("#careSelect option").count()==49,"cat topic choices and shared benefits not present")
         page.locator("#careSelect").select_option("hospital")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("반려견 입원비" not in page.locator(".pjm021-fee-guide").inner_text(),
              "dog-only published admission price must not be offered for a cat")
         page.locator("#careSelect").select_option("feline_cystitis")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         txt=page.locator(".pjm020-result").inner_text()
         need("원문" in txt and "미검증" in txt,"NH unverified contract must be labeled")
         need("비뇨기" in txt,"cat urinary treatment-specific note missing")
@@ -246,6 +264,7 @@ def run_case(browser,url,w,h,engine):
         need(page.locator("#careSelect option").count()==47,"cat-only care leaked to dog")
         page.locator("#careSelect").select_option("allergy")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("삼성화재" in page.locator(".pjm020-result").inner_text(),
              "new insurer missing in-app facts")
         need("50%" in page.locator(".pjm023-coverage").inner_text() and
@@ -257,6 +276,7 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("kakao-dog")
         page.locator("#careSelect").select_option("surgery")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("수술당일형" in page.locator(".pjm023-coverage").inner_text(),
              "KakaoPay surgery-only vs inpatient/outpatient plans not shown")
         need("카카오페이손해보험" in page.locator(".pjm023-coverage").inner_text(),
@@ -269,6 +289,7 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("db-dog")
         page.locator("#careSelect").select_option("dog_bite_training")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         txt=page.locator(".pjm020-result").inner_text()
         need("15만원" in txt and "10회" in txt and "2주" in txt,
              "DB dog bite training rider public conditions missing")
@@ -280,26 +301,31 @@ def run_case(browser,url,w,h,engine):
              "non-medical benefits must not show vet fee medians")
         page.locator("#careSelect").select_option("dog_large")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("10회" in page.locator(".pjm023-focus").inner_text(),
              "DB dog large-dog rider annual limit missing")
         page.locator("#careSelect").select_option("mri")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("30일" in page.locator(".pjm023-focus").inner_text() and
              "90일" in page.locator(".pjm023-focus").inner_text(),
              "DB 2610 MRI 30-day wait must be distinguished from chemo 90-day wait")
         page.locator("#careSelect").select_option("chemo")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("90일" in page.locator(".pjm023-focus").inner_text() and
              "6회" in page.locator(".pjm023-focus").inner_text(),
              "DB 2610 oncology 90-day waiting / six treatments omitted")
         page.locator("#careSelect").select_option("surgery")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("30일" in page.locator(".pjm023-focus").inner_text() and
              "연 1회" in page.locator(".pjm023-focus").inner_text(),
              "DB 2610 specific high-cost surgery waiting / frequency omitted")
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("claim_docs")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("30만원" in page.locator(".pjm023-focus").inner_text(),
              "KB 30만원 claim documentation threshold omitted")
         need("업로드" in page.locator(".pjm020-result").inner_text(),
@@ -307,6 +333,7 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("nh-cat")
         page.locator("#careSelect").select_option("boarding")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need("판매 대리점" in page.locator(".pjm023-focus").inner_text(),
              "NH seller evidence must not be called official terms")
         page.locator("#insurerSelect").select_option("meritz-cat")
@@ -316,6 +343,7 @@ def run_case(browser,url,w,h,engine):
 
         page.locator("#careSelect").select_option("illness")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         need(page.locator(".pjm021-plan-amounts > div").count()==3,
              "Meritz payout simulation changed")
         need("메리츠" in page.locator(".pjm023-coverage").inner_text(),

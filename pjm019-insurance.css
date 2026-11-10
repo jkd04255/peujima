@@ -195,3 +195,65 @@
 .pjm029-kb-details p{font-size:11px!important;line-height:1.75!important;color:#56685d!important;
   margin:0 0 7px!important;word-break:keep-all;overflow-wrap:anywhere}
 .pjm029-kb-details strong{font-weight:700}
+
+/* PJM-030 — quiet, single bottom disclosure for nonessential insurance copy.
+   The main answer, fee rows and benefit summary stay visually unchanged. */
+.pjm020-result .pjm030-fineprint{
+  margin:22px 0 0!important;padding:16px 0 0!important;
+  border:0!important;border-top:1px solid #e3e9e1!important;
+  background:transparent!important;color:#768277!important
+}
+.pjm020-result .pjm030-fineprint>summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:5px 0!important;margin:0!important;
+  font-size:11px!important;line-height:1.7!important;
+  color:#78877a!important;font-weight:550!important;letter-spacing:0!important
+}
+.pjm020-result .pjm030-fineprint>summary::-webkit-details-marker{display:none}
+.pjm020-result .pjm030-fineprint>summary::after{content:"+";font-size:16px;font-weight:400;line-height:1;color:#849285}
+.pjm020-result .pjm030-fineprint[open]>summary::after{content:"−"}
+.pjm020-result .pjm030-fineprint>summary:focus-visible{
+  outline:2px solid #427050;outline-offset:5px;border-radius:3px
+}
+.pjm030-fineprint-content{
+  padding:13px 0 2px!important;margin:0!important;font-size:11px!important;
+  line-height:1.75!important;word-break:keep-all;overflow-wrap:anywhere
+}
+.pjm030-note-group{padding:10px 0 14px!important;border:0!important}
+.pjm030-note-group+.pjm030-note-group{border-top:1px solid #edf0eb!important}
+.pjm030-note-group>h5{font-family:var(--przima-typeface,inherit);
+  margin:0 0 9px!important;font-weight:650!important;
+  font-size:11px!important;line-height:1.6!important;color:#637366!important}
+.pjm030-note-group p,.pjm030-note-group small,.pjm030-note-group li,
+.pjm030-note-group .pjm026-source-meta,.pjm030-note-group .pjm026-version-warning,
+.pjm030-note-group .pjm027-clause-origin,.pjm030-note-group .pjm029-kb-editions,
+.pjm030-note-group .pjm023-extra-warning,.pjm030-note-group .pjm021-pending{
+  font-size:11px!important;line-height:1.75!important;color:#697b6e!important;
+  font-weight:400!important;letter-spacing:0!important;word-break:keep-all!important
+}
+.pjm030-note-group .pjm026-version-warning,.pjm030-note-group .pjm023-extra-warning,
+.pjm030-note-group .pjm021-unpriced,.pjm030-note-group .pjm021-pending{
+  display:block;margin:4px 0 8px!important;padding:0!important;background:none!important;
+  border:0!important;box-shadow:none!important;border-radius:0!important
+}
+.pjm030-note-group .pjm021-cost-notice{margin:4px 0 8px!important;font-size:11px!important;
+  font-weight:400!important;color:#697b6e!important}
+.pjm030-note-group .pjm021-unpriced{font-size:11px!important;color:#697b6e!important;line-height:1.7!important}
+.pjm030-note-group .pjm021-conditions{margin:4px 0 6px!important;padding:0!important}
+.pjm030-note-group .pjm021-conditions>strong{font-size:11px!important;color:#647366!important;margin:0 0 6px!important}
+.pjm030-note-group .pjm021-conditions ul{padding-left:16px!important;gap:5px!important}
+.pjm030-note-group .pjm021-conditions li{font-size:11px!important}
+.pjm030-note-group .pjm020-note{margin:4px 0!important;font-size:11px!important}
+.pjm030-note-group .pjm023-more,.pjm030-note-group .pjm021-policy-details,
+.pjm030-note-group .pjm020-details{margin:8px 0!important;padding:0!important;
+  border:0!important;background:transparent!important}
+.pjm030-note-group .pjm023-more summary,.pjm030-note-group .pjm021-policy-details>summary,
+.pjm030-note-group .pjm020-details>summary{
+  font-size:11px!important;font-weight:550!important;line-height:1.7!important;
+  color:#647c69!important;padding:6px 0!important;margin:0!important
+}
+.pjm030-evidence-note{font-size:11px!important;color:#6d7e70!important;margin:2px 0 8px!important}
+@media(max-width:600px){
+  .pjm020-result .pjm030-fineprint{margin-top:19px!important;padding-top:12px!important}
+  .pjm030-fineprint-content{padding-top:9px!important}
+}

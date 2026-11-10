@@ -52,6 +52,13 @@ def inspect_logic(page):
     require("1년" in x["jointSummary"]["description"],"DB joint coverage waiting period")
     require(x["dentalSummary"]["status"]=="특약 가입 여부 확인","DB dental rider status")
 
+def reveal_notes(page):
+    """Open the new single footer disclosure for legacy policy-detail checks."""
+    panel=page.locator(".pjm030-fineprint")
+    assert panel.count()==1, "bottom evidence disclosure must exist"
+    if panel.get_attribute("open") is None:
+        page.locator(".pjm030-fineprint > summary").click()
+
 def run_case(browser,base,w,h,kind):
     ctx=browser.new_context(viewport={"width":w,"height":h},
         locale="ko-KR",reduced_motion="reduce",
@@ -66,6 +73,7 @@ def run_case(browser,base,w,h,kind):
         inspect_logic(page)
         page.locator("#insurerSelect").select_option("db-dog")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         result=page.locator(".pjm020-result")
         require(result.is_visible(),"DB coverage result missing")
         require(result.locator(".pjm021-plan-amounts > div").count()==2,"expected two DB ratio variants")
@@ -87,17 +95,20 @@ def run_case(browser,base,w,h,kind):
             page.locator("#careSelect").select_option(care)
             require(page.locator(".pjm020-result").count()==0,"old DB result remained on care change")
             page.locator(".insurance-button").click()
+            reveal_notes(page)
             require(page.locator(".pjm021-plan-amounts").count()==0,
                     "unverified rider cost must not generate benefits")
             require("특약" in page.locator(".pjm020-result").inner_text(),"rider caveat missing")
 
         page.locator("#careSelect").select_option("patella")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         require("1년" in page.locator(".pjm020-result").inner_text(),"joint rider waiting period absent")
 
         page.locator("#insurerSelect").select_option("hyundai-dog")
         require(page.locator(".pjm020-result").count()==0,"DB result leaked after insurer change")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         require(page.locator(".pjm021-plan-amounts").count()==0,
                 "unverified insurer must not calculate a benefit")
         require("DB손해보험" not in page.locator(".pjm021-policy-details").text_content(),
@@ -106,6 +117,7 @@ def run_case(browser,base,w,h,kind):
         page.locator("#insurerSelect").select_option("meritz-dog")
         page.locator("#careSelect").select_option("illness")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         require(page.locator(".pjm021-plan-amounts > div").count()==3,
                 "existing Meritz examples regressed")
         require(not page.evaluate("document.documentElement.scrollWidth > innerWidth+2"),
