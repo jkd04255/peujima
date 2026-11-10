@@ -161,6 +161,10 @@
     '<th scope="col">수술 당일</th><th scope="col">연간</th><th scope="col">영상검사</th>'+
     '</tr></thead><tbody>'+PLAN_LIMITS.map(p=>'<tr>'+p.map(x=>'<td>'+esc(x)+'</td>').join("")+'</tr>').join("")+
     '</tbody></table></div><p>공개 상품 안내의 플랜별 예시 한도입니다. 가입 시점·특약·자기부담금에 따라 달라질 수 있습니다.</p></details>';
+  const dbDetails='<details class="pjm020-details pjm022-db-details"><summary>DB 펫블리 보장 조건 자세히 보기</summary>'+
+    '<p>2026년 펫블리 반려견보험2610(CM) 공식 상품 안내 기준입니다. 의료비 특약을 가입했다고 가정하며 50% 또는 70% 보상비율과 3만원 또는 5만원 자기부담금이 선택 가능합니다.</p>'+
+    '<p>질병은 최초 30일 경과 후, 슬관절·고관절 탈구 등은 1년 경과 후 보장 개시합니다. 치과·특정피부 약물치료·MRI/CT 검사비 확대는 해당 특약 가입 여부를 확인해야 합니다.</p>'+
+    '<p>개별 계약의 일일·연간 한도, 이전 보험금 지급액 및 다른 보험 보유 여부는 확인되지 않습니다. 화면의 DB 가상 계산은 한도 적용 전 금액입니다.</p></details>';
   function summarize(insurerId,careId){
     const insurer=INSURERS.find(i=>i.id===insurerId);
     if(!insurer||!CARES.find(c=>c.id===careId))return {status:"추가 확인 필요",title:"선택한 상품을 확인해 주세요",description:"상품과 진료 항목을 다시 선택해 주세요.",points:[],source:null,showPlans:false};
@@ -195,6 +199,25 @@
         description:"구강질환 보장 안내가 있지만, 질병 치료인지 예방·미용 목적 처치인지에 따라 다를 수 있습니다.",
         points:["구강질환 관련 담보와 면책 조항을 확인하세요.","일반 스케일링을 자동으로 보장되는 치료로 판단하지 않습니다."]};
     }
+    if(insurerId==="db-dog"){
+      const dbBase={...base,showDBDetails:true};
+      if(careId==="patella")return {...dbBase,status:"면책기간 확인 필수",title:"슬관절·고관절 탈구 관련 진료",
+        description:"펫블리 반려견보험2610의 공식 안내에는 슬관절·고관절 탈구와 유사 질환·상해가 가입일부터 1년이 지난 다음 날부터 보장 개시된다고 설명돼 있습니다.",
+        points:["의료비 관련 특약 가입과 최초 사고·발병 시점이 중요합니다.","기존 질환, 일일·연간 한도 및 실제 계약의 지급 제한을 확인해야 합니다."]};
+      if(careId==="mri"||careId==="dental"||careId==="skin"){
+        const titles={mri:"MRI·CT 검사비 확대",dental:"치과·구강질환 확장보장",skin:"특정피부 약물치료 확장보장"};
+        return {...dbBase,status:"특약 가입 여부 확인",title:titles[careId],
+          description:"DB손해보험 공식 펫블리 2610 안내에서 관련 확장보장 특약을 소개하지만, 가입 여부와 진료비 보장 대상은 별도 확인이 필요합니다.",
+          points:["해당 확장보장 특약 가입과 실제 치료 목적을 확인해야 합니다.","검사·처치별 금액과 계약별 한도가 불확실해 보험금 확정 계산은 제공하지 않습니다."]};
+      }
+      if(careId==="illness"||careId==="digestive"||careId==="ear"||careId==="injury"){
+        const titles={illness:"질병 통원·입원 의료비",digestive:"구토·설사 관련 진료",ear:"외이염·귀 질환 치료",injury:"사고·상해 치료"};
+        return {...dbBase,status:"보장 검토 가능",title:titles[careId],
+          description:"펫블리 반려견보험2610의 공개 안내는 의료비 특약 가입 시 보상비율 50%·70%, 자기부담금 3만·5만원을 소개합니다. 아래 금액은 3만원 공제 시 한도 적용 전 계산 예시입니다.",
+          points:["질병은 가입 후 30일 경과와 기존 질환 여부를 확인하세요.","실제 보장액은 계약별 일일·연간 한도와 선택한 자기부담금에 따라 달라집니다."]};
+      }
+      return dbBase;
+    }
     if(hyundaiDog&&(careId==="patella"||careId==="mri"||careId==="dental")){
       const titles={patella:"슬관절·고관절",mri:"MRI·CT 검사",dental:"치과·구강질환"};
       return {...base,status:"특약 가입 여부 확인",title:titles[careId]+" 보장",
@@ -213,7 +236,7 @@
     return '<article class="insurance-result pjm020-result" role="status" aria-live="polite">'+
       '<span class="pjm020-status">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3>'+
       '<p>'+esc(x.description)+'</p>'+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
-      (x.showPlans?planDetails:"")+
+      (x.showPlans?planDetails:"")+(x.showDBDetails?dbDetails:"")+
       '<p class="pjm020-note">해당 상품의 공개 안내를 요약한 내용이며, 가입 계약에 따라 결과가 달라질 수 있습니다.</p>'+
       ''+
       '</article>';
