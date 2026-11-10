@@ -212,7 +212,10 @@
       '<p class="pjm023-focus"><b>'+(isExtra?'선택한 보장·청구 항목의 확인 사항':'선택한 진료의 확인 사항')+'</b> '+esc(note)+'</p>'+clauseContext+
       '<details class="pjm023-more"><summary>한도·면책기간·특약 자세히 보기</summary><dl>'+
       row("일일·연간 한도",limit)+row("보장개시·면책",waiting)+row("확장보장",riders)+
-      '</dl><p>검토 자료: '+esc(source)+(insurerId.startsWith('nh-')?' (보험사 공식 원문 약관이 아닌 판매 대리점 안내)':'')+'</p>'+
+      '</dl>'+(clause?.details?.length?
+        '<div class="pjm028-clause-details"><h5>이 특약의 실제 지급 조건</h5><dl>'+
+        clause.details.map(([label,detail])=>row(label,detail)).join("")+'</dl></div>':"")+
+      '<p>검토 자료: '+esc(source)+(insurerId.startsWith('nh-')?' (보험사 공식 원문 약관이 아닌 판매 대리점 안내)':'')+'</p>'+
       '<p>가입 시점의 증권·약관 및 진료 영수증을 대조한 결과가 아닙니다. 해당 진료의 보장 여부나 지급액을 확정하지 않습니다.</p></details>'+
       '</section>';
   }

@@ -133,10 +133,30 @@ def run_case(browser,url,w,h,engine):
                  "extra KB benefits must not result in invented payment")
             need(page.locator(".pjm020-result a[target='_blank']").count()==0,
                  "the result should remain inside PRZIMA")
+            # PJM-028: show original exclusions only on explicit expansion,
+            # keeping the default two-selection result concise.
+            need(page.locator(".pjm028-clause-details").count()==1,
+                 "KB 26.01 supplement must be available in details")
+            need(not page.locator(".pjm028-clause-details").is_visible(),
+                 "policy exclusions should stay collapsed by default")
+            page.locator(".pjm023-more summary").click()
+            details=page.locator(".pjm028-clause-details").inner_text()
+            must={"funeral":("장례확인서","임시 안치"),
+                  "boarding":("위탁비용 영수증","질병입원"),
+                  "liability":("3만원","동거","질병 전염")}
+            for word in must[care]:
+                need(word in details or word in detail,
+                     f"KB 26.01 {care} missing verified claim exclusion: {word}")
+            if care=="liability":
+                need("타인 소유 반려동물" in detail,
+                     "KB liability must not be overclaimed as all property damage")
+                need("사고당 자기부담금 3만원" in detail,
+                     "KB accident-level deductible lost")
         page.locator("#insurerSelect").select_option("kb-cat")
         page.locator("#careSelect").select_option("boarding")
         page.locator(".insurance-button").click()
-        need(page.locator(".pjm027-clause-origin").count()==0,
+        need(page.locator(".pjm027-clause-origin").count()==0 and
+             page.locator(".pjm028-clause-details").count()==0,
              "KB 26.01 dog boarding terms must never be copied to KB cat")
         page.locator("#insurerSelect").select_option("samsung-dog")
         page.locator("#careSelect").select_option("funeral")
