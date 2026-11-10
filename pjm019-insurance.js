@@ -33,7 +33,7 @@
   function careOptions(selected){
     const base='<optgroup label="주요 진료 항목">'+options(CARES.filter(c=>!c.group),selected)+'</optgroup>';
     return base+catalog.groups.filter(group=>group!=="고양이 주요질환"||state.insurer.endsWith("-cat")).map(group=>
-      '<optgroup label="'+esc(group)+'">'+options(CARES.filter(c=>c.group===group),selected)+'</optgroup>'
+      '<optgroup label="'+esc(group)+'">'+options(CARES.filter(c=>c.group===group&&(state.insurer.endsWith('-cat')||!c.id.startsWith('dog_'))),selected)+'</optgroup>'
     ).join("");
   }
   const PLAN_LIMITS=[
@@ -129,7 +129,7 @@
       })};
   }
   function guidance(insurerId,careId){
-    const g=CARE_GUIDES[careId];if(!g)return "";
+    const g=CARE_GUIDES[careId];if(!g||catalog.cares.some(c=>c.id===careId&&c.group==="기타 보장"))return "";
     const meritz=insurerId==="meritz-dog",db=insurerId==="db-dog";
     const cat=insurerId.endsWith("-cat");
     // Never present a DOG-specific published fee as a feline treatment price.
@@ -189,19 +189,33 @@
   function coverageInfo(insurerId,careId){
     const p=catalog.products[insurerId];if(!p)return "";
     const ins=INSURERS.find(i=>i.id===insurerId);
+    const care=catalog.cares.find(x=>x.id===careId);
+    const isExtra=care&&care.group==="기타 보장";
     const note=(catalog.focus[insurerId]||{})[careId]||
-      "이 진료의 검사·약제·처치가 보장되는지는 진단명, 치료 목적, 실제 가입한 특약 및 면책기간에 따라 달라집니다.";
+      (isExtra?"이 상품의 해당 부가보장 특약은 확인되지 않았습니다. 다른 보험사의 보장을 이 계약에도 적용하지 않습니다.":
+      "이 진료의 검사·약제·처치가 보장되는지는 진단명, 치료 목적, 실제 가입한 특약 및 면책기간에 따라 달라집니다.");
     const [version,scope,ratio,deductible,limit,waiting,riders,source]=p;
     const row=(label,detail)=>'<div class="pjm023-fact"><dt>'+esc(label)+'</dt><dd>'+esc(detail)+'</dd></div>';
     const caution=insurerId.startsWith("nh-")||insurerId==="kb-cat";
-    return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
-      '<div class="pjm023-head"><h4>보험사의 공개 보장 조건</h4><span>'+esc(caution?"원문 약관 미검증":"상품 안내 기준")+'</span></div>'+
+    const evidence=insurerId.startsWith("nh-")||insurerId==="kb-cat"?"약관 원문 미확인":
+      insurerId==="hyundai-dog"||insurerId==="hyundai-cat"||insurerId==="kb-dog"?
+      "관련 버전 약관 원문 확인":"공식 상품 안내 기준";
+    const sourceUrl={
+      "kb-dog":"https://direct.kbinsure.co.kr/dwlddoc/KB_Direct_LngtrmDog%2825064%29_202601.pdf",
+      "kb-cat":"https://www.kbinsure.co.kr/CG803000012.ec",
+      "db-dog":"https://www.directdb.co.kr/ltm/prd/cpnm/custInfoView.do?pdcDvcd=l_pet_dog&searchPdcCd=31119&searchPdcTrtHistCd=00",
+      "nh-dog":"https://nh-insure.co.kr/pet/",
+      "nh-cat":"https://nh-insure.co.kr/pet/"
+    }[insurerId]||ins?.source||"";
+    const extraContext=isExtra?
+      '<p class="pjm023-extra-warning">이 항목은 일반 진료비 실손 담보가 아닌 별도 보장 또는 청구 절차입니다. 관련 특약의 실제 가입 여부가 확인되지 않으면 지급 가능하다고 판단할 수 없습니다.</p>':"";    return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
+      '<div class="pjm023-head"><h4>보험 상품 보장 확인</h4><span>'+esc(evidence)+'</span></div>'+
       '<p class="pjm023-version">'+esc((ins?ins.label+' · ':'')+version)+'</p>'+
-      '<dl class="pjm023-facts">'+row("어떤 진료",scope)+row("보상비율",ratio)+row("자기부담금",deductible)+'</dl>'+
-      '<p class="pjm023-focus"><b>선택한 진료의 확인 사항</b> '+esc(note)+'</p>'+
+      '<dl class="pjm023-facts">'+row(isExtra?"기본 의료비":"어떤 진료",scope)+row("보상비율",ratio)+row("자기부담금",deductible)+'</dl>'+extraContext+
+      '<p class="pjm023-focus"><b>'+(isExtra?'선택한 보장·청구 항목의 확인 사항':'선택한 진료의 확인 사항')+'</b> '+esc(note)+'</p>'+
       '<details class="pjm023-more"><summary>한도·면책기간·특약 자세히 보기</summary><dl>'+
       row("일일·연간 한도",limit)+row("보장개시·면책",waiting)+row("확장보장",riders)+
-      '</dl><p>검토 자료: '+esc(source)+'</p>'+
+      '</dl><p>검토 자료: '+esc(source)+'</p>'+(sourceUrl?'<p><a href="'+esc(sourceUrl)+'" target="_blank" rel="noopener noreferrer">근거 자료 확인</a>'+(insurerId.startsWith('nh-')?' (보험사 공식 사이트가 아닌 판매 안내 페이지)':'')+'</p>':'')+
       '<p>가입 시점의 증권·약관 및 진료 영수증을 대조한 결과가 아닙니다. 해당 진료의 보장 여부나 지급액을 확정하지 않습니다.</p></details>'+
       '</section>';
   }
@@ -217,11 +231,17 @@
     if(catalog.cares.some(i=>i.id===careId)){
       const term=catalog.cares.find(i=>i.id===careId);
       const preventive=careId==="neuter"||careId==="healthcheck";
-      return {...base,status:preventive?"일반적으로 보장 제외":"특약·진단 확인 필요",
+      const extra=term.group==="기타 보장";
+      const docs=careId==="claim_docs";
+      return {...base,status:preventive?"일반적으로 보장 제외":docs?"보험금 청구 준비":extra?"개별 부가특약 확인 필요":"특약·진단 확인 필요",
         title:term.label,
         description:preventive?"예방·일상 관리 목적의 진료는 일반 의료비 특약에서 보장하지 않을 수 있습니다. 치료 목적의 예외는 계약별 확인이 필요합니다.":
+          docs?"진료비 영수증·세부내역서·진료기록부 등을 준비할 수 있습니다. 보험사·청구 금액·상병명에 따라 추가 서류가 필요합니다. 개인정보나 파일을 프지마에 제출할 필요는 없습니다.":
+          extra?"의료비와 다른 별도 특약입니다. 지급 대상 사고, 제외 사유, 가입 여부 및 실제 지급 금액을 구분해 확인해야 합니다.":
           "이 진료의 검사·처치·약제비가 모두 같은 보장에 포함되는 것은 아닙니다. 아래 상품별 보장 조건과 면책을 확인해 주세요.",
-        points:["실제 보장 여부는 가입 담보와 진단명·치료 목적에 따라 달라집니다.","개별 영수증 항목과 공제금·한도·기지급금액 등은 확인되지 않았습니다."],
+        points:docs?["보험사 공식 보험금 청구 안내에서 서류 목록과 적용 기준을 확인하세요.","진료비 영수증·세부내역서 원본은 이 화면에 업로드하지 마세요."]:
+          extra?["실제 계약에 해당 부가특약이 있는지 확인해야 합니다.","사고 요건·서류·공제금·책임 한도 등 확인 전에는 지급액을 계산하지 않습니다."]:
+          ["실제 보장 여부는 가입 담보와 진단명·치료 목적에 따라 달라집니다.","개별 영수증 항목과 공제금·한도·기지급금액 등은 확인되지 않았습니다."],
         showPlans:false,showDBDetails:false};
     }
     if(careId==="vaccine"||careId==="groom"){
@@ -292,7 +312,7 @@
       '</article>';
   }
   function section(mode,legacyCare){
-    if(mode!==state.mode){state.mode=mode;state.insurer=mode==="cat"?"meritz-cat":"meritz-dog";if(mode!=="cat"&&state.care.startsWith("feline_"))state.care="illness";state.showResult=false;}
+    if(mode!==state.mode){state.mode=mode;state.insurer=mode==="cat"?"meritz-cat":"meritz-dog";if((mode!=="cat"&&state.care.startsWith("feline_"))||(mode==="cat"&&state.care.startsWith("dog_")))state.care="illness";state.showResult=false;}
     if(legacyCare&&state.previousCare!==legacyCare&&CARES.some(i=>i.id===legacyCare)){
       state.previousCare=legacyCare;state.care=legacyCare;state.showResult=false;
     }
@@ -319,7 +339,7 @@
     const insurerChanged=event.target.id==="insurerSelect";
     state[insurerChanged?"insurer":"care"]=event.target.value;
     if(insurerChanged){
-      if(!state.insurer.endsWith("-cat")&&state.care.startsWith("feline_"))state.care="illness";
+      if((!state.insurer.endsWith("-cat")&&state.care.startsWith("feline_"))||(state.insurer.endsWith("-cat")&&state.care.startsWith("dog_")))state.care="illness";
       const careSelect=document.getElementById("careSelect");
       if(careSelect)careSelect.innerHTML=careOptions(state.care);
     }
