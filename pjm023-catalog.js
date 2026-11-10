@@ -9,8 +9,8 @@ const insurers=[
   ["samsung-cat","삼성화재 · 다이렉트 펫보험 반려묘","https://direct.samsungfire.com/m/fp/pet.html"],
   ["kb-dog","KB손해보험 · 금쪽같은 펫보험 반려견","https://insight.kbinsure.co.kr/pet-insurance-coverage/"],
   ["kb-cat","KB손해보험 · 금쪽같은 펫보험 반려묘","https://www.kbinsure.co.kr/CG313020001.ec"],
-  ["nh-dog","NH농협손해보험 · NH펫앤미든든 반려견","https://nh-insure.co.kr/pet/"],
-  ["nh-cat","NH농협손해보험 · NH펫앤미든든 반려묘","https://nh-insure.co.kr/pet/"],
+  ["nh-dog","NH농협손해보험 · NH펫앤미든든 반려견","https://www.nhfire.co.kr/"],
+  ["nh-cat","NH농협손해보험 · NH펫앤미든든 반려묘","https://www.nhfire.co.kr/"],
   ["kakao-dog","카카오페이손해보험 · 펫보험 반려견","https://kakaopayinscorp.co.kr/blog/kang-hyungwook-pet-insurance-must-check"],
   ["kakao-cat","카카오페이손해보험 · 펫보험 반려묘","https://kakaopayinscorp.co.kr/"]
 ].map(([id,label,source])=>({id,label,source}));
@@ -93,6 +93,92 @@ const focus={
  "kakao-dog":{patella:"일반 질병 30일과 다르게 슬관절·고관절 탈구는 최초 1년 면책입니다.",surgery:"수술당일형·수술입원형·수술입통원형에서 입원/통원 보장 범위가 다릅니다."},
  "kakao-cat":{feline_cystitis:"반려묘 질환별 대기기간과 플랜에 포함된 통원 담보를 확인해야 합니다."}
 };
-window.PJM023=Object.freeze({insurers,cares,products,focus,
+const EVIDENCE={
+  "meritz-dog": {
+    "grade": "B",
+    "basis": "공식 상품 상세 안내",
+    "version": "2026 펫퍼민트 Puppy & Family",
+    "warning": "가입 연도에 따라 플랜별 공제금·보장한도가 달라질 수 있습니다."
+  },
+  "meritz-cat": {
+    "grade": "B",
+    "basis": "공식 반려묘 상품 상세 안내",
+    "version": "2026 Cat & Family",
+    "warning": "반려견 의료비 보장 규칙을 고양이 계약에 적용하지 않습니다."
+  },
+  "hyundai-dog": {
+    "grade": "A",
+    "basis": "현대해상 Hi2601 공식 약관 PDF",
+    "version": "Hi2601",
+    "warning": "검토한 Hi2601과 가입 증권의 버전이 같은 경우에만 해당 조항을 참고할 수 있습니다."
+  },
+  "hyundai-cat": {
+    "grade": "A",
+    "basis": "현대해상 Hi2601 반려묘 특별약관 PDF",
+    "version": "Hi2601",
+    "warning": "반려견 특별약관의 관절·특정약물 조건을 반려묘 계약에 복사하지 않습니다."
+  },
+  "db-dog": {
+    "grade": "B",
+    "basis": "DB 공식 다이렉트 상품 상세페이지",
+    "version": "2610 상품 소개 / 2607 가입안내 혼재",
+    "warning": "같은 화면에 2610과 2607 안내가 섞여 있습니다. 2607의 지급횟수·한도를 2610 계약에 확정 적용할 수 없습니다."
+  },
+  "db-cat": {
+    "grade": "B",
+    "basis": "DB 반려묘 공식 상품 소개",
+    "version": "반려묘 상품 안내, 개별 약관 버전 미대조",
+    "warning": "반려견 2610 및 2607 상품의 한도와 특약을 반려묘에 복사하지 않습니다."
+  },
+  "samsung-dog": {
+    "grade": "B",
+    "basis": "삼성화재 반려견 공식 다이렉트 상세",
+    "version": "2026 착한펫 반려견 상세",
+    "warning": "범용 소개 페이지와 상세 상품의 보상비율 선택지가 다르므로 가입 상품을 확인해야 합니다."
+  },
+  "samsung-cat": {
+    "grade": "B",
+    "basis": "삼성화재 반려묘 공식 다이렉트 상세",
+    "version": "2026 반려묘 상세",
+    "warning": "특정 전염병 보장에는 예방접종 내역 등 추가 조건이 적용될 수 있습니다."
+  },
+  "kb-dog": {
+    "grade": "A",
+    "basis": "KB 26.01 공식 약관 원문 / 26.07 상품 공시",
+    "version": "26.01 약관 검증 / 26.07는 상품 존재만 공시 확인",
+    "warning": "26.01 약관의 30·90일 및 동일일 중복지급 제한을 26.07 가입자에게 그대로 적용하지 마세요."
+  },
+  "kb-cat": {
+    "grade": "D",
+    "basis": "KB 26.07 반려묘 상품 공식 공시",
+    "version": "26.07 상품 존재 확인 / 약관 원문 조건 미검증",
+    "warning": "반려견 26.01 약관의 보상비율·면책을 반려묘 26.07에 적용하지 않습니다."
+  },
+  "nh-dog": {
+    "grade": "D",
+    "basis": "2604 보험 판매 안내(제3자), 보험사 원문 미검증",
+    "version": "2604 판매 안내 / 공식 원문 미확보",
+    "warning": "NH농협손해보험의 공식 사이트는 nhfire.co.kr입니다. nh-insure.co.kr은 공식 보험사 약관으로 확인되지 않았습니다."
+  },
+  "nh-cat": {
+    "grade": "D",
+    "basis": "2604 보험 판매 안내(제3자), 보험사 원문 미검증",
+    "version": "2604 판매 안내 / 공식 원문 미확보",
+    "warning": "NH농협손해보험의 공식 사이트는 nhfire.co.kr입니다. 제3자 판매 안내를 보험사 공식 약관으로 취급하지 않습니다."
+  },
+  "kakao-dog": {
+    "grade": "C",
+    "basis": "카카오페이손해보험 공식 블로그·상품 설명",
+    "version": "2026 공개 소개(플랜별 원문 약관 미대조)",
+    "warning": "수술당일형·수술입원형·수술입통원형의 보장대상 차이가 있으므로 정확한 가입 플랜을 확인해야 합니다."
+  },
+  "kakao-cat": {
+    "grade": "C",
+    "basis": "카카오페이손해보험 공식 상품 소개",
+    "version": "2026 반려묘 공개 소개, 개별 약관 미대조",
+    "warning": "반려견 플랜의 보상비율·공제금을 고양이 상품에 그대로 적용하지 않습니다."
+  }
+};
+window.PJM023=Object.freeze({insurers,cares,products,focus,evidence:EVIDENCE,
   groups:["소화기","내과·만성질환","피부·귀·눈","뼈·관절","검사·처치","고양이 주요질환","예방·일상","기타 보장"]});
 })();
