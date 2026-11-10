@@ -78,7 +78,8 @@ def run_case(browser,origin,width,height,name):
         page.locator(".pjm020-details summary").click()
         require(page.locator(".pjm020-details[open] table").is_visible(),"plan comparison did not expand")
         require(page.locator(".pjm020-details tbody tr").count()==3,"plan rows missing")
-        require(page.locator(".pjm020-result a[target='_blank']").count()==1,"official evidence should be optional link")
+        require(page.locator(".pjm020-result a[target='_blank']").count()==0,"insurance explanation should remain inside PRZIMA")
+        require(page.locator(".pjm021-policy-details").count()==1,"source and exclusions must be explained in-app")
 
         page.locator("#careSelect").select_option("patella")
         require(page.locator(".pjm020-result").count()==0,"stale result after changing treatment")
