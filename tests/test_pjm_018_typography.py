@@ -36,8 +36,8 @@ def run_case(browser,origin,width,height,name):
         lambda route:route.fulfill(status=200,content_type="text/css",body="/* font CDN stub: no glyph files in CI */"))
     try:
         page.goto(origin,wait_until="load")
-        page.locator(".pjm013-nav-name").first.wait_for(timeout=12000)
-        require("SUIT Variable" in family(page,".pjm013-nav-name"),f"{name} navigation missing SUIT")
+        page.locator(".pjm013-nav-name").first.wait_for(state="attached",timeout=12000)
+        require("SUIT Variable" in family(page,".pjm013-nav-name:visible"),f"{name} navigation missing SUIT")
         require("SUITE Variable" in family(page,".brand-primary"),f"{name} brand missing SUITE")
         require("SUITE Variable" in family(page,".hero-v4-heading"),f"{name} photo hero missing SUITE")
         require("SUIT Variable" in family(page,".pjm013-service-card"),f"{name} service card missing SUIT")
