@@ -71,7 +71,7 @@ def run_screen(browser, origin, width, height, name):
         require(page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--przima-typeface').includes('SUIT Variable')"), "SUIT typography token missing")
         require(page.evaluate("getComputedStyle(document.documentElement).fontSynthesis") == "none", "synthetic font styles enabled")
         for sel in [
-            ".pjm013-header .brand-primary",
+            ".pjm013-header .brand-all-focus",
             ".pjm013-service-card strong",
             ".pjm013-home-legacy .hero-v4-heading",
             ".pjm013-search-row input",
