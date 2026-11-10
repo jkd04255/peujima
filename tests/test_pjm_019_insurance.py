@@ -1,7 +1,6 @@
-"""PJM-019: verified-product, fail-closed benefit scenarios and full UI/browser regression.
-
-Only mocks existing official-information links, no real insurer, login, policy PDF,
-paid API, personal location or insurance claim. Real iPhone Safari is separate.
+"""PJM-020 insurance summary UX regression.
+The screen now asks only for product and care type, not expense/dates/medical history.
+Official-public-info summaries are not policy adjudication; unknown contract details stay unknown.
 """
 from __future__ import annotations
 import functools
@@ -11,116 +10,101 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
-
 class Quiet(http.server.SimpleHTTPRequestHandler):
-    def log_message(self, *args): pass
+    def log_message(self,*args): pass
 
-def require(condition, message):
-    if not condition:
-        raise AssertionError(message)
+def require(value,msg):
+    if not value: raise AssertionError(msg)
 
-def evaluate(page, **changes):
-    base={
-      "insurer":"meritz-dog","plan":"premium","care":"illness","deductible":"30000",
-      "visit":"out","start":"2025-01-01","onset":"2026-03-05",
-      "expense":"200000","annualPaid":"0","dailyPaid":"0","existing":"no",
-      "scanUsed":"no","policyMatch":True
-    }
-    base.update(changes)
-    return page.evaluate("(q)=>window.PJM019.estimate(q)",base)
+def verify_summary_engine(page):
+    q=lambda ins,care: page.evaluate("(x)=>PJM019.summarize(x.ins,x.care)",{"ins":ins,"care":care})
+    x=q("meritz-dog","illness")
+    require(x["status"]=="보장 검토 가능" and "30일" in " ".join(x["points"]),"Meritz disease waiting period")
+    require("50~70%" in x["description"] and x["showPlans"],"published tier-range disclosure")
+    x=q("meritz-dog","patella")
+    require("1년" in x["description"] and x["status"]=="면책기간 확인 필수","patella timing warning")
+    x=q("meritz-dog","mri")
+    require("최초 연 1회" in x["description"],"scan annual one-time cap")
+    x=q("meritz-dog","dental")
+    require("확인" in x["status"],"dental should not assert guaranteed payout")
+    for c in ["vaccine","groom"]:
+        x=q("meritz-dog",c)
+        require(x["status"]=="일반적으로 보장 제외","preventive / cosmetic coverage caution")
+    for ins in ["meritz-cat","hyundai-dog","hyundai-cat","db-dog","db-cat"]:
+        x=q(ins,"illness")
+        require(x["showPlans"] is False,"must not carry Meritz dog amounts over to other products")
+        require("50~70%" not in x["description"],"must not show unverified percentages")
+    x=q("hyundai-dog","mri")
+    require(x["status"]=="특약 가입 여부 확인","Hyundai add-on caveat")
+    require(q("hyundai-cat","mri")["showPlans"] is False,"cat policy is not dog rider")
+    require(q("missing","unknown")["status"]=="추가 확인 필요","invalid selection must fail closed")
 
-def check_engine(page):
-    good=evaluate(page)
-    require(good["kind"]=="scenario" and good["amount"]==119000,
-       "70% 200000 minus 30000 deductible example should be 119000")
-    require(evaluate(page,plan="standard",expense="1000000")["amount"]==150000,
-       "basic plan daily cap")
-    require(evaluate(page,plan="economy",expense="1000000")["amount"]==100000,
-       "economy plan daily cap")
-    require(evaluate(page,annualPaid="14950000")["amount"]==50000,
-       "annual remaining cap")
-    require(evaluate(page,visit="surgery-out",expense="8000000")["amount"]==2500000,
-       "surgery-day cap")
-    require(evaluate(page,care="mri",scanUsed="no",expense="4000000")["amount"]==300000,
-       "MRI first annual scan constrained by non-surgery daily cap")
-    require(evaluate(page,care="patella",start="2026-01-01",onset="2026-06-01")["kind"]=="excluded",
-       "first-year patella exclusion")
-    require(evaluate(page,care="illness",start="2026-01-01",onset="2026-01-20")["kind"]=="excluded",
-       "first 30 days illness exclusion")
-    require(evaluate(page,care="injury",start="2026-01-01",onset="2026-01-05")["kind"]=="scenario",
-       "injury should not be treated as new-disease waiting period")
-    require(evaluate(page,care="vaccine")["kind"]=="excluded","preventive care exclusion")
-    require(evaluate(page,care="groom")["kind"]=="excluded","grooming exclusion")
-    require(evaluate(page,care="dental")["kind"]=="hold","dental needs contract conditions")
-    require(evaluate(page,care="mri",scanUsed="yes")["kind"]=="hold","repeat imaging must be held")
-    require(evaluate(page,insurer="hyundai-dog")["kind"]=="hold","other insurer must not estimate")
-    require(evaluate(page,insurer="meritz-cat")["kind"]=="hold","dog rules cannot be reused for cats")
-    require(evaluate(page,policyMatch=False)["kind"]=="hold","unknown signed terms must block")
-    require(evaluate(page,existing="unknown")["kind"]=="hold","unknown pre-existing condition blocks")
-    require(evaluate(page,existing="yes")["kind"]=="excluded","documented pre-existing condition")
-    require(evaluate(page,expense="-1")["kind"]=="hold","negative cost blocks")
-    require(evaluate(page,expense="abc")["kind"]=="hold","invalid currency blocks")
-    require(evaluate(page,annualPaid="")["kind"]=="hold","unknown annual remainder blocks")
-    require(evaluate(page,onset="2023-01-01")["kind"]=="hold","pre-policy illness blocks")
-    require(evaluate(page,start="2026-02-31")["kind"]=="hold","invalid start date blocks")
-
-def run_case(browser, origin, width, height, engine="Chromium"):
-    ctx=browser.new_context(viewport={"width":width,"height":height},locale="ko-KR",
-        reduced_motion="reduce",has_touch=engine=="WebKit",is_mobile=engine=="WebKit")
-    page=ctx.new_page()
-    exceptions=[]
-    page.on("pageerror",lambda e:exceptions.append(str(e)))
+def run_case(browser,origin,width,height,name):
+    context=browser.new_context(viewport={"width":width,"height":height},locale="ko-KR",
+        reduced_motion="reduce",has_touch=name=="WebKit",is_mobile=name=="WebKit")
+    page=context.new_page()
+    errors=[]
+    page.on("pageerror",lambda e:errors.append(str(e)))
     page.route("https://cdn.jsdelivr.net/gh/sun-typeface/**",
         lambda route:route.fulfill(status=200,content_type="text/css",body="/* no external font in test */"))
     try:
         page.goto(origin+"#insurance",wait_until="load")
-        require(page.locator("#insurance").count()==1,"insurance route not mounted")
-        require(page.locator("#insurerSelect").is_visible(),"insurance company selection lost")
-        require(page.locator("#careSelect").is_visible(),"care selection lost")
-        require(page.locator(".insurance-button").is_visible(),"analysis button missing")
-        require(page.locator(".insurance-disclaimer").is_visible(),"insurance non-guarantee notice lost")
-        require(page.locator(".insurance-intro").count()==0,"redundant intro returned")
-        require(page.locator(".insurance-card .form-head").count()==0,"decorative English heading returned")
-        require(page.locator("a[href='https://www.meritzdirect.com/pet/product.do']").count()>0,
-                "official source link missing")
-        require("PJM019" in page.evaluate("() => ({PJM019:!!window.PJM019})") and page.evaluate("!!window.PJM019"),
-                "engine not loaded")
-        check_engine(page)
+        require(page.locator("#insurance").is_visible(),"insurance view missing")
+        require(page.locator("#insurerSelect").is_visible(),"insurer selector missing")
+        require(page.locator("#careSelect").is_visible(),"treatment selector missing")
+        require(page.locator(".insurance-button").is_visible(),"summary button missing")
+        require(page.locator(".insurance-disclaimer").is_visible(),"policy disclaimer missing")
+        require(page.locator(".insurance-intro").count()==0,"old redundant intro returned")
+        require(page.locator(".insurance-card .form-head").count()==0,"old non-functional English metadata returned")
+        require(page.locator("#pjm019Expense").count()==0,"old expense input still displayed")
+        require(page.locator("#pjm019Start").count()==0,"old insurance date still required")
+        require(page.locator("#pjm019AnnualPaid").count()==0,"old paid amount field still required")
+        require(page.locator("#pjm019PolicyMatch").count()==0,"old checkbox still required")
+        require(page.locator("#insurance select").count()==2,"expected exactly two product and care selects")
+        require(page.locator(".pjm020-result").count()==0,"result visible before user chooses")
+        require(page.locator(".insurance-button").evaluate("(b)=>b.tagName")== "BUTTON","summary is not a link")
+        require("PJM019" in page.evaluate("() => ({PJM019:!!window.PJM019})"),"analyzer JS unavailable")
+        verify_summary_engine(page)
+
         page.locator(".insurance-button").click()
-        require(page.locator(".insurance-result").is_visible(),"initial hold result missing")
-        require("추가 확인" in page.locator(".insurance-result").inner_text(),"missing fields should not estimate")
-        page.locator("#pjm019Start").fill("2025-01-01")
-        page.locator("#pjm019Start").dispatch_event("change")
-        page.locator("#pjm019Onset").fill("2026-03-05")
-        page.locator("#pjm019Onset").dispatch_event("change")
-        page.locator("#pjm019Expense").fill("200000")
-        page.locator("#pjm019Expense").dispatch_event("change")
-        page.locator("#pjm019AnnualPaid").fill("0")
-        page.locator("#pjm019AnnualPaid").dispatch_event("change")
-        page.locator("#pjm019DailyPaid").fill("0")
-        page.locator("#pjm019DailyPaid").dispatch_event("change")
-        page.locator("#pjm019Existing").select_option("no")
-        page.locator("#pjm019PolicyMatch").check()
+        require(page.locator(".insurance-result").is_visible(),"summary not rendered after click")
+        result=page.locator(".insurance-result").inner_text()
+        require("질병 통원·입원 의료비" in result,"wrong first default summary")
+        require("50~70%" in result,"range should be concise and labeled")
+        require("30일" in result,"waiting period not included")
+        require(page.locator(".pjm020-details").count()==1,"optional detailed plan info missing")
+        require(page.locator(".pjm020-details").is_visible(),"plan detail disclosure inaccessible")
+        require(not page.locator(".pjm020-details").get_attribute("open"),"plans should start collapsed")
+        page.locator(".pjm020-details summary").click()
+        require(page.locator(".pjm020-details[open] table").is_visible(),"plan comparison did not expand")
+        require(page.locator(".pjm020-details tbody tr").count()==3,"plan rows missing")
+        require(page.locator(".pjm020-result a[target='_blank']").count()==1,"official evidence should be optional link")
+
+        page.locator("#careSelect").select_option("patella")
+        require(page.locator(".pjm020-result").count()==0,"stale result after changing treatment")
+        require(page.locator("#insurerSelect").input_value()=="meritz-dog","selection lost after care change")
         page.locator(".insurance-button").click()
-        require("119,000원" in page.locator(".pjm019-amount").inner_text(),
-                "UI result should use assumed rule and cite amount as hypothetical")
-        require("확정" in page.locator(".pjm019-result").inner_text(),"uncertainty notice disappeared")
+        require("1년" in page.locator(".pjm020-result").inner_text(),"patella summary missing")
         page.locator("#insurerSelect").select_option("hyundai-dog")
-        require(page.locator(".pjm019-amount").count()==0,
-                "stale Meritz amount visible after unsupported insurer switch")
+        require(page.locator(".pjm020-result").count()==0,"stale Meritz result after insurer change")
         page.locator(".insurance-button").click()
-        require("추가 확인" in page.locator(".insurance-result").inner_text(),
-                "unsupported insurer must not produce claims")
-        require(not page.evaluate("document.documentElement.scrollWidth > innerWidth+2"),
-                f"{engine} {width}: insurance overflow")
+        require("특약" in page.locator(".pjm020-result").inner_text(),"Hyundai optional clause missing")
+        require(page.locator(".pjm020-details").count()==0,"unverified insurer has plan comparison")
+
+        page.locator("#insurerSelect").select_option("meritz-cat")
+        page.locator("#careSelect").select_option("illness")
+        page.locator(".insurance-button").click()
+        require("반려묘" in page.locator(".pjm020-result").inner_text(),"cat warning missing")
+        require("30만원" not in page.locator(".pjm020-result").inner_text(),"dog numeric limit copied to cat")
+        require(not page.evaluate("document.documentElement.scrollWidth > innerWidth+2"),f"{name} {width}px horizontal overflow")
         page.goto(origin+"#home",wait_until="load")
-        require(page.locator(".pjm013-service-card").count()==3,"home services changed")
+        require(page.locator(".pjm013-service-card").count()==3,"home services broken")
         page.goto(origin+"#nearby",wait_until="load")
-        require(page.locator(".nearby-geo").is_visible(),"Kakao search missing after insurance")
-        require(not exceptions,f"{engine} {width}: JS errors: {exceptions}")
-        print(f"PASS PJM-019 {engine} {width}px: terms scenarios, fail-closed checks, UI, routes, overflow")
+        require(page.locator(".nearby-geo").is_visible(),"Kakao place search missing")
+        require(not errors,f"{name} {width}px JS errors {errors}")
+        print(f"PASS PJM-020 {name} {width}px simple insurance summaries / controls / routes")
     finally:
-        ctx.close()
+        context.close()
 
 def main():
     server=http.server.ThreadingHTTPServer(("127.0.0.1",0),
@@ -132,8 +116,8 @@ def main():
             chromium=p.chromium.launch(headless=True,args=["--no-sandbox"])
             webkit=p.webkit.launch(headless=True)
             try:
-                for w,h in [(320,700),(390,844),(1440,900)]:
-                    run_case(chromium,origin,w,h)
+                for width,height in [(320,700),(390,844),(1440,900)]:
+                    run_case(chromium,origin,width,height,"Chromium")
                 run_case(webkit,origin,390,844,"WebKit")
             finally:
                 chromium.close()
@@ -141,7 +125,6 @@ def main():
     finally:
         server.shutdown()
         server.server_close()
-    print("ALL PJM-019 POLICY SCENARIO QA PASSED")
+    print("PJM-020 SIMPLE INSURANCE QA PASSED")
 
-if __name__=="__main__":
-    main()
+if __name__=="__main__": main()
