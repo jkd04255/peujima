@@ -257,3 +257,55 @@
   .pjm020-result .pjm030-fineprint{margin-top:19px!important;padding-top:12px!important}
   .pjm030-fineprint-content{padding-top:9px!important}
 }
+
+/* PJM-031 · Real procedure-level choices without extra user inputs.
+   Medical care remains prominent; meta disclaimers move to PJM-030 fine print. */
+.pjm020-result .pjm031-procedures{
+  margin:22px 0 18px!important;padding:19px 0 0!important;
+  border:0!important;border-top:1px solid #e2e8e0!important;
+  background:transparent!important;max-width:100%;min-width:0
+}
+.pjm020-result .pjm031-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
+.pjm020-result .pjm031-heading h4{
+  margin:0!important;color:#2f4c3b!important;font-family:var(--przima-display-typeface,var(--przima-typeface))!important;
+  font-size:17px!important;line-height:1.48!important;letter-spacing:-.035em!important;font-weight:740!important
+}
+.pjm020-result .pjm031-heading span{font-size:11px;color:#758578;white-space:nowrap}
+.pjm020-result .pjm031-procedure-list{
+  margin:0!important;padding:0!important;list-style:none!important;display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important;min-width:0
+}
+.pjm020-result .pjm031-procedure-item{
+  margin:0!important;padding:14px 13px 12px!important;list-style:none!important;
+  border:1px solid #e2e9df;border-radius:11px;background:#fff;
+  display:flex;flex-direction:column;align-items:stretch;gap:7px!important;
+  min-width:0;overflow-wrap:anywhere;word-break:keep-all;min-height:0
+}
+.pjm020-result .pjm031-procedure-title{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
+.pjm020-result .pjm031-stage{
+  font-size:10px!important;line-height:1.45!important;font-weight:600!important;
+  letter-spacing:0!important;color:#668172!important
+}
+.pjm020-result .pjm031-procedure-title strong{
+  display:block;font-size:13px!important;line-height:1.46!important;font-weight:720!important;
+  letter-spacing:-.025em!important;color:#334f3d!important;word-break:keep-all
+}
+.pjm020-result .pjm031-procedure-item p{
+  padding:0!important;margin:0!important;font-size:12px!important;line-height:1.62!important;
+  font-weight:400!important;color:#63766a!important;word-break:keep-all
+}
+.pjm020-result .pjm031-price{
+  display:block;margin-top:auto;padding-top:5px;font-size:10px!important;
+  line-height:1.6!important;color:#89958a!important;font-weight:500!important
+}
+.pjm020-result .pjm031-price.pjm031-published{color:#4b7658!important;font-weight:620!important}
+.pjm030-note-group .pjm031-procedure-caution{
+  font-size:11px!important;line-height:1.75!important;color:#697b6e!important;
+  padding:0!important;margin:4px 0!important;background:none!important
+}
+@media(max-width:720px){
+  .pjm020-result .pjm031-procedure-list{grid-template-columns:minmax(0,1fr);gap:9px!important}
+  .pjm020-result .pjm031-procedure-item{padding:12px 13px 11px!important}
+  .pjm020-result .pjm031-procedure-title{gap:3px}
+  .pjm020-result .pjm031-heading{margin-bottom:11px}
+}

@@ -128,6 +128,39 @@
         return {name:p.name,ratio:p.ratio,amount,selfPay:total-amount};
       })};
   }
+  /* PJM-031 — meaningful, per-condition clinical treatment options.
+     Price figures reuse only exact single-item nationwide medians; no made-up
+     surgery/chemotherapy prices or claim payouts, and no extra required fields. */
+  function procedureBreakdown(insurerId,careId){
+    const allRows=window.PJM031?.entries?.[careId];
+    if(!Array.isArray(allRows)||allRows.length===0)return "";
+    const isCat=insurerId.endsWith("-cat");
+    // Do not show dog-only vaccination or dog admission procedure as feline care.
+    const rows=allRows.filter((row)=>!(isCat&&(row[3]==="vaccine"||row[3]==="inpatient")));
+    const care=catalog.cares.find(c=>c.id===careId);
+    const isBenefit=!!care&&care.group==="기타 보장";
+    const sum=rows.map(([stage,title,detail,medianKey])=>{
+      const median=MEDIANS[medianKey];
+      // These two published fee categories are dog-specific; never copy them to cats.
+      const published=median&&!((medianKey==="inpatient"||medianKey==="vaccine")&&isCat);
+      const price=published?
+        "공개 항목 중간값 · "+money(median.won):
+        isBenefit?"계약·특약별 확인":
+        /수술|시술/.test(stage)?"수술·시술비 별도 확인":"병원별 비용 확인";
+      return '<li class="pjm031-procedure-item">'+
+        '<div class="pjm031-procedure-title"><span class="pjm031-stage">'+esc(stage)+'</span>'+
+        '<strong>'+esc(title)+'</strong></div>'+
+        '<p>'+esc(detail)+'</p>'+
+        '<small class="pjm031-price'+(published?' pjm031-published':'')+'">'+esc(price)+'</small>'+
+        '</li>';
+    }).join("");
+    return '<section class="pjm031-procedures" aria-label="선택한 진료의 세부 검사와 치료">'+
+      '<div class="pjm031-heading"><h4>'+(isBenefit?'관련 보장·청구 세부 항목':'세부 검사·치료 항목')+'</h4>'+
+      '<span>'+rows.length+'개</span></div>'+
+      '<ul class="pjm031-procedure-list">'+sum+'</ul>'+
+      '<p class="pjm031-procedure-caution">이는 해당 질환에서 검토할 수 있는 항목이지 모든 환자의 필수 진료 목록이나 합산 치료비가 아닙니다. 공개 중간값은 해당 검사·진찰 1개 항목만의 통계이며, 수술·항암 치료비와 보험 지급액은 별도로 확인해야 합니다.</p>'+
+      '</section>';
+  }
   function guidance(insurerId,careId){
     const g=CARE_GUIDES[careId];if(!g||catalog.cares.some(c=>c.id===careId&&c.group==="기타 보장"))return "";
     const meritz=insurerId==="meritz-dog",db=insurerId==="db-dog";
@@ -323,7 +356,8 @@
       {label:"진료비·가상 계산 기준",selectors:[
         ".pjm021-cost-notice",".pjm021-fees .pjm021-unpriced",
         ".pjm021-example .pjm021-calc-note",
-        ".pjm021-imaging small",".pjm021-pending"
+        ".pjm021-imaging small",".pjm021-pending",
+        ".pjm031-procedure-caution"
       ]},
       {label:"가입·보장 유의사항",selectors:[
         ".pjm023-extra-warning",".pjm021-conditions",".pjm020-note"
@@ -382,7 +416,7 @@
     const pts=x.points.map(s=>'<li>'+esc(s)+'</li>').join("");
     return compactSupplementalNotes('<article class="insurance-result pjm020-result" role="status" aria-live="polite">'+
       '<span class="pjm020-status">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3>'+
-      '<p>'+esc(x.description)+'</p>'+coverageInfo(state.insurer,state.care)+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
+      '<p>'+esc(x.description)+'</p>'+coverageInfo(state.insurer,state.care)+procedureBreakdown(state.insurer,state.care)+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
       (x.showPlans?planDetails:"")+(x.showDBDetails?dbDetails:"")+
       '<p class="pjm020-note">해당 상품의 공개 안내를 요약한 내용이며, 가입 계약에 따라 결과가 달라질 수 있습니다.</p>'+
       ''+
@@ -429,5 +463,5 @@
     state.showResult=true;
     const out=document.getElementById("pjm020Output");if(out){out.innerHTML=output();out.scrollIntoView({behavior:"smooth",block:"nearest"});}
   },true);
-  window.PJM019=Object.freeze({section,summarize,insurers:INSURERS,careTypes:CARES,sample,guidance,medianCosts:MEDIANS,policyRules:PLAN_RULES});
+  window.PJM019=Object.freeze({section,summarize,insurers:INSURERS,careTypes:CARES,sample,guidance,procedureBreakdown,medianCosts:MEDIANS,policyRules:PLAN_RULES});
 })();
