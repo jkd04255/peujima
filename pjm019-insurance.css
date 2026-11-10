@@ -122,6 +122,8 @@
   .pjm021-plan-amounts strong{font-size:clamp(13px,4vw,17px)}
   .pjm021-plan-amounts small{font-size:9px}
 }
+/* PJM-022 · DB has two calculation variants; Meritz retains three. */
+.pjm022-plan-amounts{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:340px){
   .pjm021-plan-amounts{grid-template-columns:1fr}
   .pjm021-plan-amounts>div{padding:12px}
