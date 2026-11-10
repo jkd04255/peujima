@@ -200,13 +200,6 @@
     const evidence=insurerId.startsWith("nh-")||insurerId==="kb-cat"?"약관 원문 미확인":
       insurerId==="hyundai-dog"||insurerId==="hyundai-cat"||insurerId==="kb-dog"?
       "관련 버전 약관 원문 확인":"공식 상품 안내 기준";
-    const sourceUrl={
-      "kb-dog":"https://direct.kbinsure.co.kr/dwlddoc/KB_Direct_LngtrmDog%2825064%29_202601.pdf",
-      "kb-cat":"https://www.kbinsure.co.kr/CG803000012.ec",
-      "db-dog":"https://www.directdb.co.kr/ltm/prd/cpnm/custInfoView.do?pdcDvcd=l_pet_dog&searchPdcCd=31119&searchPdcTrtHistCd=00",
-      "nh-dog":"https://nh-insure.co.kr/pet/",
-      "nh-cat":"https://nh-insure.co.kr/pet/"
-    }[insurerId]||ins?.source||"";
     const extraContext=isExtra?
       '<p class="pjm023-extra-warning">이 항목은 일반 진료비 실손 담보가 아닌 별도 보장 또는 청구 절차입니다. 관련 특약의 실제 가입 여부가 확인되지 않으면 지급 가능하다고 판단할 수 없습니다.</p>':"";    return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
       '<div class="pjm023-head"><h4>보험 상품 보장 확인</h4><span>'+esc(evidence)+'</span></div>'+
@@ -215,7 +208,7 @@
       '<p class="pjm023-focus"><b>'+(isExtra?'선택한 보장·청구 항목의 확인 사항':'선택한 진료의 확인 사항')+'</b> '+esc(note)+'</p>'+
       '<details class="pjm023-more"><summary>한도·면책기간·특약 자세히 보기</summary><dl>'+
       row("일일·연간 한도",limit)+row("보장개시·면책",waiting)+row("확장보장",riders)+
-      '</dl><p>검토 자료: '+esc(source)+'</p>'+(sourceUrl?'<p><a href="'+esc(sourceUrl)+'" target="_blank" rel="noopener noreferrer">근거 자료 확인</a>'+(insurerId.startsWith('nh-')?' (보험사 공식 사이트가 아닌 판매 안내 페이지)':'')+'</p>':'')+
+      '</dl><p>검토 자료: '+esc(source)+(insurerId.startsWith('nh-')?' (보험사 공식 원문 약관이 아닌 판매 대리점 안내)':'')+'</p>'+
       '<p>가입 시점의 증권·약관 및 진료 영수증을 대조한 결과가 아닙니다. 해당 진료의 보장 여부나 지급액을 확정하지 않습니다.</p></details>'+
       '</section>';
   }
