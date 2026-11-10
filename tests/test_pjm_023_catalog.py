@@ -57,6 +57,10 @@ def run_case(browser,url,w,h,engine):
         page.locator("#insurerSelect").select_option("nh-cat")
         need(page.locator(".pjm020-result").count()==0,"stale KB result after insurer change")
         need(page.locator("#careSelect option").count()==45,"cat topic choices not present")
+        page.locator("#careSelect").select_option("hospital")
+        page.locator(".insurance-button").click()
+        need("반려견 입원비" not in page.locator(".pjm021-fee-guide").inner_text(),
+             "dog-only published admission price must not be offered for a cat")
         page.locator("#careSelect").select_option("feline_cystitis")
         page.locator(".insurance-button").click()
         txt=page.locator(".pjm020-result").inner_text()
