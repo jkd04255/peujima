@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 KEY_NAME = "PJM012_KAKAO_JS_KEY"
 ANCHOR = '<script src="./pjm012-nearby.js"></script>'
 KEY_PATTERN = re.compile(r"^[A-Za-z0-9]{20,64}$")
-ASSETS = ("pjm012-nearby.js", "pjm012-nearby.css", "pjm013-navigation.js", "pjm013-navigation.css")
+ASSETS = ("pjm012-nearby.js", "pjm012-nearby.css", "pjm013-navigation.js", "pjm013-navigation.css", "pjm019-insurance.js", "pjm019-insurance.css")
 
 
 def build_site(output_dir: Path, kakao_js_key: str) -> None:
