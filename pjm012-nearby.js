@@ -1,7 +1,7 @@
 
 (function(){
   'use strict';
-  const memory={sdkPromise:null,map:null,markers:[]};
+  const memory={sdkPromise:null,map:null,markers:[],selectedPlaceId:null};
   function key(){
     try{return String(window.PRZIMA_KAKAO_JS_KEY||sessionStorage.getItem('przima_kakao_js_key')||'').trim()}
     catch(_){return String(window.PRZIMA_KAKAO_JS_KEY||'').trim()}
@@ -61,8 +61,9 @@
     const n=state.nearby;
     const busy=['locating','geocoding','loading'].includes(n.status);
     const statusText=n.message||(key()?'위치 정보는 자동 수집하지 않습니다. 버튼을 눌러 검색을 시작하세요.':'현재 지도 API 연결 키가 없습니다. 아래 설정에서 JavaScript 키를 등록한 뒤 검색해 주세요.');
-    const list=n.status==='ready'&&n.results.length?n.results.map(p=>`<article class="nearby-place" data-place-id="${escapeHtml(p.id)}">
-      <div class="nearby-place-heading"><b>${escapeHtml(p.name)}</b><small>${meters(p.meters)}</small></div>
+    const list=n.status==='ready'&&n.results.length?n.results.map(p=>`<article class="nearby-place${memory.selectedPlaceId===p.id?' is-selected':''}" data-place-id="${escapeHtml(p.id)}" tabindex="-1" aria-label="${escapeHtml(p.name)}${memory.selectedPlaceId===p.id?' 선택한 병원':''}">
+      
+      <div class="nearby-place-heading"><b>${escapeHtml(p.name)}</b><div class="nearby-place-indicators"><span class="nearby-place-selected">선택한 병원</span><small>${meters(p.meters)}</small></div></div>
       <p>${icon('pin',14)} ${escapeHtml(p.address)}${p.phone?'<br>전화 '+escapeHtml(p.phone):''}</p>
       <div class="nearby-place-links"><a href="https://place.map.kakao.com/${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">카카오맵 상세 보기 ${icon('arrow',13)}</a>
       ${/^[+0-9 -]{7,25}$/.test(p.phone)?`<a href="tel:${p.phone.replace(/[^0-9+]/g,'')}">전화 걸기</a>`:''}</div>
@@ -83,6 +84,20 @@
       <p class="nearby-endnote">실제 장소 정보입니다. 영업·진료 여부는 병원에 확인해 주세요. <strong>실제 예약은 지원하지 않습니다.</strong> 위치는 검색에만 사용하며 저장하지 않습니다.</p>
       </div></div></section>`;
   }
+  function selectPlace(id){
+    const cards=Array.from(document.querySelectorAll('#nearby-hospitals .nearby-place'));
+    const chosen=cards.find(card=>card.dataset.placeId===id);
+    if(!chosen)return;
+    memory.selectedPlaceId=id;
+    cards.forEach(card=>{
+      const active=card===chosen;
+      card.classList.toggle('is-selected',active);
+      const name=card.querySelector('.nearby-place-heading b')?.textContent||'동물병원';
+      card.setAttribute('aria-label',name+(active?' 선택한 병원':''));
+    });
+    chosen.scrollIntoView({block:'center',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    chosen.focus({preventScroll:true});
+  }
   function paint(){
     const target=document.getElementById('nearbyKakaoMap'),n=state.nearby;
     if(!target||!n.center||!window.kakao?.maps?.Map||!memory.sdkPromise)return;
@@ -96,7 +111,7 @@
           const pos=new km.LatLng(p.lat,p.lng);bounds.extend(pos);
           const marker=new km.Marker({map,position:pos});memory.markers.push(marker);
           if(km.event?.addListener)km.event.addListener(marker,'click',()=>{
-            Array.from(document.querySelectorAll('.nearby-place')).find(x=>x.dataset.placeId===p.id)?.scrollIntoView({block:'center',behavior:'smooth'});
+            selectPlace(p.id);
           });
         });
         map.setBounds(bounds);
@@ -105,6 +120,7 @@
   }
   async function search(lat,lng,label){
     const n=state.nearby,seq=++n.requestId;
+    memory.selectedPlaceId=null;
     n.center={lat,lng};n.originLabel=label;n.status='loading';n.results=[];n.message='카카오맵에서 주변 동물병원을 검색하고 있습니다.';render();
     try{
       const k=await sdk();if(seq!==n.requestId)return;
@@ -140,6 +156,7 @@
   async function region(value){
     const q=String(value||'').trim(),n=state.nearby;
     if(!q)return message('지역을 입력해 주세요.');
+    memory.selectedPlaceId=null;
     const seq=++n.requestId;n.status='geocoding';n.message='지역 좌표를 확인하고 있습니다.';n.originLabel='';n.results=[];render();
     try{
       const k=await sdk();if(seq!==n.requestId)return;
