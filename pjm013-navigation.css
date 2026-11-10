@@ -431,7 +431,8 @@ html,body,#root,#root *{
   font-family:var(--przima-type-display)!important;
 }
 #root .pjm013-brand,
-#root .pjm013-brand *{
+#root .pjm013-brand *,
+#root :is(h1,h2,h3,h4) *{
   font-family:var(--przima-type-display)!important;
 }
 #root :is(h1,h2,h3,h4){
