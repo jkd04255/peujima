@@ -169,3 +169,8 @@
 .pjm023-more a{color:#3f6850;text-decoration:underline;text-underline-offset:3px;
   overflow-wrap:anywhere;font-weight:650}
 .pjm023-more a:focus-visible{outline:2px solid #2e5a3b;outline-offset:2px}
+
+/* PJM-026: concise source provenance, no distracting chip or external redirect. */
+.pjm026-source-meta{margin:3px 0 7px!important;font-size:11px!important;line-height:1.6!important;color:#607369!important;word-break:keep-all}
+.pjm026-version-warning{margin:4px 0 13px!important;padding:9px 11px;border:1px solid #e4e9dc;background:#f8f8f1;
+  border-radius:8px;color:#586556!important;font-size:11px!important;line-height:1.65!important;word-break:keep-all}
