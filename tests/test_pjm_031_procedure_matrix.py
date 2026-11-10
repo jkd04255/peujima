@@ -44,8 +44,10 @@ def check_examples(page):
          "patella should include surgery, imaging and rehabilitation")
     surgery=p.locator(".pjm031-procedure-item").filter(has_text="슬개골 교정수술비")
     need(surgery.count()==1 and
-         "수술·시술비 별도 확인" in surgery.inner_text(),
-         "patella surgery cost must not be fabricated")
+         "약 80만~300만원" in surgery.inner_text() and
+         "공개 사례 참고" in surgery.inner_text() and
+         surgery.locator(".pjm031-published").count()==0,
+         "patella surgery must display reference range, never official median")
     need(page.locator(".pjm031-procedure-caution").count()==1 and
          not page.locator(".pjm031-procedure-caution").is_visible(),
          "extra explanation must remain inside compact bottom fine print")
@@ -58,9 +60,9 @@ def check_examples(page):
     for label in ["암수술비","항암약물치료비","방사선치료비"]:
         row=p.locator(".pjm031-procedure-item").filter(has_text=label)
         need(row.count()==1 and
-             ("비용 확인" in row.locator(".pjm031-price").inner_text() or
-              "별도 확인" in row.locator(".pjm031-price").inner_text()),
-             "unverified cancer treatment price misrepresented: "+label)
+             "약 " in row.locator(".pjm031-price").inner_text() and
+             "원" in row.locator(".pjm031-price").inner_text(),
+             "unverified cancer treatment price needs an estimated range: "+label)
         need(not row.locator(".pjm031-published").count(),
              "no nationwide median for "+label)
     need(page.locator(".pjm021-plan-amounts").count()==0,
@@ -106,8 +108,9 @@ def check_examples(page):
     p=result_for(page,"boarding")
     need("보호자 입원 사유" in p.inner_text(),
          "nonclinical benefit rows must be covered")
-    need("계약·특약별 확인" in p.inner_text(),
-         "benefit items must not carry invented treatment fees")
+    need("보험 보장·청구 조건" in p.inner_text() and
+         "약 3만~15만원" in p.inner_text(),
+         "benefit conditions must be separated from approximate boarding service cost")
 
 def check_matrix(page):
     total=page.evaluate("""() => {
