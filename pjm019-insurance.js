@@ -191,7 +191,8 @@
     const ins=INSURERS.find(i=>i.id===insurerId);
     const care=catalog.cares.find(x=>x.id===careId);
     const isExtra=care&&care.group==="기타 보장";
-    const note=(catalog.focus[insurerId]||{})[careId]||
+    const clause=(catalog.clauseEvidence?.[insurerId]||{})[careId]||null;
+    const note=clause?.summary||(catalog.focus[insurerId]||{})[careId]||
       (isExtra?"이 상품의 해당 부가보장 특약은 확인되지 않았습니다. 다른 보험사의 보장을 이 계약에도 적용하지 않습니다.":
       "이 진료의 검사·약제·처치가 보장되는지는 진단명, 치료 목적, 실제 가입한 특약 및 면책기간에 따라 달라집니다.");
     const [version,scope,ratio,deductible,limit,waiting,riders,source]=p;
@@ -201,12 +202,14 @@
     const auditContext=audit?
       '<p class="pjm026-source-meta">검토 기준: '+esc(audit.version)+'</p>'+
       '<p class="pjm026-version-warning">주의 · '+esc(audit.warning)+'</p>':"";
+    const clauseContext=clause?
+      '<p class="pjm027-clause-origin">약관 출처 · '+esc(clause.version)+' / '+esc(clause.clause)+'</p>':"";
     const extraContext=isExtra?
       '<p class="pjm023-extra-warning">이 항목은 일반 진료비 실손 담보가 아닌 별도 보장 또는 청구 절차입니다. 관련 특약의 실제 가입 여부가 확인되지 않으면 지급 가능하다고 판단할 수 없습니다.</p>':"";    return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
       '<div class="pjm023-head"><h4>보험 상품 보장 확인</h4><span>'+esc(evidence)+'</span></div>'+
       '<p class="pjm023-version">'+esc((ins?ins.label+' · ':'')+version)+'</p>'+auditContext+
       '<dl class="pjm023-facts">'+row(isExtra?"기본 의료비":"어떤 진료",scope)+row("보상비율",ratio)+row("자기부담금",deductible)+'</dl>'+extraContext+
-      '<p class="pjm023-focus"><b>'+(isExtra?'선택한 보장·청구 항목의 확인 사항':'선택한 진료의 확인 사항')+'</b> '+esc(note)+'</p>'+
+      '<p class="pjm023-focus"><b>'+(isExtra?'선택한 보장·청구 항목의 확인 사항':'선택한 진료의 확인 사항')+'</b> '+esc(note)+'</p>'+clauseContext+
       '<details class="pjm023-more"><summary>한도·면책기간·특약 자세히 보기</summary><dl>'+
       row("일일·연간 한도",limit)+row("보장개시·면책",waiting)+row("확장보장",riders)+
       '</dl><p>검토 자료: '+esc(source)+(insurerId.startsWith('nh-')?' (보험사 공식 원문 약관이 아닌 판매 대리점 안내)':'')+'</p>'+
