@@ -124,7 +124,7 @@
     const scenario=s?'<section class="pjm021-example" aria-label="가정 계산 예시">'+
       '<div class="pjm021-example-heading"><strong>'+(db?"공식 산식의 가상 계산":"보험금은 얼마나 나올까요?")+'</strong><span>'+(db?"한도 적용 전 · 지급 확정 아님":"가상 예시 · 지급 확정 아님")+'</span></div>'+
       '<p>위 항목을 같은 날 모두 받고 총 '+money(s.total)+'이 청구됐다고 가정했습니다.</p>'+
-      '<div class="pjm021-plan-amounts">'+s.plans.map(p=>
+      '<div class="pjm021-plan-amounts'+(db?' pjm022-plan-amounts':'')+'">'+s.plans.map(p=>
         '<div><span>'+esc(p.name)+(db?"":' ('+Math.round(p.ratio*100)+'%)')+'</span><strong>'+money(p.amount)+'</strong>'+
         '<small>'+(db?"한도 적용 전 금액":"가정상 본인부담 "+money(p.selfPay))+'</small></div>').join("")+'</div>'+
       '<p class="pjm021-calc-note">'+esc(exampleText)+'</p></section>':"";
