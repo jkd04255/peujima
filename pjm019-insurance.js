@@ -204,15 +204,28 @@
       '<p class="pjm026-version-warning">주의 · '+esc(audit.warning)+'</p>':"";
     const clauseContext=clause?
       '<p class="pjm027-clause-origin">약관 출처 · '+esc(clause.version)+' / '+esc(clause.clause)+'</p>':"";
+    const kb2607=insurerId.startsWith("kb-")?catalog.kb2607:null;
+    const kbSpecies=insurerId==="kb-dog"?"dog":"cat";
+    const kbChoices=kb2607?kb2607.products.filter(x=>x.species===kbSpecies):[];
+    const kbIdentifier=kbChoices.map(x=>x.channel+" "+x.code).join(" · ");
+    const kbNotice=kb2607?
+      '<p class="pjm029-kb-editions">26.07 상품 구분 · '+esc(kbIdentifier)+' (공식 공시 확인, 약관 본문 미검증)</p>':"";
+    const kbNote=kb2607?((kb2607.secondary[insurerId]||{})[careId]||
+      "선택한 항목의 26.07 보장·한도·대기기간은 약관 본문에서 직접 검증하지 못했습니다."):"";
+    const kbDetails=kb2607?
+      '<div class="pjm029-kb-details"><h5>26.07 자료 확인 범위</h5>'+
+      '<p><strong>공식 공시</strong> · '+esc(kbIdentifier)+' 상품 존재 확인. 일반형/다이렉트형은 별개입니다.</p>'+
+      '<p><strong>선택 항목의 2차 해설</strong> · '+esc(kbNote)+'</p>'+
+      '<p>26.07의 원문 파일 다운로드 주소를 확인했으나 PDF 본문을 직접 대조하지 못했습니다. 26.01 조건 또는 제3자 해설을 실제 26.07 계약의 지급 조건으로 확정하지 않습니다.</p></div>':"";
     const extraContext=isExtra?
       '<p class="pjm023-extra-warning">이 항목은 일반 진료비 실손 담보가 아닌 별도 보장 또는 청구 절차입니다. 관련 특약의 실제 가입 여부가 확인되지 않으면 지급 가능하다고 판단할 수 없습니다.</p>':"";    return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
       '<div class="pjm023-head"><h4>보험 상품 보장 확인</h4><span>'+esc(evidence)+'</span></div>'+
-      '<p class="pjm023-version">'+esc((ins?ins.label+' · ':'')+version)+'</p>'+auditContext+
+      '<p class="pjm023-version">'+esc((ins?ins.label+' · ':'')+version)+'</p>'+auditContext+kbNotice+
       '<dl class="pjm023-facts">'+row(isExtra?"기본 의료비":"어떤 진료",scope)+row("보상비율",ratio)+row("자기부담금",deductible)+'</dl>'+extraContext+
       '<p class="pjm023-focus"><b>'+(isExtra?'선택한 보장·청구 항목의 확인 사항':'선택한 진료의 확인 사항')+'</b> '+esc(note)+'</p>'+clauseContext+
       '<details class="pjm023-more"><summary>한도·면책기간·특약 자세히 보기</summary><dl>'+
       row("일일·연간 한도",limit)+row("보장개시·면책",waiting)+row("확장보장",riders)+
-      '</dl>'+(clause?.details?.length?
+      '</dl>'+kbDetails+(clause?.details?.length?
         '<div class="pjm028-clause-details"><h5>이 특약의 실제 지급 조건</h5><dl>'+
         clause.details.map(([label,detail])=>row(label,detail)).join("")+'</dl></div>':"")+
       '<p>검토 자료: '+esc(source)+(insurerId.startsWith('nh-')?' (보험사 공식 원문 약관이 아닌 판매 대리점 안내)':'')+'</p>'+

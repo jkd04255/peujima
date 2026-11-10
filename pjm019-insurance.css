@@ -185,3 +185,13 @@
 .pjm028-clause-details dl{margin:0!important}
 .pjm028-clause-details .pjm023-fact{align-items:start;min-width:0}
 .pjm028-clause-details .pjm023-fact dd{overflow-wrap:anywhere;word-break:keep-all}
+
+/* PJM-029: keep KB product identifiers and secondary-source limitations understated. */
+.pjm029-kb-editions{margin:5px 0 10px!important;color:#526955!important;font-size:11px!important;
+  font-weight:600!important;line-height:1.65!important;word-break:keep-all}
+.pjm029-kb-details{margin:13px 0 10px;padding:12px 0 0;border-top:1px solid rgba(46,67,49,.14)}
+.pjm029-kb-details h5{font-size:12px!important;font-weight:700!important;color:#45624e!important;
+  line-height:1.55!important;margin:0 0 8px!important}
+.pjm029-kb-details p{font-size:11px!important;line-height:1.75!important;color:#56685d!important;
+  margin:0 0 7px!important;word-break:keep-all;overflow-wrap:anywhere}
+.pjm029-kb-details strong{font-weight:700}

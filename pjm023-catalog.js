@@ -136,6 +136,35 @@ const CLAUSE_EVIDENCE={
    }
  }
 };
+/* PJM-029: insurer-published 26.07 product identities vs independently unverified
+   secondary analyses. Never interpret third-party notes as signed policy terms. */
+const KB_2607={
+  release:"26.07",
+  status:"공식 상품공시로 상품 존재 확인, PDF 다운로드 엔드포인트 확인; 약관 본문 직접 열람·대조 미완료",
+  products:[
+    {code:"25343",species:"dog",channel:"일반형",policyFile:"https://www.kbinsure.co.kr/CG802030003.ec?fileNm=25343_1_1.pdf",sourceType:"official_listing_and_unread_pdf"},
+    {code:"25344",species:"dog",channel:"일반형(추가 공시 코드)",policyFile:null,sourceType:"official_listing_only"},
+    {code:"25345",species:"cat",channel:"일반형",policyFile:"https://www.kbinsure.co.kr/CG802030003.ec?fileNm=25345_1_1.pdf",sourceType:"official_listing_and_unread_pdf"},
+    {code:"25346",species:"cat",channel:"일반형(추가 공시 코드)",policyFile:null,sourceType:"official_listing_only"},
+    {code:"25357",species:"dog",channel:"다이렉트형",policyFile:null,sourceType:"official_listing_only"},
+    {code:"25358",species:"cat",channel:"다이렉트형",policyFile:null,sourceType:"official_listing_only"}
+  ],
+  secondary:{
+    "kb-dog":{
+      illness:"제3자 26.07 해설에는 일반 질병 보장개시를 계약일 포함 30일 경과 다음 날로 설명하지만, 현재 KB 원문 PDF 본문을 직접 검증하지 못했습니다.",
+      limping:"제3자 26.07 해설은 반려견의 슬관절·고관절 탈구 및 형성부전 등에 1년 면책을 설명합니다. 계약별 적용 조항과 예외는 원문 미검증입니다.",
+      chemo:"제3자 26.07 해설은 항암약물치료 확장보장에 90일 대기 조건이 있다고 설명합니다. 별도 특약 가입·금액·횟수는 26.07 약관 원문 미검증입니다.",
+      mri:"제3자 26.07 상품요약에는 MRI·CT 별도 확장보장과 연간 횟수 제한이 소개됩니다. 일반형/다이렉트형의 확정 한도·지급 조건은 원문 미검증입니다.",
+      boarding:"제3자 26.07 상품요약에는 보호자의 상해 또는 질병 입원으로 발생한 위탁비용 관련 별도 담보가 소개됩니다. 26.01의 '상해입원' 특약과 동일하다고 가정하면 안 됩니다."
+    },
+    "kb-cat":{
+      illness:"제3자 26.07 약관 해설은 반려묘 일반 질병 30일 대기를 설명합니다. 26.07 KB 공식 원문 PDF 본문은 직접 검증하지 못했습니다.",
+      feline_cystitis:"제3자 26.07 해설은 반려묘의 방광·비뇨기·신장질환을 일반 질병 보장 검토 대상으로 소개합니다. 기존 질환·면책·실제 가입 특약에 따라 달라지며 보장 확정이 아닙니다.",
+      chemo:"제3자 26.07 약관 해설은 반려묘 항암약물치료와 특정약물치료 확장의 90일 대기 조건을 소개하지만, 계약서·원문 PDF 대조가 필요합니다.",
+      feline_dental:"제3자 26.07 비교 해설에서 KB 반려묘의 치과·구강질환은 보장 범위를 명확하게 확정하지 않았습니다. 구강 진료만으로 지급대상으로 판단하지 않습니다."
+    }
+  }
+};
 const EVIDENCE={
   "meritz-dog": {
     "grade": "B",
@@ -222,6 +251,6 @@ const EVIDENCE={
     "warning": "반려견 플랜의 보상비율·공제금을 고양이 상품에 그대로 적용하지 않습니다."
   }
 };
-window.PJM023=Object.freeze({insurers,cares,products,focus,evidence:EVIDENCE,clauseEvidence:CLAUSE_EVIDENCE,
+window.PJM023=Object.freeze({insurers,cares,products,focus,evidence:EVIDENCE,clauseEvidence:CLAUSE_EVIDENCE,kb2607:KB_2607,
   groups:["소화기","내과·만성질환","피부·귀·눈","뼈·관절","검사·처치","고양이 주요질환","예방·일상","기타 보장"]});
 })();

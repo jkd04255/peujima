@@ -112,6 +112,69 @@ def run_case(browser,url,w,h,engine):
         need(page.locator(".pjm023-more[open]").is_visible(),"cannot expand conditions")
         need("면책" in page.locator(".pjm023-more").inner_text(),"exclusions omitted")
 
+        # PJM-029: insurer-issued disclosure vs unreviewed official PDF body
+        # and third-party 26.07 interpretations must remain distinguishable.
+        snapshot=page.evaluate("""() => ({
+            products:PJM023.kb2607.products.map(x=>({
+                code:x.code,species:x.species,channel:x.channel,
+                sourceType:x.sourceType,policyFile:x.policyFile
+            })),
+            dog:PJM023.kb2607.secondary["kb-dog"],
+            cat:PJM023.kb2607.secondary["kb-cat"],
+            gradeDog:PJM023.evidence["kb-dog"].grade,
+            gradeCat:PJM023.evidence["kb-cat"].grade
+        })""")
+        need({x["code"] for x in snapshot["products"]}==
+             {"25343","25344","25345","25346","25357","25358"},
+             "KB 26.07 officially listed product identity matrix changed")
+        need(sorted(x["channel"] for x in snapshot["products"] if x["species"]=="dog")==
+             ["다이렉트형","일반형","일반형(추가 공시 코드)"],"dog general and direct policy must be distinct")
+        need(sorted(x["channel"] for x in snapshot["products"] if x["species"]=="cat")==
+             ["다이렉트형","일반형","일반형(추가 공시 코드)"],"cat general and direct policy must be distinct")
+        need(snapshot["gradeDog"]=="A" and snapshot["gradeCat"]=="D",
+             "KB verified 26.01 PDF must not become a verified 26.07 cat policy")
+        need(all(x["sourceType"].startswith("official_listing") for x in snapshot["products"]),
+             "never classify undecoded KB 26.07 PDF as read original")
+        need("30일" in snapshot["cat"]["illness"] and
+             "원문" in snapshot["cat"]["illness"],
+             "secondary 26.07 cat guidance must be explicitly unverified")
+        page.locator("#insurerSelect").select_option("kb-dog")
+        page.locator("#careSelect").select_option("mri")
+        page.locator(".insurance-button").click()
+        need("25343" in page.locator(".pjm029-kb-editions").inner_text() and
+             "25357" in page.locator(".pjm029-kb-editions").inner_text() and
+             "25344" in page.locator(".pjm029-kb-editions").inner_text(),
+             "KB dog general and direct product codes not displayed")
+        need(not page.locator(".pjm029-kb-details").is_visible(),
+             "secondary 26.07 notes should not clutter default result")
+        page.locator(".pjm023-more summary").click()
+        need("2차 해설" in page.locator(".pjm029-kb-details").inner_text() and
+             "원문" in page.locator(".pjm029-kb-details").inner_text(),
+             "26.07 secondary and original document status incorrectly conflated")
+        need(page.locator(".pjm021-plan-amounts").count()==0,
+             "unverified 26.07 MRI claim amount cannot be calculated")
+        page.locator("#insurerSelect").select_option("kb-cat")
+        page.locator("#careSelect").select_option("feline_cystitis")
+        page.locator(".insurance-button").click()
+        need("25345" in page.locator(".pjm029-kb-editions").inner_text() and
+             "25358" in page.locator(".pjm029-kb-editions").inner_text() and
+             "25346" in page.locator(".pjm029-kb-editions").inner_text() and
+             "25343" not in page.locator(".pjm029-kb-editions").inner_text(),
+             "KB dog product codes leaked into cat result")
+        page.locator(".pjm023-more summary").click()
+        need("비뇨기" in page.locator(".pjm029-kb-details").inner_text() and
+             "원문" in page.locator(".pjm029-kb-details").inner_text(),
+             "cat 26.07 urinary caveat missing")
+        need(page.locator(".pjm027-clause-origin").count()==0,
+             "KB dog 26.01 source must never be displayed for KB cat")
+        need(page.locator(".pjm020-result a[target='_blank']").count()==0,
+             "KB 26.07 in-app explanation must not redirect")
+        page.locator("#insurerSelect").select_option("nh-dog")
+        page.locator("#careSelect").select_option("mri")
+        page.locator(".insurance-button").click()
+        need(page.locator(".pjm029-kb-editions").count()==0,
+             "KB 26.07 label must not leak into another insurer")
+        
         # PJM-027: only KB dog 26.01 signed original clauses can be explained.
         page.locator("#insurerSelect").select_option("kb-dog")
         for care,words in [
