@@ -1,3 +1,7 @@
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css");
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUITE@2/fonts/variable/woff2/SUITE-Variable.css");
+
+/* PJM-018: SUIT UI + SUITE headline font family, official OFL sources. */
 /* PJM-013 / service navigation redesign
    Dedicated routes: 홈 / 실제 병원 찾기 / 가상 예약 체험 / 보험 안내.
    Retains original pet photographs, brand, 7-day calendar and PJM-012 Kakao.
@@ -400,4 +404,67 @@
   .pjm013-page--nearby .nearby-real-badge{font-size:10px;padding:5px 7px}
   .pjm013-page--clinics .section-top h2{font-size:25px}
   .pjm013-page--clinics .clinic-section{padding-top:26px}
+}
+
+
+/* PJM-018 · PRZIMA unified typography
+   SUIT: forms, long-form text, navigation; SUITE: headlines and highlights.
+   Keep media, wording, layout, service flows, warnings and map unchanged.
+   Override legacy font-family declarations only at the type layer. */
+:root {
+  --przima-type-body:"SUIT Variable","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --przima-type-display:"SUITE Variable","SUIT Variable","Apple SD Gothic Neo",sans-serif;
+}
+html,body,#root,#root *{
+  font-family:var(--przima-type-body)!important;
+}
+#root :is(h1,h2,h3,h4,
+  .brand-primary,.brand-all-focus,
+  .pjm013-service-card strong,
+  .pjm013-panel-heading strong,
+  .pjm013-condition-row h2,
+  .nearby-place-heading b,
+  .clinic-profile-card h2,
+  .clinic-explore-card strong,
+  .insurance-card h3,
+  .modal h2){
+  font-family:var(--przima-type-display)!important;
+}
+#root :is(h1,h2,h3,h4){
+  font-weight:700!important;
+  letter-spacing:-.048em!important;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+#root :is(.header-v4 .brand-primary,.brand-primary,.brand-all-focus){
+  font-weight:780!important;
+  letter-spacing:-.058em!important;
+}
+#root :is(.pjm013-nav-name,.pjm013-mode-switch button,
+  .pjm013-condition-chips button,.pjm013-search-form>label,
+  .nearby-geo,.nearby-region-form button,.nearby-place-links a){
+  font-weight:650!important;
+  letter-spacing:-.022em!important;
+}
+#root :is(.pjm013-service-card strong,.nearby-place-heading b,
+  .clinic-explore-card strong,.clinic-profile-card h2){
+  font-weight:700!important;
+  letter-spacing:-.046em!important;
+}
+#root :is(.nearby-place p,.nearby-endnote,.insurance-disclaimer,
+  .virtual-clinic-notice span,.pjm013-footer-row,
+  .clinic-profile-caution,.clinic-visit-note){
+  line-height:1.7;
+  letter-spacing:-.012em;
+}
+#root :is(button,input,textarea,select){
+  font-family:var(--przima-type-body)!important;
+}
+@media(max-width:620px){
+  #root :is(.pjm013-nav-name,.pjm013-service-card strong){
+    letter-spacing:-.025em!important;
+  }
+  #root :is(.nearby-region-form input,.nearby-key-form input){
+    font-size:16px;
+  }
 }
