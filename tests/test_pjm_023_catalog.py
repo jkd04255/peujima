@@ -201,8 +201,19 @@ def run_case(browser,url,w,h,engine):
              "DB dog large-dog rider annual limit missing")
         page.locator("#careSelect").select_option("mri")
         page.locator(".insurance-button").click()
-        need("90일" in page.locator(".pjm023-focus").inner_text(),
-             "DB MRI/CT disease waiting period omitted")
+        need("30일" in page.locator(".pjm023-focus").inner_text() and
+             "90일" in page.locator(".pjm023-focus").inner_text(),
+             "DB 2610 MRI 30-day wait must be distinguished from chemo 90-day wait")
+        page.locator("#careSelect").select_option("chemo")
+        page.locator(".insurance-button").click()
+        need("90일" in page.locator(".pjm023-focus").inner_text() and
+             "6회" in page.locator(".pjm023-focus").inner_text(),
+             "DB 2610 oncology 90-day waiting / six treatments omitted")
+        page.locator("#careSelect").select_option("surgery")
+        page.locator(".insurance-button").click()
+        need("30일" in page.locator(".pjm023-focus").inner_text() and
+             "연 1회" in page.locator(".pjm023-focus").inner_text(),
+             "DB 2610 specific high-cost surgery waiting / frequency omitted")
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("claim_docs")
         page.locator(".insurance-button").click()
