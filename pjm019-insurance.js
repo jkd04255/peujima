@@ -6,7 +6,7 @@
   "use strict";
   const MERITZ="https://www.meritzdirect.com/pet/product.do";
   const HYUNDAI="https://m.hi.co.kr/serviceAction.do?menuId=202853";
-  const DB="https://www.dongbuinsurance.com/FWMALV6783.do";
+  const DB="https://www.directdb.co.kr/ltm/prd/cpnm/custInfoView.do?partner_code=L329&pdcDvcd=l_pet_dog&searchPdcCd=31119&searchPdcTrtHistCd=00";
   const INSURERS=[
     {id:"meritz-dog",label:"메리츠화재 · 펫퍼민트 반려견",source:MERITZ},
     {id:"meritz-cat",label:"메리츠화재 · 펫퍼민트 반려묘",source:MERITZ},
@@ -43,6 +43,10 @@
      Verified 2025-12-22 MAFRA report / 3,950 veterinary hospitals. */
   const GOV_SOURCE="농림축산식품부 · 2025 전국 동물병원 진료비 현황 (2025.12.22)";
   const POLICY_SOURCE="메리츠화재 · 2026 펫퍼민트 Puppy & Family 다이렉트 보장내용(통원/입원의료비Ⅲ)";
+  const DB_POLICY_SOURCE="DB손해보험 · 2026 프로미라이프 다이렉트 펫블리 반려견보험2610(CM) 상품 안내";
+  // DB's 2610 official page publishes 50/70%, 3/5만원 and the deduction-first
+  // formula, but does not identify the user's daily/annual cap or optional riders.
+  const DB_SAMPLE_RULES=[{name:"70% 가정",ratio:.7},{name:"50% 가정",ratio:.5}];
   const MEDIANS={
     first:{name:"초진 진찰료",won:10000},
     cbc:{name:"전혈구 검사",won:34000},
@@ -78,7 +82,7 @@
       caveat:"수술비가 아니라 관절 진찰 및 X-ray만 포함한 가상 통원 사례입니다. 첫 보장개시 후 1년 이내 발병은 제외될 수 있습니다."},
     mri:{caption:"고가 영상검사 시 참고 항목",items:["first","mri","ct"],
       others:["마취·진정·판독·추가 처치가 별도로 발생할 수 있음"],scenario:false,
-      caveat:"MRI와 CT는 서로 다른 검사로, 한 번의 진료에서 모두 시행한다고 가정하지 않습니다. 별도 연간 1회 검사비 한도와 통원/입원 한도 관계가 명확하지 않아 지급액은 계산하지 않습니다."},
+      caveat:"MRI와 CT는 서로 다른 검사이며 둘 다 시행한다고 가정하지 않습니다. 영상검사 특약과 기본 의료비 한도의 적용 관계를 가입 계약에서 확인할 수 없어 지급액은 계산하지 않습니다."},
     dental:{caption:"구강질환 진료 비용 확인 항목",items:["first"],
       others:["치과 방사선·스케일링·발치·마취 (전국 공개 통계 없음)"],scenario:false,
       caveat:"치료 목적과 예방 목적에 따라 담보가 달라질 수 있어 구강치료 총액이나 지급액을 제시하지 않습니다."},
@@ -96,13 +100,17 @@
   ];
   const money=n=>Number(n).toLocaleString("ko-KR")+"원";
   function sample(insurerId,careId){
-    const guide=CARE_GUIDES[careId],supported=insurerId==="meritz-dog";
-    if(!guide||!supported||!guide.scenario)return null;
+    const guide=CARE_GUIDES[careId];
+    const meritz=insurerId==="meritz-dog",db=insurerId==="db-dog";
+    if(!guide||(!meritz&&!db)||!guide.scenario)return null;
     const total=guide.items.reduce((n,id)=>n+MEDIANS[id].won,0);
-    return {total,deductible:30000,plans:PLAN_RULES.map(p=>{
-      const amount=Math.min(Math.floor(Math.max(total-30000,0)*p.ratio),p.daily,p.annual);
-      return {name:p.name,ratio:p.ratio,amount,selfPay:total-amount};
-    })};
+    return {total,deductible:30000,beforeCaps:db,
+      plans:(meritz?PLAN_RULES:DB_SAMPLE_RULES).map(p=>{
+        const preliminary=Math.floor(Math.max(total-30000,0)*p.ratio);
+        // DB 2610: this is only a PRE-CAP, pre-eligibility formula illustration.
+        const amount=meritz?Math.min(preliminary,p.daily,p.annual):preliminary;
+        return {name:p.name,ratio:p.ratio,amount,selfPay:total-amount};
+      })};
   }
   function guidance(insurerId,careId){
     const g=CARE_GUIDES[careId];if(!g)return "";
