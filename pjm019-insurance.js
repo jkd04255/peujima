@@ -190,7 +190,7 @@
     const row=(label,detail)=>'<div class="pjm023-fact"><dt>'+esc(label)+'</dt><dd>'+esc(detail)+'</dd></div>';
     const caution=insurerId.startsWith("nh-")||insurerId==="kb-cat";
     return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
-      '<div class="pjm023-head"><h4>보험사의 공개 보장 조건</h4><span>'+esc(caution?"세부 약관 미검증":"상품 안내 기준")+'</span></div>'+
+      '<div class="pjm023-head"><h4>보험사의 공개 보장 조건</h4><span>'+esc(caution?"원문 약관 미검증":"상품 안내 기준")+'</span></div>'+
       '<p class="pjm023-version">'+esc(version)+'</p>'+
       '<dl class="pjm023-facts">'+row("어떤 진료",scope)+row("보상비율",ratio)+row("자기부담금",deductible)+'</dl>'+
       '<p class="pjm023-focus"><b>선택한 진료의 확인 사항</b> '+esc(note)+'</p>'+
