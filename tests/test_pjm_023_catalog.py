@@ -63,6 +63,39 @@ def run_case(browser,url,w,h,engine):
         need("90일" in policyFacts["meritzFIP"],"Meritz feline FIP exclusion not shown")
         need("예방접종" in policyFacts["catVaccine"],"Samsung cat prior vaccination condition missing")
 
+        # PJM-026: policy dates and provenance must not get silently generalized.
+        evidence=page.evaluate("""() => ({
+            db:PJM023.evidence["db-dog"],
+            kb:PJM023.evidence["kb-dog"],
+            nh:PJM023.evidence["nh-cat"],
+            hy:PJM023.evidence["hyundai-dog"],
+            insurerNH:PJM023.insurers.find(x=>x.id==="nh-dog").source
+        })""")
+        need(evidence["db"]["grade"]=="B" and "2607" in evidence["db"]["warning"],
+             "DB 2610 vs 2607 product-page conflict unreported")
+        need(evidence["kb"]["grade"]=="A" and "26.07" in evidence["kb"]["warning"],
+             "KB 26.01 proof must not be claimed for 26.07")
+        need(evidence["nh"]["grade"]=="D" and "nhfire.co.kr" in evidence["insurerNH"],
+             "NH original unverified or wrong official company domain")
+        need(evidence["hy"]["grade"]=="A","Hyundai Hi2601 original policy status lost")
+        page.locator("#insurerSelect").select_option("db-dog")
+        page.locator("#careSelect").select_option("chemo")
+        page.locator(".insurance-button").click()
+        need("2610" in page.locator(".pjm026-source-meta").inner_text()
+             and "2607" in page.locator(".pjm026-version-warning").inner_text(),
+             "DB version conflict not visible in simplified in-app answer")
+        need("공식 상품 안내" in page.locator(".pjm023-head").inner_text(),
+             "B grade wrongly presented as original policy PDF")
+        page.locator("#insurerSelect").select_option("kb-dog")
+        page.locator("#careSelect").select_option("chemo")
+        page.locator(".insurance-button").click()
+        need("26.01" in page.locator(".pjm026-version-warning").inner_text()
+             and "26.07" in page.locator(".pjm026-version-warning").inner_text(),
+             "KB original policy mismatch not communicated on screen")
+        need("A · 약관 원문 검증" in page.locator(".pjm023-head").inner_text(),
+             "KB policy PDF audit badge missing")
+        need(page.locator(".pjm020-result a[target='_blank']").count()==0,
+             "in-app policy explanation must not redirect to insurer")
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("chemo")
         page.locator(".insurance-button").click()
