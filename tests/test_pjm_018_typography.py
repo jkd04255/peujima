@@ -41,6 +41,7 @@ def run_case(browser,origin,width,height,name):
         require("SUITE Variable" in family(page,".pjm013-brand"),f"{name} brand wrapper missing SUITE")
         require("SUITE Variable" in family(page,".pjm013-brand button"),f"{name} brand text missing SUITE")
         require("SUITE Variable" in family(page,".hero-v4-heading"),f"{name} photo hero missing SUITE")
+        require("SUITE Variable" in family(page,".hero-v4-heading strong"),f"{name} emphasized hero text missing SUITE")
         require("SUIT Variable" in family(page,".pjm013-service-card"),f"{name} service card missing SUIT")
         require("SUITE Variable" in family(page,".pjm013-service-card strong"),f"{name} service title missing SUITE")
         require(page.locator(".hero-pet").count()>=2,"pet photographs lost")
