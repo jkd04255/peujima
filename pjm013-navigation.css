@@ -427,13 +427,14 @@ body{
   letter-spacing:-.018em;
   font-optical-sizing:auto;
 }
-.pjm013-header .brand-primary{
+.pjm013-header .brand-primary,
+.pjm013-header .brand-all-focus{
   font-weight:800;
   letter-spacing:-.052em;
 }
 .pjm013-header .brand-leading,
 .pjm013-header .brand-ending,
-.pjm013-header .brand-all{
+.pjm013-header .brand-all-soft{
   font-weight:650;
   letter-spacing:-.027em;
 }
