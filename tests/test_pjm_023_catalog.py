@@ -38,6 +38,31 @@ def run_case(browser,url,w,h,engine):
         need(page.locator("#careSelect optgroup").count()>=7,"grouped care taxonomy absent")
         need(page.locator("#careSelect option").count()==40,
              "dog should show 10 base and 30 non-cat-specific conditions")
+        policyFacts=page.evaluate("""() => {
+          const p=PJM023;
+          return {
+            hyundaiForeign:p.focus["hyundai-dog"].foreignbody,
+            hyundaiMedicine:p.focus["hyundai-dog"].allergy,
+            hyundaiMRI:p.focus["hyundai-dog"].mri,
+            kbChemo:p.focus["kb-dog"].chemo,
+            kbMRI:p.focus["kb-dog"].mri,
+            samsungKidney:p.focus["samsung-dog"].kidney,
+            samsungRatio:p.products["samsung-dog"][2],
+            meritzFIP:p.focus["meritz-cat"].fip,
+            catVaccine:p.focus["samsung-cat"].feline_herpes
+          };
+        }""")
+        need("2회" in policyFacts["hyundaiForeign"],"Hi2601 foreign-body rider annual 2 not shown")
+        need("12회" in policyFacts["hyundaiMedicine"] and "90일" in policyFacts["hyundaiMedicine"],
+             "Hi2601 special-drug benefit annual 12 / 90-day rule missing")
+        need("1회" in policyFacts["hyundaiMRI"],"Hi2601 MRI/CT annual 1 missing")
+        need("90일" in policyFacts["kbChemo"] and "1종" in policyFacts["kbMRI"],
+             "KB 26.01 major-treatment waiting or same-day restriction missing")
+        need("90일" in policyFacts["samsungKidney"] and "50%" in policyFacts["samsungRatio"],
+             "Samsung specific disease waiting or actual selectable ratio mismatch")
+        need("90일" in policyFacts["meritzFIP"],"Meritz feline FIP exclusion not shown")
+        need("예방접종" in policyFacts["catVaccine"],"Samsung cat prior vaccination condition missing")
+
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("chemo")
         page.locator(".insurance-button").click()
@@ -75,8 +100,9 @@ def run_case(browser,url,w,h,engine):
         page.locator(".insurance-button").click()
         need("삼성화재" in page.locator(".pjm020-result").inner_text(),
              "new insurer missing in-app facts")
-        need("80%" in page.locator(".pjm023-coverage").inner_text(),
-             "official Samsung selectable ratio missing")
+        need("50%" in page.locator(".pjm023-coverage").inner_text() and
+             "70%" in page.locator(".pjm023-coverage").inner_text(),
+             "Samsung detailed product 50/70 percentage missing")
         need("NH펫앤미든든" not in page.locator(".pjm023-coverage").inner_text(),
              "old insurer's source leaked into Samsung result")
 
@@ -104,7 +130,7 @@ def run_case(browser,url,w,h,engine):
         page.goto(url+"#nearby",wait_until="load")
         need(page.locator(".nearby-geo").is_visible(),"map entry changed")
         need(not errors,f"JavaScript exceptions {engine} {w}: {errors}")
-        print(f"PASS PJM-023 {engine} {w}px 12 products / 45 care topics / sourced details")
+        print(f"PASS PJM-023 {engine} {w}px 14 products / 45 care topics / sourced details")
     finally:
         context.close()
 
