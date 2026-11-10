@@ -132,9 +132,11 @@
      Price figures reuse only exact single-item nationwide medians; no made-up
      surgery/chemotherapy prices or claim payouts, and no extra required fields. */
   function procedureBreakdown(insurerId,careId){
-    const rows=window.PJM031?.entries?.[careId];
-    if(!Array.isArray(rows)||rows.length===0)return "";
+    const allRows=window.PJM031?.entries?.[careId];
+    if(!Array.isArray(allRows)||allRows.length===0)return "";
     const isCat=insurerId.endsWith("-cat");
+    // Do not show dog-only vaccination or dog admission procedure as feline care.
+    const rows=allRows.filter((row)=>!(isCat&&(row[3]==="vaccine"||row[3]==="inpatient")));
     const care=catalog.cares.find(c=>c.id===careId);
     const isBenefit=!!care&&care.group==="기타 보장";
     const sum=rows.map(([stage,title,detail,medianKey])=>{
