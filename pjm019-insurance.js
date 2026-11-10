@@ -17,6 +17,9 @@
   ];
   const CARES=[
     {id:"illness",label:"질병 통원·입원"},
+    {id:"digestive",label:"구토·설사·소화기"},
+    {id:"skin",label:"피부·알레르기"},
+    {id:"ear",label:"외이염·귀 질환"},
     {id:"injury",label:"사고·상해 치료"},
     {id:"patella",label:"슬개골·고관절"},
     {id:"mri",label:"MRI·CT 검사"},
@@ -34,6 +37,104 @@
   function options(items,selected){return items.map(i=>
     '<option value="'+esc(i.id)+'"'+(i.id===selected?" selected":"")+'>'+esc(i.label)+'</option>'
   ).join("");}
+
+  /* 2025 government nationwide MEDIANS of individually published fees, not
+     disease-level treatment averages, a standard package, or an actual hospital quote.
+     Verified 2025-12-22 MAFRA report / 3,950 veterinary hospitals. */
+  const GOV_SOURCE="농림축산식품부 · 2025 전국 동물병원 진료비 현황 (2025.12.22)";
+  const POLICY_SOURCE="메리츠화재 · 2026 펫퍼민트 Puppy & Family 다이렉트 보장내용(통원/입원의료비Ⅲ)";
+  const MEDIANS={
+    first:{name:"초진 진찰료",won:10000},
+    cbc:{name:"전혈구 검사",won:34000},
+    chem:{name:"혈액화학 검사",won:80000},
+    xray:{name:"X-ray 촬영",won:45000},
+    ultrasound:{name:"초음파 검사",won:57000},
+    ct:{name:"CT 촬영",won:600000},
+    mri:{name:"MRI 촬영",won:791500},
+    inpatient:{name:"반려견 입원비(1일 공개 항목)",won:60000},
+    vaccine:{name:"반려견 종합백신 접종",won:25000}
+  };
+  /* Combinations are explicitly synthetic: sums of independent medians.
+     "common" is a possible presentation, not a frequency ranking, clinical advice,
+     a validated treatment bundle or mean disease bill. */
+  const CARE_GUIDES={
+    illness:{caption:"질병 외래에서 참고할 검사 예시",items:["first","cbc","chem"],
+      others:["진단에 따른 처방·주사비 (공개 통계 없음)"],scenario:true,
+      caveat:"진찰·전혈구·혈액화학 검사가 모두 시행된 가상의 통원 사례입니다. 실제 질환별 평균 총진료비가 아닙니다."},
+    digestive:{caption:"구토·설사 증상 시 고려될 수 있는 검사",items:["first","chem","ultrasound"],
+      others:["수액·구토 억제 처치·약값 (공개 통계 없음)"],scenario:true,
+      caveat:"진찰·혈액화학·초음파를 모두 시행한 가상의 통원 사례이며, 반드시 필요한 검사 조합이 아닙니다."},
+    skin:{caption:"피부 증상에서 살펴볼 비용 항목",items:["first","cbc"],
+      others:["피부 도말·스크래핑·약 처방 (전국 공개 통계 없음)"],scenario:false,
+      caveat:"전혈구 검사는 모든 피부질환에 실시하지 않습니다. 피부 치료비 총액을 계산할 근거가 부족합니다."},
+    ear:{caption:"귀 질환에서 살펴볼 비용 항목",items:["first"],
+      others:["이경 검사·귀 세포검사·세척·약 처방 (전국 공개 통계 없음)"],scenario:false,
+      caveat:"실제 외이염 치료비는 별도 검사·처치·약값에 따라 달라집니다."},
+    injury:{caption:"외상 평가에 사용할 수 있는 항목",items:["first","xray"],
+      others:["창상 처치·봉합·마취·입원 (필요 시 별도)"],scenario:true,
+      caveat:"진찰과 방사선 촬영만 시행한 가상 통원 사례입니다. 수술·처치비가 포함된 평균 비용이 아닙니다."},
+    patella:{caption:"관절 상태 평가에 사용할 수 있는 항목",items:["first","xray"],
+      others:["정형외과 수술·마취·재활 치료 (공개 통계 없음)"],scenario:true,
+      caveat:"수술비가 아니라 관절 진찰 및 X-ray만 포함한 가상 통원 사례입니다. 첫 보장개시 후 1년 이내 발병은 제외될 수 있습니다."},
+    mri:{caption:"고가 영상검사 시 참고 항목",items:["first","mri","ct"],
+      others:["마취·진정·판독·추가 처치가 별도로 발생할 수 있음"],scenario:false,
+      caveat:"MRI와 CT는 서로 다른 검사로, 한 번의 진료에서 모두 시행한다고 가정하지 않습니다. 별도 연간 1회 검사비 한도와 통원/입원 한도 관계가 명확하지 않아 지급액은 계산하지 않습니다."},
+    dental:{caption:"구강질환 진료 비용 확인 항목",items:["first"],
+      others:["치과 방사선·스케일링·발치·마취 (전국 공개 통계 없음)"],scenario:false,
+      caveat:"치료 목적과 예방 목적에 따라 담보가 달라질 수 있어 구강치료 총액이나 지급액을 제시하지 않습니다."},
+    vaccine:{caption:"예방 진료에서 공개된 항목",items:["vaccine"],
+      others:["추가 예방 처치·상담은 별도"],scenario:false,
+      caveat:"예방 목적의 접종·정기검진은 일반적인 의료비 특약에서 보장하지 않는 손해로 안내합니다."},
+    groom:{caption:"일상 관리 비용",items:[],
+      others:["발톱 관리·미용·일반 목욕 (전국 공개 통계 없음)"],scenario:false,
+      caveat:"치료 목적이 아닌 관리 비용은 일반적으로 보장되지 않으며 표준 진료비 통계가 없습니다."}
+  };
+  const PLAN_RULES=[
+    {name:"고급형",ratio:.7,daily:300000,annual:15000000,surgery:2500000,scan:1000000},
+    {name:"기본형",ratio:.7,daily:150000,annual:10000000,surgery:2500000,scan:500000},
+    {name:"실속형",ratio:.5,daily:100000,annual:7000000,surgery:2000000,scan:300000}
+  ];
+  const money=n=>Number(n).toLocaleString("ko-KR")+"원";
+  function sample(insurerId,careId){
+    const guide=CARE_GUIDES[careId],supported=insurerId==="meritz-dog";
+    if(!guide||!supported||!guide.scenario)return null;
+    const total=guide.items.reduce((n,id)=>n+MEDIANS[id].won,0);
+    return {total,deductible:30000,plans:PLAN_RULES.map(p=>{
+      const amount=Math.min(Math.floor(Math.max(total-30000,0)*p.ratio),p.daily,p.annual);
+      return {name:p.name,ratio:p.ratio,amount,selfPay:total-amount};
+    })};
+  }
+  function guidance(insurerId,careId){
+    const g=CARE_GUIDES[careId];if(!g)return "";
+    const unitRows=g.items.map(id=>'<div class="pjm021-fee-row"><span>'+esc(MEDIANS[id].name)+'</span><strong>'+money(MEDIANS[id].won)+'</strong></div>').join("");
+    const other=g.others.map(x=>'<span class="pjm021-unpriced">'+esc(x)+'</span>').join("");
+    const s=sample(insurerId,careId);
+    const scenario=s?'<section class="pjm021-example" aria-label="가정 계산 예시">'+
+      '<div class="pjm021-example-heading"><strong>보험금은 얼마나 나올까요?</strong><span>가상 예시 · 지급 확정 아님</span></div>'+
+      '<p>위 항목을 같은 날 모두 받고 총 '+money(s.total)+'이 청구됐다고 가정했습니다.</p>'+
+      '<div class="pjm021-plan-amounts">'+s.plans.map(p=>
+        '<div><span>'+esc(p.name)+' ('+Math.round(p.ratio*100)+'%)</span><strong>'+money(p.amount)+'</strong>'+
+        '<small>가정상 본인부담 '+money(p.selfPay)+'</small></div>').join("")+'</div>'+
+      '<p class="pjm021-calc-note">3만원 공제, 해당 비용 모두 보장 대상, 의료비Ⅲ 담보 가입, 면책기간 경과, 1일·연간 잔여한도 충분, 중복보상 조정 없음 등을 가정한 계산입니다. 실제 지급액은 달라지거나 0원일 수 있습니다.</p></section>':"";
+    const imaging=(insurerId==="meritz-dog"&&careId==="mri")?'<div class="pjm021-imaging"><strong>영상검사 연간 최초 1회 특약 한도</strong>'+
+      '<p>고급형 최대 100만원 · 기본형 최대 50만원 · 실속형 최대 30만원</p>'+
+      '<small>이는 검사비 한도이지, 받을 보험금의 확정액이 아닙니다.</small></div>':"";
+    return '<section class="pjm021-fee-guide" aria-label="대표 진료 항목과 보장 예시">'+
+      '<h4>이런 진료 항목을 확인해 보세요</h4>'+
+      '<p class="pjm021-subhead">'+esc(g.caption)+'</p>'+
+      '<div class="pjm021-fees">'+(unitRows||'<p>신뢰할 수 있는 공개 진료비 자료가 없습니다.</p>')+other+'</div>'+
+      '<p class="pjm021-cost-notice">표시 금액은 2025년 전국 동물병원 <b>개별 항목 중간값</b>입니다. 질환별 총 치료비·수술비 또는 진료 권장 목록이 아닙니다.</p>'+
+      (insurerId==="meritz-dog"?scenario+imaging:
+      '<p class="pjm021-pending">이 보험 상품의 가입 버전별 지급 규칙은 아직 검증하지 않아 예상 보험금을 표시하지 않습니다. 공개 진료비 자료만 안내합니다.</p>')+
+      '<details class="pjm021-policy-details"><summary>근거와 확인할 조건 보기</summary>'+
+      '<div><b>보험 보장 자료</b><p>'+esc(POLICY_SOURCE)+'</p>'+
+      '<p>통원·입원의료비Ⅲ 특약은 각각 가입해야 하며, 플랜에 따라 보장비율 50~70%, 자기부담금 3만/5만원과 일일·연간 한도가 적용됩니다. 질병 최초 30일, 반려견 슬관절·고관절 관련 최초 1년, 이미 발병한 질환 및 예방 목적 진료의 면책 조건을 확인해야 합니다.</p>'+
+      '<b>진료비 자료</b><p>'+esc(GOV_SOURCE)+'</p>'+
+      '<p>'+esc(g.caveat)+'</p>'+
+      '<small>원문 약관 PDF 전문과 가입한 증권을 자동 판독한 결과는 아닙니다. 가입 시기·특약·진단·잔여 한도에 따라 지급 여부가 달라집니다.</small></div></details>'+
+      '</section>';
+  }
+
   const planDetails='<details class="pjm020-details"><summary>플랜별 보장 한도 자세히 보기</summary>'+
     '<div class="pjm020-table-wrap"><table><thead><tr>'+
     '<th scope="col">플랜</th><th scope="col">비율</th><th scope="col">통원·입원 1일</th>'+
@@ -55,6 +156,9 @@
         points:["치료를 위한 처치라면 진단명과 특약에 따라 달라질 수 있습니다.","최종 제외 여부는 가입 약관의 면책 조항을 확인해야 합니다."]};
     }
     if(meritzDog){
+      if(careId==="digestive"||careId==="skin"||careId==="ear")return {...base,status:"보장 검토 가능",title:careId==="digestive"?"구토·설사 등 소화기 진료":careId==="skin"?"피부·알레르기 진료":"외이염·귀 질환 진료",
+        description:"치료 목적의 질병 통원·입원은 의료비Ⅲ 특약을 가입한 경우 보장 검토 대상입니다. 진찰·검사 비용 전체가 항상 보장되는 것은 아닙니다.",
+        points:["질병 최초 보장개시 후 30일 및 기존 질환 관련 면책 여부를 확인해야 합니다.","통원·입원 특약, 보장비율·공제금·남은 한도를 적용해야 합니다."],showPlans:true};
       if(careId==="illness")return {...base,status:"보장 검토 가능",title:"질병 통원·입원 의료비",
         description:"의료비Ⅲ 담보가 포함된 계약은 보장비율 50~70%, 통원·입원 1일 최대 10만~30만원 수준의 플랜별 한도를 안내합니다.",
         points:["첫 보험개시 후 30일 이내 발병한 질병은 제외될 수 있습니다.","기왕증, 자기부담금 및 연간 한도를 확인해야 합니다."],showPlans:true};
@@ -84,13 +188,14 @@
   function output(){
     if(!state.showResult)return '<p class="pjm020-instruction">보험과 치료 항목을 선택한 뒤 결과를 확인하세요.</p>';
     const x=summarize(state.insurer,state.care);
+    const extra=guidance(state.insurer,state.care);
     const pts=x.points.map(s=>'<li>'+esc(s)+'</li>').join("");
     return '<article class="insurance-result pjm020-result" role="status" aria-live="polite">'+
       '<span class="pjm020-status">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3>'+
-      '<p>'+esc(x.description)+'</p>'+(pts?'<ul>'+pts+'</ul>':"")+
+      '<p>'+esc(x.description)+'</p>'+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
       (x.showPlans?planDetails:"")+
       '<p class="pjm020-note">해당 상품의 공개 안내를 요약한 내용이며, 가입 계약에 따라 결과가 달라질 수 있습니다.</p>'+
-      (x.source?'<a href="'+esc(x.source)+'" target="_blank" rel="noopener noreferrer">공식 상품 안내 확인 ↗</a>':"")+
+      ''+
       '</article>';
   }
   function section(mode,legacyCare){
@@ -101,7 +206,7 @@
     return '<section class="section insurance pjm020-insurance" id="insurance">'+
       '<div class="site-width pjm020-wrap">'+
       '<div class="pjm020-heading"><h2>내 보험,<br><em>어디까지 보장될까요?</em></h2>'+
-      '<p>가입 보험과 진료 항목을 선택하면 필요한 내용만 정리해 드립니다.</p></div>'+
+      '<p>대표 진료 항목의 공개 비용과 보험 보장 예시를 한 번에 확인해 보세요.</p></div>'+
       '<div class="insurance-card pjm020-card">'+
       '<label for="insurerSelect">가입 보험·상품<select id="insurerSelect">'+
       options(INSURERS,state.insurer)+'</select></label>'+
@@ -128,5 +233,5 @@
     state.showResult=true;
     const out=document.getElementById("pjm020Output");if(out){out.innerHTML=output();out.scrollIntoView({behavior:"smooth",block:"nearest"});}
   },true);
-  window.PJM019=Object.freeze({section,summarize,insurers:INSURERS,careTypes:CARES});
+  window.PJM019=Object.freeze({section,summarize,insurers:INSURERS,careTypes:CARES,sample,guidance,medianCosts:MEDIANS,policyRules:PLAN_RULES});
 })();
