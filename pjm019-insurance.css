@@ -64,3 +64,66 @@
   .pjm020-insurance .insurance-card.pjm020-card{padding:20px 16px;border-radius:16px}
   .pjm020-insurance .insurance-result.pjm020-result{padding:19px 16px}
 }
+
+
+/* PJM-021 · concise native insurance explanation; public national price evidence */
+.pjm021-fee-guide{margin:22px 0 5px;padding-top:20px;border-top:1px solid #dce7db}
+.pjm021-fee-guide h4{font-family:var(--przima-display-typeface,var(--przima-typeface))!important;font-size:17px;
+  font-weight:750;letter-spacing:-.045em;color:#304a38;margin:0 0 6px;line-height:1.45}
+.pjm021-fee-guide .pjm021-subhead{font-size:12px;line-height:1.65;color:#637767;margin:0 0 11px}
+.pjm021-fees{border-radius:12px;background:#fff;border:1px solid #e1e8df;overflow:hidden}
+.pjm021-fee-row{display:flex;align-items:center;justify-content:space-between;gap:15px;
+  padding:13px 14px;border-bottom:1px solid #edf0ec}
+.pjm021-fee-row:last-child{border-bottom:0}
+.pjm021-fee-row span{font-size:13px;color:#4b6051;line-height:1.5}
+.pjm021-fee-row strong{font-size:14px;letter-spacing:-.035em;color:#294637;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.pjm021-unpriced{display:block;padding:12px 14px;background:#fcfcfa;
+  font-size:11px;line-height:1.65;color:#758274;word-break:keep-all}
+.pjm021-cost-notice{margin:10px 1px 19px!important;font-size:11px!important;
+  color:#69796c!important;line-height:1.65!important;word-break:keep-all}
+.pjm021-example{background:#fff;border:1px solid #dbe6dc;border-radius:14px;padding:20px 17px;margin:15px 0}
+.pjm021-example-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+.pjm021-example-heading strong{font-family:var(--przima-display-typeface,var(--przima-typeface))!important;
+  font-size:16px;letter-spacing:-.04em;color:#304c3b}
+.pjm021-example-heading span{font-size:10px;color:#77887c;font-weight:600}
+.pjm021-example>p{margin:0;font-size:12px;line-height:1.65;color:#65766b}
+.pjm021-plan-amounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0}
+.pjm021-plan-amounts>div{display:flex;flex-direction:column;gap:5px;border:1px solid #e2eae1;border-radius:9px;
+  min-width:0;padding:12px 10px;background:#fafcf8}
+.pjm021-plan-amounts span{font-size:11px;line-height:1.4;color:#65796b;font-weight:600}
+.pjm021-plan-amounts strong{font-size:clamp(15px,2.7vw,22px);letter-spacing:-.055em;
+  font-variant-numeric:tabular-nums;color:#2b6244;white-space:nowrap}
+.pjm021-plan-amounts small{font-size:10px;line-height:1.45;color:#78887b;word-break:keep-all}
+.pjm021-example p.pjm021-calc-note{font-size:11px;color:#6d806e;
+  line-height:1.72;padding-top:10px;border-top:1px solid #ebf0e9;word-break:keep-all}
+.pjm021-imaging{border:1px solid #dbe6dc;border-radius:12px;padding:15px;background:#fff;margin:14px 0}
+.pjm021-imaging strong{display:block;font-size:13px;color:#3f5b47}
+.pjm021-imaging p{font-size:13px;font-weight:650;margin:7px 0!important;color:#2e5e41!important}
+.pjm021-imaging small{font-size:11px;line-height:1.6;color:#79887d}
+.pjm021-pending{font-size:11px!important;line-height:1.65!important;color:#6b7f6f!important;
+  background:#fff;border:1px solid #e4ebe2;border-radius:10px;padding:12px 13px}
+.pjm021-policy-details{margin-top:17px;border-top:1px solid #dce8dc}
+.pjm021-policy-details>summary{list-style:revert;font-size:12px;color:#426b4d;
+  font-weight:700;cursor:pointer;padding:13px 0}
+.pjm021-policy-details>div{background:#fff;border:1px solid #e0e9df;border-radius:10px;
+  padding:14px;font-size:11px;color:#637869;line-height:1.75}
+.pjm021-policy-details b{color:#3c5e43}
+.pjm021-policy-details p{margin:7px 0 11px!important;line-height:1.72!important;
+  font-size:11px!important;word-break:keep-all}
+.pjm021-policy-details small{font-size:10px;color:#7e8d7f;line-height:1.6;display:block}
+.pjm021-conditions{margin-top:15px}
+.pjm021-conditions>strong{font-size:13px;color:#3e5c46;display:block;margin-bottom:9px}
+@media(max-width:620px){
+  .pjm021-example{padding:17px 12px}
+  .pjm021-plan-amounts{gap:6px}
+  .pjm021-plan-amounts>div{padding:11px 7px}
+  .pjm021-plan-amounts span{font-size:10px}
+  .pjm021-plan-amounts strong{font-size:clamp(13px,4vw,17px)}
+  .pjm021-plan-amounts small{font-size:9px}
+}
+@media(max-width:340px){
+  .pjm021-plan-amounts{grid-template-columns:1fr}
+  .pjm021-plan-amounts>div{padding:12px}
+  .pjm021-plan-amounts strong{font-size:20px}
+}
