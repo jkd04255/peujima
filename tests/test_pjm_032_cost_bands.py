@@ -122,8 +122,10 @@ def run_case(browser,url,w,h,engine,full):
         need("약 20만~35만원" in p.inner_text(),
              "actual public cremation service fee should provide a planning range")
         p=set_care(page,"liability")
+        # '계약 확인' includes the characters '약 ': check price labels only.
         need("보험 보장·청구 조건" in p.inner_text() and
-             "약 " not in p.inner_text(),
+             all("약 " not in label for label in
+                 p.locator(".pjm031-price").all_inner_texts()),
              "non-medical indemnity paperwork must not show invented fees")
         need(not page.evaluate("document.documentElement.scrollWidth>innerWidth+2"),
              f"{engine} {w} horizontal scrolling from price labels")
