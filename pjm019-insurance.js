@@ -33,7 +33,7 @@
   function careOptions(selected){
     const base='<optgroup label="주요 진료 항목">'+options(CARES.filter(c=>!c.group),selected)+'</optgroup>';
     return base+catalog.groups.filter(group=>group!=="고양이 주요질환"||state.insurer.endsWith("-cat")).map(group=>
-      '<optgroup label="'+esc(group)+'">'+options(CARES.filter(c=>c.group===group&&(state.insurer.endsWith('-cat')||!c.id.startsWith('dog_'))),selected)+'</optgroup>'
+      '<optgroup label="'+esc(group)+'">'+options(CARES.filter(c=>c.group===group&&(!state.insurer.endsWith('-cat')||!c.id.startsWith('dog_'))),selected)+'</optgroup>'
     ).join("");
   }
   const PLAN_LIMITS=[
