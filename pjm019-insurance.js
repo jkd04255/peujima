@@ -114,35 +114,47 @@
   }
   function guidance(insurerId,careId){
     const g=CARE_GUIDES[careId];if(!g)return "";
+    const meritz=insurerId==="meritz-dog",db=insurerId==="db-dog";
     const unitRows=g.items.map(id=>'<div class="pjm021-fee-row"><span>'+esc(MEDIANS[id].name)+'</span><strong>'+money(MEDIANS[id].won)+'</strong></div>').join("");
     const other=g.others.map(x=>'<span class="pjm021-unpriced">'+esc(x)+'</span>').join("");
     const s=sample(insurerId,careId);
+    const exampleText=db
+      ?"공제 후 보상비율만 적용한 값이며 개인 계약의 1일·연간 한도, 특약, 면책 및 중복보상 조정을 적용하기 전입니다. 실제 지급액은 더 적거나 0원일 수 있습니다."
+      :"3만원 공제, 해당 비용 모두 보장 대상, 의료비Ⅲ 담보 가입, 면책기간 경과, 1일·연간 잔여한도 충분, 중복보상 조정 없음 등을 가정한 계산입니다. 실제 지급액은 달라지거나 0원일 수 있습니다.";
     const scenario=s?'<section class="pjm021-example" aria-label="가정 계산 예시">'+
-      '<div class="pjm021-example-heading"><strong>보험금은 얼마나 나올까요?</strong><span>가상 예시 · 지급 확정 아님</span></div>'+
+      '<div class="pjm021-example-heading"><strong>'+(db?"공식 산식의 가상 계산":"보험금은 얼마나 나올까요?")+'</strong><span>'+(db?"한도 적용 전 · 지급 확정 아님":"가상 예시 · 지급 확정 아님")+'</span></div>'+
       '<p>위 항목을 같은 날 모두 받고 총 '+money(s.total)+'이 청구됐다고 가정했습니다.</p>'+
       '<div class="pjm021-plan-amounts">'+s.plans.map(p=>
-        '<div><span>'+esc(p.name)+' ('+Math.round(p.ratio*100)+'%)</span><strong>'+money(p.amount)+'</strong>'+
-        '<small>가정상 본인부담 '+money(p.selfPay)+'</small></div>').join("")+'</div>'+
-      '<p class="pjm021-calc-note">3만원 공제, 해당 비용 모두 보장 대상, 의료비Ⅲ 담보 가입, 면책기간 경과, 1일·연간 잔여한도 충분, 중복보상 조정 없음 등을 가정한 계산입니다. 실제 지급액은 달라지거나 0원일 수 있습니다.</p></section>':"";
-    const imaging=(insurerId==="meritz-dog"&&careId==="mri")?'<div class="pjm021-imaging"><strong>영상검사 연간 최초 1회 특약 한도</strong>'+
+        '<div><span>'+esc(p.name)+(db?"":' ('+Math.round(p.ratio*100)+'%)')+'</span><strong>'+money(p.amount)+'</strong>'+
+        '<small>'+(db?"한도 적용 전 금액":"가정상 본인부담 "+money(p.selfPay))+'</small></div>').join("")+'</div>'+
+      '<p class="pjm021-calc-note">'+esc(exampleText)+'</p></section>':"";
+    const imaging=meritz&&careId==="mri"?'<div class="pjm021-imaging"><strong>영상검사 연간 최초 1회 특약 한도</strong>'+
       '<p>고급형 최대 100만원 · 기본형 최대 50만원 · 실속형 최대 30만원</p>'+
       '<small>이는 검사비 한도이지, 받을 보험금의 확정액이 아닙니다.</small></div>':"";
+    const policyName=meritz?POLICY_SOURCE:db?DB_POLICY_SOURCE:"선택한 보험사의 가입 시점별 상품 약관 확인 필요";
+    const policyConditions=meritz
+      ?"통원·입원의료비Ⅲ 특약은 각각 가입해야 하며, 플랜에 따라 보장비율 50~70%, 자기부담금 3만/5만원과 일일·연간 한도가 적용됩니다. 질병 최초 30일, 반려견 슬관절·고관절 관련 최초 1년, 이미 발병한 질환 및 예방 목적 진료의 면책 조건을 확인해야 합니다."
+      :db
+      ?"2026년 2610(CM) 공개 안내의 의료비 특약은 50% 또는 70% 보상비율과 3만/5만원 자기부담금을 제시합니다. 산식은 (부담 의료비 - 적용 자기부담금) × 보상비율, 이후 일일 한도 이내 지급입니다. 질병은 계약일부터 30일 경과 후, 슬관절·고관절 탈구 및 유사 질환·상해는 1년 경과 후 개시합니다. 치과·특정피부 약물·영상검사 확대는 별도 특약 조건을 확인해야 합니다. 개인 계약의 일일·연간 한도 및 다른 지급 제한은 확인되지 않았습니다."
+      :"해당 보험사의 반려견·반려묘 가입 계약에 적용되는 지급비율, 특약, 면책기간과 한도는 아직 검증되지 않았습니다. 다른 보험사의 조건을 대신 적용하지 않습니다.";
+    const unsupported=!(meritz||db)?
+      '<p class="pjm021-pending">이 보험 상품의 가입 버전별 지급 규칙은 아직 검증하지 않아 예상 보험금을 표시하지 않습니다. 공개 진료비 자료만 안내합니다.</p>':"";
+    const specialPending=db&&!s?
+      '<p class="pjm021-pending">이 항목은 처치 비용 또는 특약·한도 자료가 부족하여 지급액을 계산하지 않습니다. 가입한 계약의 보장 내용에 따라 달라집니다.</p>':"";
     return '<section class="pjm021-fee-guide" aria-label="대표 진료 항목과 보장 예시">'+
       '<h4>이런 진료 항목을 확인해 보세요</h4>'+
       '<p class="pjm021-subhead">'+esc(g.caption)+'</p>'+
       '<div class="pjm021-fees">'+(unitRows||'<p>신뢰할 수 있는 공개 진료비 자료가 없습니다.</p>')+other+'</div>'+
       '<p class="pjm021-cost-notice">표시 금액은 2025년 전국 동물병원 <b>개별 항목 중간값</b>입니다. 질환별 총 치료비·수술비 또는 진료 권장 목록이 아닙니다.</p>'+
-      (insurerId==="meritz-dog"?scenario+imaging:
-      '<p class="pjm021-pending">이 보험 상품의 가입 버전별 지급 규칙은 아직 검증하지 않아 예상 보험금을 표시하지 않습니다. 공개 진료비 자료만 안내합니다.</p>')+
+      scenario+imaging+specialPending+unsupported+
       '<details class="pjm021-policy-details"><summary>근거와 확인할 조건 보기</summary>'+
-      '<div><b>보험 보장 자료</b><p>'+esc(POLICY_SOURCE)+'</p>'+
-      '<p>통원·입원의료비Ⅲ 특약은 각각 가입해야 하며, 플랜에 따라 보장비율 50~70%, 자기부담금 3만/5만원과 일일·연간 한도가 적용됩니다. 질병 최초 30일, 반려견 슬관절·고관절 관련 최초 1년, 이미 발병한 질환 및 예방 목적 진료의 면책 조건을 확인해야 합니다.</p>'+
+      '<div><b>보험 보장 자료</b><p>'+esc(policyName)+'</p>'+
+      '<p>'+esc(policyConditions)+'</p>'+
       '<b>진료비 자료</b><p>'+esc(GOV_SOURCE)+'</p>'+
       '<p>'+esc(g.caveat)+'</p>'+
       '<small>원문 약관 PDF 전문과 가입한 증권을 자동 판독한 결과는 아닙니다. 가입 시기·특약·진단·잔여 한도에 따라 지급 여부가 달라집니다.</small></div></details>'+
       '</section>';
   }
-
   const planDetails='<details class="pjm020-details"><summary>플랜별 보장 한도 자세히 보기</summary>'+
     '<div class="pjm020-table-wrap"><table><thead><tr>'+
     '<th scope="col">플랜</th><th scope="col">비율</th><th scope="col">통원·입원 1일</th>'+
