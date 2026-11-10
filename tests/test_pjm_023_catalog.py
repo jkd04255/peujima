@@ -84,7 +84,7 @@ def run_case(browser,url,w,h,engine):
         need("2610" in page.locator(".pjm026-source-meta").inner_text()
              and "2607" in page.locator(".pjm026-version-warning").inner_text(),
              "DB version conflict not visible in simplified in-app answer")
-        need("공식 상품 안내" in page.locator(".pjm023-head").inner_text(),
+        need("상품 안내 확인" in page.locator(".pjm023-head").inner_text(),
              "B grade wrongly presented as original policy PDF")
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("chemo")
@@ -92,7 +92,7 @@ def run_case(browser,url,w,h,engine):
         need("26.01" in page.locator(".pjm026-version-warning").inner_text()
              and "26.07" in page.locator(".pjm026-version-warning").inner_text(),
              "KB original policy mismatch not communicated on screen")
-        need("A · 약관 원문 검증" in page.locator(".pjm023-head").inner_text(),
+        need("A · 일부 약관 원문 확인" in page.locator(".pjm023-head").inner_text(),
              "KB policy PDF audit badge missing")
         need(page.locator(".pjm020-result a[target='_blank']").count()==0,
              "in-app policy explanation must not redirect to insurer")
