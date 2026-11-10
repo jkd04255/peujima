@@ -32,7 +32,7 @@ def run_case(browser,url,w,h,engine):
           species:!!PJM019.insurers.find(x=>x.id==="nh-cat"),
           official:!!PJM019.insurers.find(x=>x.id==="samsung-dog")
         })""")
-        need(stats["catalog"] and stats["i"]==12 and stats["c"]==35 and
+        need(stats["catalog"] and stats["i"]==14 and stats["c"]==35 and
              stats["care"]==45 and stats["species"] and stats["official"],
              f"catalog counts or data failed: {stats}")
         need(page.locator("#careSelect optgroup").count()>=7,"grouped care taxonomy absent")
@@ -75,6 +75,16 @@ def run_case(browser,url,w,h,engine):
              "official Samsung selectable ratio missing")
         need("NH펫앤미든든" not in page.locator(".pjm023-coverage").inner_text(),
              "old insurer's source leaked into Samsung result")
+
+        page.locator("#insurerSelect").select_option("kakao-dog")
+        page.locator("#careSelect").select_option("surgery")
+        page.locator(".insurance-button").click()
+        need("수술당일형" in page.locator(".pjm023-coverage").inner_text(),
+             "KakaoPay surgery-only vs inpatient/outpatient plans not shown")
+        need("카카오페이손해보험" in page.locator(".pjm023-coverage").inner_text(),
+             "KakaoPay official coverage profile not shown")
+        need(page.locator(".pjm021-plan-amounts").count()==0,
+             "KakaoPay must not reuse Meritz/DB payout examples")
 
         page.locator("#insurerSelect").select_option("meritz-dog")
         page.locator("#careSelect").select_option("illness")
