@@ -70,7 +70,7 @@
     const dailyRemaining=Math.max(0,limit-dailyPaid);
     const scanRemaining=q.care==="mri"?plan.scan:Infinity;
     // EDUCATIONAL ASSUMPTION, not a verified payment formula from the user's signed policy.
-    const assumedBeforeLimit=Math.max(0,expense-Number(q.deductible))*plan.ratio;
+    const assumedBeforeLimit=Math.floor(Math.max(0,expense-Number(q.deductible))*Math.round(plan.ratio*100)/100);
     const amount=Math.floor(Math.max(0,Math.min(assumedBeforeLimit,annualRemaining,dailyRemaining,scanRemaining)));
     return {
       kind:"scenario",title:"조건을 가정한 계산 예시",reason:"이 금액은 보험금 지급 확정액이 아닙니다. 공제·비례보상 순서와 계약별 면책·실제 잔여 한도 확인 전에는 오차가 있을 수 있습니다.",
