@@ -79,8 +79,12 @@ def run_case(browser,origin,w,h,engine):
               "illustrative plan payments missing")
         check("가상" in result.inner_text() and "중간값" in result.inner_text(),
               "price and payout uncertainty disclaimers missing")
-        check(result.locator("a[href]").count()==0,
-              "user must not be redirected to insurer to read explanations")
+        # Optional research links in the collapsed cost-source footer are fine;
+        # insurance explanation must not send the user to an insurer's website.
+        check(result.locator("a[href]").count()==
+              result.locator(".pjm030-fineprint .pjm032-sources a[href]").count() and
+              result.locator("a[target='_blank']").count()==0,
+              "only voluntary fee-source links in the bottom disclosure are allowed")
         check(page.locator(".pjm021-policy-details").count()==1,"in-app details missing")
         check(not page.locator(".pjm021-policy-details").get_attribute("open"),
               "explanatory details should be collapsed by default")
