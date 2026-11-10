@@ -9,6 +9,7 @@ on:
       - feature/pjm-018-suit-typography
       - feature/pjm-018-typography-system
       - feature/pjm-019-policy-benefit-estimator
+      - feature/pjm-020-simple-insurance-summary
   pull_request:
     branches:
       - main
@@ -65,7 +66,7 @@ jobs:
         run: python tests/test_pjm_014_compact_ui.py
       - name: PJM-018 Korean typography and responsive Chromium WebKit
         run: python tests/test_pjm_018_typography.py
-      - name: PJM-019 source-checked insurance scenario and UI Chromium WebKit
+      - name: PJM-020 concise insurance coverage summary and UI Chromium WebKit
         run: python tests/test_pjm_019_insurance.py
       - name: PJM-016 map marker selected-card feedback Chromium WebKit
         run: python tests/test_pjm_016_marker_selection.py
