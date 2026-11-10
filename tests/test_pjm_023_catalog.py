@@ -32,7 +32,7 @@ def run_case(browser,url,w,h,engine):
           species:!!PJM019.insurers.find(x=>x.id==="nh-cat"),
           official:!!PJM019.insurers.find(x=>x.id==="samsung-dog")
         })""")
-        need(stats["catalog"] and stats["i"]==14 and stats["c"]==35 and
+        need(stats["catalog"] and stats["i"]==14 and stats["c"]==42 and
              stats["care"]==52 and stats["species"] and stats["official"],
              f"catalog counts or data failed: {stats}")
         need(page.locator("#careSelect optgroup").count()>=7,"grouped care taxonomy absent")
