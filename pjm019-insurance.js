@@ -196,14 +196,15 @@
       "이 진료의 검사·약제·처치가 보장되는지는 진단명, 치료 목적, 실제 가입한 특약 및 면책기간에 따라 달라집니다.");
     const [version,scope,ratio,deductible,limit,waiting,riders,source]=p;
     const row=(label,detail)=>'<div class="pjm023-fact"><dt>'+esc(label)+'</dt><dd>'+esc(detail)+'</dd></div>';
-    const caution=insurerId.startsWith("nh-")||insurerId==="kb-cat";
-    const evidence=insurerId.startsWith("nh-")||insurerId==="kb-cat"?"약관 원문 미확인":
-      insurerId==="hyundai-dog"||insurerId==="hyundai-cat"||insurerId==="kb-dog"?
-      "관련 버전 약관 원문 확인":"공식 상품 안내 기준";
+    const audit=(catalog.evidence||{})[insurerId]||null;
+    const evidence=audit?({A:"A · 약관 원문 검증",B:"B · 공식 상품 안내",C:"C · 공식 홍보 자료",D:"D · 약관 원문 미검증"}[audit.grade]||"근거 확인 필요"):"근거 확인 필요";
+    const auditContext=audit?
+      '<p class="pjm026-source-meta">검토 기준: '+esc(audit.version)+'</p>'+
+      '<p class="pjm026-version-warning">주의 · '+esc(audit.warning)+'</p>':"";
     const extraContext=isExtra?
       '<p class="pjm023-extra-warning">이 항목은 일반 진료비 실손 담보가 아닌 별도 보장 또는 청구 절차입니다. 관련 특약의 실제 가입 여부가 확인되지 않으면 지급 가능하다고 판단할 수 없습니다.</p>':"";    return '<section class="pjm023-coverage" aria-label="보험 상품의 공개 보장 조건">'+
       '<div class="pjm023-head"><h4>보험 상품 보장 확인</h4><span>'+esc(evidence)+'</span></div>'+
-      '<p class="pjm023-version">'+esc((ins?ins.label+' · ':'')+version)+'</p>'+
+      '<p class="pjm023-version">'+esc((ins?ins.label+' · ':'')+version)+'</p>'+auditContext+
       '<dl class="pjm023-facts">'+row(isExtra?"기본 의료비":"어떤 진료",scope)+row("보상비율",ratio)+row("자기부담금",deductible)+'</dl>'+extraContext+
       '<p class="pjm023-focus"><b>'+(isExtra?'선택한 보장·청구 항목의 확인 사항':'선택한 진료의 확인 사항')+'</b> '+esc(note)+'</p>'+
       '<details class="pjm023-more"><summary>한도·면책기간·특약 자세히 보기</summary><dl>'+
