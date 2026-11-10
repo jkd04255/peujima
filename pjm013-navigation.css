@@ -1,3 +1,4 @@
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css");
 /* PJM-013 / service navigation redesign
    Dedicated routes: 홈 / 실제 병원 찾기 / 가상 예약 체험 / 보험 안내.
    Retains original pet photographs, brand, 7-day calendar and PJM-012 Kakao.
@@ -400,4 +401,131 @@
   .pjm013-page--nearby .nearby-real-badge{font-size:10px;padding:5px 7px}
   .pjm013-page--clinics .section-top h2{font-size:25px}
   .pjm013-page--clinics .clinic-section{padding-top:26px}
+}
+
+
+/* PJM-018 / cohesive Korean-first typography
+   Typeface: SUIT Variable (SIL OFL 1.1; sun-typeface/SUIT).
+   Keep the existing photographs, colors, geometry and all form controls.
+   This last-in-cascade override unifies historical mixed Noto/Apple/DM/serif
+   font stacks without rewriting the 1MB legacy inline stylesheet. */
+:root{
+  --przima-typeface:"SUIT Variable","Apple SD Gothic Neo","Noto Sans KR",
+                    "Malgun Gothic",system-ui,sans-serif;
+}
+html{
+  font-synthesis:none;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+/* Legacy CSS explicitly sets different families on several nested labels.
+   Select text-bearing descendants once, while excluding SVG/icon subtrees. */
+body,body :not(svg):not(svg *){
+  font-family:var(--przima-typeface)!important;
+}
+body{
+  letter-spacing:-.018em;
+  font-optical-sizing:auto;
+}
+.pjm013-header .brand-primary{
+  font-weight:800;
+  letter-spacing:-.052em;
+}
+.pjm013-header .brand-leading,
+.pjm013-header .brand-ending,
+.pjm013-header .brand-all{
+  font-weight:650;
+  letter-spacing:-.027em;
+}
+.pjm013-nav-name,.pjm013-bottom-nav .pjm013-nav-name{
+  font-weight:710;
+  letter-spacing:-.025em;
+}
+.pjm013-mode-switch button{
+  font-weight:670;
+  letter-spacing:-.018em;
+}
+.pjm013-home-legacy .hero-v4-heading{
+  font-weight:700;
+  letter-spacing:-.043em;
+  line-height:1.37;
+}
+.pjm013-search-panel h2,.pjm013-panel-heading strong{
+  font-weight:740;
+  letter-spacing:-.045em;
+  line-height:1.36;
+}
+.pjm013-service-card strong{
+  font-weight:750;
+  letter-spacing:-.045em;
+  line-height:1.35;
+}
+.pjm013-service-card .pjm013-card-num,
+.pjm013-condition-row h2 span{
+  font-weight:650;
+  letter-spacing:-.012em;
+}
+.pjm013-condition-row h2,
+.pjm013-page--clinics .section-top h2,
+.pjm013-page--insurance .insurance h2,
+.section h2,.section h2 em,.insurance h2 em{
+  font-weight:720;
+  letter-spacing:-.047em;
+  line-height:1.34;
+  font-style:normal;
+}
+.pjm013-page--clinics .specialty-item b,
+.clinic-explore-main strong,
+.clinic-profile-body h2,
+.clinic-booking-heading h3,
+.clinic-visit-card h3,
+.nearby-results-title h3,
+.nearby-place-heading b{
+  font-weight:710;
+  letter-spacing:-.034em;
+  line-height:1.42;
+}
+.pjm013-page--insurance .insurance-card h3,
+.pjm013-page--insurance .insurance-result b,
+.booking-modal h2{
+  font-weight:730;
+  letter-spacing:-.038em;
+  line-height:1.36;
+}
+.pjm013-page--nearby .nearby-geo,
+.pjm013-page--nearby .nearby-region-form button,
+.pjm013-page--nearby .nearby-place-links a,
+.clinic-reserve-button,.primary-btn,.cal-next,.cal-slot,
+.pjm013-locate,.pjm013-service-card,.pjm013-condition-chips button{
+  font-weight:680;
+  letter-spacing:-.018em;
+}
+.pjm013-page--nearby .nearby-place p,
+.pjm013-page--nearby .nearby-endnote,
+.clinic-profile-subtitle,.clinic-visit-card dd,
+.insurance-disclaimer,.virtual-clinic-notice,
+.booking-complete-intro,.clinic-visit-note,
+.pjm013-footer-row p{
+  letter-spacing:-.012em;
+  line-height:1.67;
+}
+.pjm013-search-row input,
+.nearby-region-form input,
+.nearby-radius select,
+.search-field input,.select-field select,
+.insurance-card select,.modal input,.modal textarea,
+.modal select{
+  letter-spacing:-.015em;
+}
+@media(max-width:620px){
+  .pjm013-header .brand-primary{letter-spacing:-.052em}
+  .pjm013-home-legacy .hero-v4-heading{
+    letter-spacing:-.044em;
+    line-height:1.37;
+  }
+  .pjm013-service-card strong{letter-spacing:-.036em}
+  .pjm013-page--clinics .section-top h2,
+  .pjm013-page--insurance .insurance h2{
+    letter-spacing:-.044em;
+  }
 }
