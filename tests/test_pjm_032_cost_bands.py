@@ -44,8 +44,8 @@ def run_case(browser,url,w,h,engine,full):
                   const result=PJM032.estimate(care.id,row,"dog");
                   if(result.kind==="estimate"){
                     estimate++;
-                    if(!(result.low>0&&result.high>=result.low)&&
-                       Number.isFinite(result.low)&&Number.isFinite(result.high))invalid++;
+                    if(!(result.low>0&&result.high>=result.low&&
+                       Number.isFinite(result.low)&&Number.isFinite(result.high)))invalid++;
                     if(result.basis==="published-case"&&!PJM032.anchors[result.source])invalid++;
                   }else if(result.kind==="not-applicable")nonPrice++;
                   else unknown++;
