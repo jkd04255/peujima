@@ -69,7 +69,7 @@
 .nearby-status{color:#455b49}
 
 
-/* PJM-016: map marker -> persistent, unmistakable result-card selection.
+/* PJM-017: map marker -> quiet card-only selection without a visible text badge.
    Use a border-independent inner outline to avoid shifting card dimensions. */
 .nearby-place.is-selected{
   background:#f0f6ee;
@@ -78,21 +78,4 @@
   outline-offset:-2px;
   box-shadow:0 5px 18px rgba(42,78,48,.1);
 }
-.nearby-place-indicators{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px}
-.nearby-place-selected{
-  display:none;
-  font-size:11px;
-  font-weight:800;
-  line-height:1.3;
-  padding:5px 8px;
-  border-radius:7px;
-  color:#fff;
-  background:#355c40;
-  white-space:nowrap;
-}
-.nearby-place.is-selected .nearby-place-selected{display:inline-flex}
 .nearby-place:focus-visible{outline:3px solid #355c40;outline-offset:2px}
-@media(max-width:620px){
-  .nearby-place-indicators{gap:5px}
-  .nearby-place-selected{font-size:10px;padding:5px 7px}
-}
