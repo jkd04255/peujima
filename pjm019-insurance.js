@@ -292,7 +292,7 @@
       '</article>';
   }
   function section(mode,legacyCare){
-    if(mode!==state.mode){state.mode=mode;state.insurer=mode==="cat"?"meritz-cat":"meritz-dog";state.showResult=false;}
+    if(mode!==state.mode){state.mode=mode;state.insurer=mode==="cat"?"meritz-cat":"meritz-dog";if(mode!=="cat"&&state.care.startsWith("feline_"))state.care="illness";state.showResult=false;}
     if(legacyCare&&state.previousCare!==legacyCare&&CARES.some(i=>i.id===legacyCare)){
       state.previousCare=legacyCare;state.care=legacyCare;state.showResult=false;
     }
