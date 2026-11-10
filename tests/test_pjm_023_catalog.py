@@ -125,12 +125,12 @@ def run_case(browser,url,w,h,engine):
             gradeCat:PJM023.evidence["kb-cat"].grade
         })""")
         need({x["code"] for x in snapshot["products"]}==
-             {"25343","25345","25357","25358"},
+             {"25343","25344","25345","25346","25357","25358"},
              "KB 26.07 officially listed product identity matrix changed")
         need(sorted(x["channel"] for x in snapshot["products"] if x["species"]=="dog")==
-             ["다이렉트형","일반형"],"dog general and direct policy must be distinct")
+             ["다이렉트형","일반형","일반형(추가 공시 코드)"],"dog general and direct policy must be distinct")
         need(sorted(x["channel"] for x in snapshot["products"] if x["species"]=="cat")==
-             ["다이렉트형","일반형"],"cat general and direct policy must be distinct")
+             ["다이렉트형","일반형","일반형(추가 공시 코드)"],"cat general and direct policy must be distinct")
         need(snapshot["gradeDog"]=="A" and snapshot["gradeCat"]=="D",
              "KB verified 26.01 PDF must not become a verified 26.07 cat policy")
         need(all(x["sourceType"].startswith("official_listing") for x in snapshot["products"]),
@@ -142,7 +142,8 @@ def run_case(browser,url,w,h,engine):
         page.locator("#careSelect").select_option("mri")
         page.locator(".insurance-button").click()
         need("25343" in page.locator(".pjm029-kb-editions").inner_text() and
-             "25357" in page.locator(".pjm029-kb-editions").inner_text(),
+             "25357" in page.locator(".pjm029-kb-editions").inner_text() and
+             "25344" in page.locator(".pjm029-kb-editions").inner_text(),
              "KB dog general and direct product codes not displayed")
         need(not page.locator(".pjm029-kb-details").is_visible(),
              "secondary 26.07 notes should not clutter default result")
@@ -157,6 +158,7 @@ def run_case(browser,url,w,h,engine):
         page.locator(".insurance-button").click()
         need("25345" in page.locator(".pjm029-kb-editions").inner_text() and
              "25358" in page.locator(".pjm029-kb-editions").inner_text() and
+             "25346" in page.locator(".pjm029-kb-editions").inner_text() and
              "25343" not in page.locator(".pjm029-kb-editions").inner_text(),
              "KB dog product codes leaked into cat result")
         page.locator(".pjm023-more summary").click()
