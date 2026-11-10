@@ -13,6 +13,7 @@ on:
       - feature/pjm-021-insurance-common-care
       - feature/pjm-022-db-dog-verified-guide
       - feature/pjm-023-expanded-insurance-catalog
+      - feature/pjm-030-compact-footer-notes
   pull_request:
     branches:
       - main
