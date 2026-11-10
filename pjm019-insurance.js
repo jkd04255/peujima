@@ -32,7 +32,7 @@
   CARES.push(...catalog.cares);
   function careOptions(selected){
     const base='<optgroup label="주요 진료 항목">'+options(CARES.filter(c=>!c.group),selected)+'</optgroup>';
-    return base+catalog.groups.map(group=>
+    return base+catalog.groups.filter(group=>group!=="고양이 주요질환"||state.insurer.endsWith("-cat")).map(group=>
       '<optgroup label="'+esc(group)+'">'+options(CARES.filter(c=>c.group===group),selected)+'</optgroup>'
     ).join("");
   }
@@ -311,7 +311,13 @@
     if(event.target.id!=="insurerSelect"&&event.target.id!=="careSelect")return;
     // Prevent the legacy change handler from rerendering the entire page and losing focus.
     event.stopImmediatePropagation();
-    state[event.target.id==="insurerSelect"?"insurer":"care"]=event.target.value;
+    const insurerChanged=event.target.id==="insurerSelect";
+    state[insurerChanged?"insurer":"care"]=event.target.value;
+    if(insurerChanged){
+      if(!state.insurer.endsWith("-cat")&&state.care.startsWith("feline_"))state.care="illness";
+      const careSelect=document.getElementById("careSelect");
+      if(careSelect)careSelect.innerHTML=careOptions(state.care);
+    }
     state.showResult=false;
     const out=document.getElementById("pjm020Output");if(out)out.innerHTML=output();
   },true);
