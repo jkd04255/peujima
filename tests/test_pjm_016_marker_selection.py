@@ -57,16 +57,16 @@ def run_case(browser, origin, width, height, name):
         must(page.locator(".nearby-place").count()==2, "two synthetic hospitals not rendered")
         must(page.evaluate("window.__testMarkers?.length")==2, "two clickable markers not created")
         must(page.locator(".nearby-place.is-selected").count()==0, "premature selection before marker click")
-        must(page.locator(".nearby-place-selected:visible").count()==0, "premature visible selection badge")
+        must(page.locator(".nearby-place-selected").count()==0, "visible selection-label markup should be removed completely")
         # Results are sorted by distance; first marker belongs to id=1001.
         page.evaluate("window.__testMarkers[0].__click()")
         selected = page.locator('.nearby-place[data-place-id="1001"]')
         must(selected.get_attribute("class").find("is-selected")!=-1, "first marker did not select first hospital")
-        must(selected.locator(".nearby-place-selected").is_visible(), "selected hospital badge not visible")
+        must(selected.locator(".nearby-place-selected").count()==0, "selection text badge should not render")
         must("선택한 병원" in selected.get_attribute("aria-label"), "accessibility label lacks selection")
         must(page.evaluate("document.activeElement?.dataset.placeId")== "1001", "selection did not focus result")
         must(page.locator(".nearby-place.is-selected").count()==1, "multiple selected cards")
-        must(page.locator(".nearby-place-selected:visible").count()==1, "multiple visible selection badges")
+        must(page.locator(".nearby-place-selected").count()==0, "text badge unexpectedly rendered")
         must(page.evaluate("""() => getComputedStyle(document.querySelector('.nearby-place.is-selected')).outlineStyle""") == "solid",
              "selected card missing strong highlight outline")
         if width==390:
@@ -74,7 +74,8 @@ def run_case(browser, origin, width, height, name):
 
         page.evaluate("window.__testMarkers[1].__click()")
         second=page.locator('.nearby-place[data-place-id="1002"]')
-        must(second.locator(".nearby-place-selected").is_visible(), "second clicked marker not highlighted")
+        must(second.locator(".nearby-place-selected").count()==0, "second selected card must also have no text badge")
+        must(second.get_attribute("class").find("is-selected")!=-1, "second clicked marker not highlighted")
         must(page.locator('.nearby-place[data-place-id="1001"].is-selected').count()==0, "old card remains selected")
         must(page.locator(".nearby-place.is-selected").count()==1, "selection not exclusive")
         must(page.evaluate("document.activeElement?.dataset.placeId")=="1002", "second selection not focused")
@@ -85,11 +86,11 @@ def run_case(browser, origin, width, height, name):
         page.locator("#nearbyRegionForm button").click()
         page.locator(".nearby-place").first.wait_for(timeout=10000)
         must(page.locator(".nearby-place.is-selected").count()==0, "stale highlight after region search")
-        must(page.locator(".nearby-place-selected:visible").count()==0, "stale badge after region search")
+        must(page.locator(".nearby-place-selected").count()==0, "selection badge should remain removed after searching")
         must(not page.evaluate("document.documentElement.scrollWidth > window.innerWidth+2"),
              "horizontal overflow on selected-card layout")
         must(not errors, f"JavaScript page errors: {errors}")
-        print(f"PASS PJM-016 {name} {width}px: marker click, badge, focus, exclusive selection, reset")
+        print(f"PASS PJM-017 {name} {width}px: marker click, badge-free outline, focus, exclusive selection, reset")
     finally:
         context.close()
 
@@ -114,7 +115,7 @@ def main():
     finally:
         server.shutdown()
         server.server_close()
-    print("PJM-016 MARKER SELECTION QA PASSED (mock Kakao, no physical iPhone)")
+    print("PJM-017 BADGE-FREE MARKER SELECTION QA PASSED (mock Kakao, no physical iPhone)")
 
 if __name__=="__main__":
     main()
