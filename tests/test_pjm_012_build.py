@@ -30,8 +30,9 @@ def main():
         assert (dist/"pjm013-navigation.css").is_file()
         assert (dist/"pjm019-insurance.js").is_file()
         assert (dist/"pjm019-insurance.css").is_file()
+        assert (dist/"pjm023-catalog.js").is_file()
         assert (dist/".nojekyll").is_file()
-        assert set(x.name for x in dist.iterdir())=={"index.html","pjm012-nearby.js","pjm012-nearby.css","pjm013-navigation.js","pjm013-navigation.css","pjm019-insurance.js","pjm019-insurance.css",".nojekyll"}
+        assert set(x.name for x in dist.iterdir())=={"index.html","pjm012-nearby.js","pjm012-nearby.css","pjm013-navigation.js","pjm013-navigation.css","pjm019-insurance.js","pjm019-insurance.css","pjm023-catalog.js",".nojekyll"}
         try:
             build_site(dist,"short")
         except ValueError:
