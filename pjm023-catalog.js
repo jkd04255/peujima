@@ -93,6 +93,30 @@ const focus={
  "kakao-dog":{patella:"일반 질병 30일과 다르게 슬관절·고관절 탈구는 최초 1년 면책입니다.",surgery:"수술당일형·수술입원형·수술입통원형에서 입원/통원 보장 범위가 다릅니다."},
  "kakao-cat":{feline_cystitis:"반려묘 질환별 대기기간과 플랜에 포함된 통원 담보를 확인해야 합니다."}
 };
+/* PJM-027: explicit, version-scoped clauses from insurer-issued original policy.
+   "Exists as a rider" is NOT a determination of the user's coverage or payment. */
+const CLAUSE_EVIDENCE={
+ "kb-dog":{
+   "funeral":{
+     version:"KB 다이렉트 금쪽같은 펫보험(강아지) 26.01",
+     clause:"반려동물 관련 특별약관 4. 반려동물장례비용지원금, 인쇄 153~154쪽",
+     summary:"26.01 공식 약관: '반려동물장례비용지원금(실손)' 별도 특약 가입 시 최초 30일 면책. 허가된 동물장묘업체의 당일 장례서비스 실제 지출액에 증권상 보상비율을 적용하고 보험가입금액을 한도로 합니다. 임시 안치·고급 유골함·봉안당 안치 등은 제외됩니다. 적법한 안락사 시 수의사 소견서가 필요합니다. 26.07 보장 조건은 별도로 미검증.",
+     riderRequired:true
+   },
+   "boarding":{
+     version:"KB 다이렉트 금쪽같은 펫보험(강아지) 26.01",
+     clause:"반려동물 관련 특별약관 6. 반려동물 위탁비용(반려인 상해입원 1일 이상), 인쇄 167~168쪽",
+     summary:"26.01 공식 약관: 보호자가 상해의 직접 결과로 1일 이상 병원에 입원하고 등록된 동물위탁관리업체에 반려견을 맡기는 경우의 별도 실손 특약. 1회 입원당 최대 180일, 위탁 1일당 증권상 가입금액 한도. 위탁 기본비용만 대상이며 추가 식대·용품구매는 제외. 단순 질병입원도 동일하게 보장된다고 해석할 수 없습니다. 26.07 원문 미검증.",
+     riderRequired:true
+   },
+   "liability":{
+     version:"KB 다이렉트 금쪽같은 펫보험(강아지) 26.01",
+     clause:"약관 요약서 보장한도표, 인쇄 19쪽 / 배상책임 특별약관의 실제 제외·공제 요건은 별도 적용",
+     summary:"26.01 공식 약관 요약서에는 '반려동물배상책임(강아지)' 별도 특약의 사고당 1,000만원 한도가 표시됩니다. 이는 발생 사고마다 지급되는 금액이 아니라 보상 상한이며, 실제 법률상 배상책임·면책·자기부담금 및 보험증권의 담보 가입 여부를 확인해야 합니다. 26.07 원문 미검증.",
+     riderRequired:true
+   }
+ }
+};
 const EVIDENCE={
   "meritz-dog": {
     "grade": "B",
@@ -179,6 +203,6 @@ const EVIDENCE={
     "warning": "반려견 플랜의 보상비율·공제금을 고양이 상품에 그대로 적용하지 않습니다."
   }
 };
-window.PJM023=Object.freeze({insurers,cares,products,focus,evidence:EVIDENCE,
+window.PJM023=Object.freeze({insurers,cares,products,focus,evidence:EVIDENCE,clauseEvidence:CLAUSE_EVIDENCE,
   groups:["소화기","내과·만성질환","피부·귀·눈","뼈·관절","검사·처치","고양이 주요질환","예방·일상","기타 보장"]});
 })();
