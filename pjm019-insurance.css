@@ -178,3 +178,10 @@
 /* PJM-027 · clause provenance is supporting information, not a third input. */
 .pjm027-clause-origin{margin:7px 0 13px!important;color:#687d6d!important;
   font-size:11px!important;line-height:1.65!important;overflow-wrap:anywhere;word-break:keep-all}
+
+/* PJM-028: original-policy exclusions stay secondary to the two-choice answer. */
+.pjm028-clause-details{margin:14px 0 10px;padding-top:12px;border-top:1px solid rgba(46,67,49,.14)}
+.pjm028-clause-details h5{font-size:12px!important;font-weight:700!important;color:#4b6652!important;line-height:1.55!important;margin:0 0 10px!important}
+.pjm028-clause-details dl{margin:0!important}
+.pjm028-clause-details .pjm023-fact{align-items:start;min-width:0}
+.pjm028-clause-details .pjm023-fact dd{overflow-wrap:anywhere;word-break:keep-all}
