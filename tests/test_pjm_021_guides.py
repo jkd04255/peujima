@@ -49,6 +49,13 @@ def inspect_engine(page):
     check(values["onsite"],"internal explanation must not force insurer website")
     check({"digestive","skin","ear"}.issubset(values["careIds"]),"common conditions not available")
 
+def reveal_notes(page):
+    """Open the new single footer disclosure for legacy policy-detail checks."""
+    panel=page.locator(".pjm030-fineprint")
+    assert panel.count()==1, "bottom evidence disclosure must exist"
+    if panel.get_attribute("open") is None:
+        page.locator(".pjm030-fineprint > summary").click()
+
 def run_case(browser,origin,w,h,engine):
     ctx=browser.new_context(viewport={"width":w,"height":h},locale="ko-KR",
         reduced_motion="reduce",has_touch=engine=="WebKit",is_mobile=engine=="WebKit")
@@ -62,6 +69,7 @@ def run_case(browser,origin,w,h,engine):
         check(page.locator("#insurance select").count()==2,"must ask only 2 questions")
         inspect_engine(page)
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         result=page.locator(".pjm020-result")
         check(result.is_visible(),"summary result missing")
         check(page.locator(".pjm021-fee-row").count()==3,"illness itemized fees missing")
@@ -85,11 +93,13 @@ def run_case(browser,origin,w,h,engine):
         page.locator("#careSelect").select_option("digestive")
         check(page.locator(".pjm021-fee-guide").count()==0,"stale plan from prior treatment")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         check("81,900원" in page.locator(".pjm020-result").inner_text(),
               "digestive reference scenario wrong")
 
         page.locator("#careSelect").select_option("mri")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         check("791,500원" in page.locator(".pjm020-result").inner_text(),
               "2025 median MRI price missing")
         check("600,000원" in page.locator(".pjm020-result").inner_text(),
@@ -99,6 +109,7 @@ def run_case(browser,origin,w,h,engine):
 
         page.locator("#careSelect").select_option("skin")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         check("피부" in page.locator(".pjm020-result").inner_text(),
               "skin-specific explanation missing")
         check(page.locator(".pjm021-plan-amounts").count()==0,
@@ -107,6 +118,7 @@ def run_case(browser,origin,w,h,engine):
         page.locator("#insurerSelect").select_option("hyundai-dog")
         check(page.locator(".pjm020-result").count()==0,"stale Meritz conclusion")
         page.locator(".insurance-button").click()
+        reveal_notes(page)
         check(page.locator(".pjm021-plan-amounts").count()==0,
               "unreviewed insurer must not show Meritz payouts")
         check("가입 계약" in page.locator(".pjm020-result").inner_text(),
