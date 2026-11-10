@@ -161,3 +161,11 @@
   .pjm023-fact{grid-template-columns:73px minmax(0,1fr);column-gap:8px}
   .pjm023-more .pjm023-fact{grid-template-columns:78px minmax(0,1fr)}
 }
+
+/* PJM-025: distinguish separately insured benefits from veterinary medical bills. */
+.pjm023-extra-warning{margin:11px 0;padding:10px 12px;border-left:3px solid #88a08c;
+  background:#f6f8f5;border-radius:5px;font-size:12px!important;line-height:1.7!important;
+  color:#59685b!important;word-break:keep-all}
+.pjm023-more a{color:#3f6850;text-decoration:underline;text-underline-offset:3px;
+  overflow-wrap:anywhere;font-weight:650}
+.pjm023-more a:focus-visible{outline:2px solid #2e5a3b;outline-offset:2px}
