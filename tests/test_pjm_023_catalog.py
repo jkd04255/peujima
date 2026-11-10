@@ -112,6 +112,38 @@ def run_case(browser,url,w,h,engine):
         need(page.locator(".pjm023-more[open]").is_visible(),"cannot expand conditions")
         need("면책" in page.locator(".pjm023-more").inner_text(),"exclusions omitted")
 
+        # PJM-027: only KB dog 26.01 signed original clauses can be explained.
+        page.locator("#insurerSelect").select_option("kb-dog")
+        for care,words in [
+            ("funeral",("30일","동물장묘업체","보상비율")),
+            ("boarding",("상해","180일","추가 식대")),
+            ("liability",("1,000만원","사고당","법률상"))
+        ]:
+            page.locator("#careSelect").select_option(care)
+            page.locator(".insurance-button").click()
+            detail=page.locator(".pjm023-focus").inner_text()
+            for word in words:
+                need(word in detail,f"KB 26.01 {care} term {word} missing")
+            origin=page.locator(".pjm027-clause-origin")
+            need(origin.is_visible() and "26.01" in origin.inner_text(),
+                 f"KB 26.01 {care} exact policy edition and location absent")
+            need("26.07" in page.locator(".pjm026-version-warning").inner_text(),
+                 "old KB policy must not be assigned to the 26.07 contract")
+            need(page.locator(".pjm021-plan-amounts").count()==0,
+                 "extra KB benefits must not result in invented payment")
+            need(page.locator(".pjm020-result a[target='_blank']").count()==0,
+                 "the result should remain inside PRZIMA")
+        page.locator("#insurerSelect").select_option("kb-cat")
+        page.locator("#careSelect").select_option("boarding")
+        page.locator(".insurance-button").click()
+        need(page.locator(".pjm027-clause-origin").count()==0,
+             "KB 26.01 dog boarding terms must never be copied to KB cat")
+        page.locator("#insurerSelect").select_option("samsung-dog")
+        page.locator("#careSelect").select_option("funeral")
+        page.locator(".insurance-button").click()
+        need(page.locator(".pjm027-clause-origin").count()==0,
+             "KB 26.01 clause must not appear in other insurers")
+
         page.locator("#insurerSelect").select_option("nh-cat")
         need(page.locator(".pjm020-result").count()==0,"stale KB result after insurer change")
         need(page.locator("#careSelect option").count()==49,"cat topic choices and shared benefits not present")
@@ -169,8 +201,19 @@ def run_case(browser,url,w,h,engine):
              "DB dog large-dog rider annual limit missing")
         page.locator("#careSelect").select_option("mri")
         page.locator(".insurance-button").click()
-        need("90일" in page.locator(".pjm023-focus").inner_text(),
-             "DB MRI/CT disease waiting period omitted")
+        need("30일" in page.locator(".pjm023-focus").inner_text() and
+             "90일" in page.locator(".pjm023-focus").inner_text(),
+             "DB 2610 MRI 30-day wait must be distinguished from chemo 90-day wait")
+        page.locator("#careSelect").select_option("chemo")
+        page.locator(".insurance-button").click()
+        need("90일" in page.locator(".pjm023-focus").inner_text() and
+             "6회" in page.locator(".pjm023-focus").inner_text(),
+             "DB 2610 oncology 90-day waiting / six treatments omitted")
+        page.locator("#careSelect").select_option("surgery")
+        page.locator(".insurance-button").click()
+        need("30일" in page.locator(".pjm023-focus").inner_text() and
+             "연 1회" in page.locator(".pjm023-focus").inner_text(),
+             "DB 2610 specific high-cost surgery waiting / frequency omitted")
         page.locator("#insurerSelect").select_option("kb-dog")
         page.locator("#careSelect").select_option("claim_docs")
         page.locator(".insurance-button").click()

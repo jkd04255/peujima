@@ -174,3 +174,7 @@
 .pjm026-source-meta{margin:3px 0 7px!important;font-size:11px!important;line-height:1.6!important;color:#607369!important;word-break:keep-all}
 .pjm026-version-warning{margin:4px 0 13px!important;padding:9px 11px;border:1px solid #e4e9dc;background:#f8f8f1;
   border-radius:8px;color:#586556!important;font-size:11px!important;line-height:1.65!important;word-break:keep-all}
+
+/* PJM-027 · clause provenance is supporting information, not a third input. */
+.pjm027-clause-origin{margin:7px 0 13px!important;color:#687d6d!important;
+  font-size:11px!important;line-height:1.65!important;overflow-wrap:anywhere;word-break:keep-all}
