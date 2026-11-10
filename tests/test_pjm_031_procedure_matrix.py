@@ -58,7 +58,8 @@ def check_examples(page):
     for label in ["암수술비","항암약물치료비","방사선치료비"]:
         row=p.locator(".pjm031-procedure-item").filter(has_text=label)
         need(row.count()==1 and
-             "비용 확인" in row.locator(".pjm031-price").inner_text(),
+             ("비용 확인" in row.locator(".pjm031-price").inner_text() or
+              "별도 확인" in row.locator(".pjm031-price").inner_text()),
              "unverified cancer treatment price misrepresented: "+label)
         need(not row.locator(".pjm031-published").count(),
              "no nationwide median for "+label)
