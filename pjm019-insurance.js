@@ -131,8 +131,13 @@
   function guidance(insurerId,careId){
     const g=CARE_GUIDES[careId];if(!g)return "";
     const meritz=insurerId==="meritz-dog",db=insurerId==="db-dog";
-    const unitRows=g.items.map(id=>'<div class="pjm021-fee-row"><span>'+esc(MEDIANS[id].name)+'</span><strong>'+money(MEDIANS[id].won)+'</strong></div>').join("");
-    const other=g.others.map(x=>'<span class="pjm021-unpriced">'+esc(x)+'</span>').join("");
+    const cat=insurerId.endsWith("-cat");
+    // Never present a DOG-specific published fee as a feline treatment price.
+    const visibleIds=g.items.filter(id=>!cat||!["inpatient","vaccine"].includes(id));
+    const unitRows=visibleIds.map(id=>'<div class="pjm021-fee-row"><span>'+esc(MEDIANS[id].name)+'</span><strong>'+money(MEDIANS[id].won)+'</strong></div>').join("");
+    const catNotice=cat&&visibleIds.length!==g.items.length?
+      '<span class="pjm021-unpriced">반려묘에 직접 적용할 수 있는 공개 중간값을 확인하지 못해 반려견 전용 금액은 표시하지 않습니다.</span>':"";
+    const other=g.others.map(x=>'<span class="pjm021-unpriced">'+esc(x)+'</span>').join("")+catNotice;
     const s=sample(insurerId,careId);
     const exampleText=db
       ?"공제 후 보상비율만 적용한 값이며 개인 계약의 1일·연간 한도, 특약, 면책 및 중복보상 조정을 적용하기 전입니다. 실제 지급액은 더 적거나 0원일 수 있습니다."
