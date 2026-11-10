@@ -143,22 +143,27 @@
       const median=MEDIANS[medianKey];
       // These two published fee categories are dog-specific; never copy them to cats.
       const published=median&&!((medianKey==="inpatient"||medianKey==="vaccine")&&isCat);
+      const band=published?null:window.PJM032?.estimate(careId,[stage,title,detail,medianKey],isCat?"cat":"dog");
+      const wonToUnit=(value)=>(value/10000).toLocaleString("ko-KR",{maximumFractionDigits:1})+"만";
       const price=published?
-        "공개 항목 중간값 · "+money(median.won):
-        isBenefit?"계약·특약별 확인":
-        /수술|시술/.test(stage)?"수술·시술비 별도 확인":"병원별 비용 확인";
+        "공식 공개 중간값 · "+money(median.won):
+        band?.kind==="estimate"?
+        "약 "+wonToUnit(band.low)+"~"+wonToUnit(band.high)+"원 / "+band.unit:
+        isBenefit?"보험 보장·청구 조건 (진료비 항목 아님)":"참고 비용 산정 대상 아님";
+      const grade=published?"":band?.kind==="estimate"?
+        (band.basis==="published-case"?" · 공개 사례 참고":" · 예산 추정"):"";
       return '<li class="pjm031-procedure-item">'+
         '<div class="pjm031-procedure-title"><span class="pjm031-stage">'+esc(stage)+'</span>'+
         '<strong>'+esc(title)+'</strong></div>'+
         '<p>'+esc(detail)+'</p>'+
-        '<small class="pjm031-price'+(published?' pjm031-published':'')+'">'+esc(price)+'</small>'+
+        '<small class="pjm031-price'+(published?' pjm031-published':'')+'">'+esc(price)+'<span class="pjm032-grade">'+esc(grade)+'</span></small>'+
         '</li>';
     }).join("");
     return '<section class="pjm031-procedures" aria-label="선택한 진료의 세부 검사와 치료">'+
       '<div class="pjm031-heading"><h4>'+(isBenefit?'관련 보장·청구 세부 항목':'세부 검사·치료 항목')+'</h4>'+
       '<span>'+rows.length+'개</span></div>'+
       '<ul class="pjm031-procedure-list">'+sum+'</ul>'+
-      '<p class="pjm031-procedure-caution">이는 해당 질환에서 검토할 수 있는 항목이지 모든 환자의 필수 진료 목록이나 합산 치료비가 아닙니다. 공개 중간값은 해당 검사·진찰 1개 항목만의 통계이며, 수술·항암 치료비와 보험 지급액은 별도로 확인해야 합니다.</p>'+
+      '<p class="pjm031-procedure-caution">위 금액 중 공식 공개 중간값은 2025년 정부 조사에 포함된 단일 항목에만 해당합니다. 나머지는 일부 병원별 공개 사례·비공식 비용 가이드와 서비스의 넓은 예산 가정을 구분해 표시한 참고 범위로, 전국 통계나 진료 견적이 아닙니다. 체중·질환 정도·수술 부위·마취·입원·약제와 지역에 따라 실제 지불액은 이 범위 밖일 수 있습니다. 수술·항암·방사선 등에는 진찰·검사·마취·입원·퇴원약이 포함되는지 병원에 확인해야 하며, 카드 금액을 합산해 질환별 총액이나 보험금을 계산하면 안 됩니다.</p>'+
       '</section>';
   }
   function guidance(insurerId,careId){
