@@ -63,7 +63,7 @@
     const statusText=n.message||(key()?'위치 정보는 자동 수집하지 않습니다. 버튼을 눌러 검색을 시작하세요.':'현재 지도 API 연결 키가 없습니다. 아래 설정에서 JavaScript 키를 등록한 뒤 검색해 주세요.');
     const list=n.status==='ready'&&n.results.length?n.results.map(p=>`<article class="nearby-place${memory.selectedPlaceId===p.id?' is-selected':''}" data-place-id="${escapeHtml(p.id)}" tabindex="-1" aria-label="${escapeHtml(p.name)}${memory.selectedPlaceId===p.id?' 선택한 병원':''}">
       
-      <div class="nearby-place-heading"><b>${escapeHtml(p.name)}</b><div class="nearby-place-indicators"><span class="nearby-place-selected">선택한 병원</span><small>${meters(p.meters)}</small></div></div>
+      <div class="nearby-place-heading"><b>${escapeHtml(p.name)}</b><small>${meters(p.meters)}</small></div>
       <p>${icon('pin',14)} ${escapeHtml(p.address)}${p.phone?'<br>전화 '+escapeHtml(p.phone):''}</p>
       <div class="nearby-place-links"><a href="https://place.map.kakao.com/${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer">카카오맵 상세 보기 ${icon('arrow',13)}</a>
       ${/^[+0-9 -]{7,25}$/.test(p.phone)?`<a href="tel:${p.phone.replace(/[^0-9+]/g,'')}">전화 걸기</a>`:''}</div>
