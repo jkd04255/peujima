@@ -5,6 +5,7 @@ on:
       - feature/pjm-014-functional-cleanup
       - feature/pjm-015-remove-duplicate-headers
       - feature/pjm-016-map-marker-selection
+      - feature/pjm-017-subtle-map-selection
   pull_request:
     branches:
       - main
