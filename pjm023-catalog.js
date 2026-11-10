@@ -143,7 +143,9 @@ const KB_2607={
   status:"공식 상품공시로 상품 존재 확인, PDF 다운로드 엔드포인트 확인; 약관 본문 직접 열람·대조 미완료",
   products:[
     {code:"25343",species:"dog",channel:"일반형",policyFile:"https://www.kbinsure.co.kr/CG802030003.ec?fileNm=25343_1_1.pdf",sourceType:"official_listing_and_unread_pdf"},
+    {code:"25344",species:"dog",channel:"일반형(추가 공시 코드)",policyFile:null,sourceType:"official_listing_only"},
     {code:"25345",species:"cat",channel:"일반형",policyFile:"https://www.kbinsure.co.kr/CG802030003.ec?fileNm=25345_1_1.pdf",sourceType:"official_listing_and_unread_pdf"},
+    {code:"25346",species:"cat",channel:"일반형(추가 공시 코드)",policyFile:null,sourceType:"official_listing_only"},
     {code:"25357",species:"dog",channel:"다이렉트형",policyFile:null,sourceType:"official_listing_only"},
     {code:"25358",species:"cat",channel:"다이렉트형",policyFile:null,sourceType:"official_listing_only"}
   ],
