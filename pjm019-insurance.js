@@ -197,7 +197,7 @@
     const [version,scope,ratio,deductible,limit,waiting,riders,source]=p;
     const row=(label,detail)=>'<div class="pjm023-fact"><dt>'+esc(label)+'</dt><dd>'+esc(detail)+'</dd></div>';
     const audit=(catalog.evidence||{})[insurerId]||null;
-    const evidence=audit?({A:"A · 일부 약관 원문 확인",B:"B · 상품 안내 확인",C:"C · 공식 소개 자료",D:"D · 약관 원문 미확보"}[audit.grade]||"근거 확인 필요"):"근거 확인 필요";
+    const evidence=audit?({A:"A · 일부 약관 원문 확인",B:"B · 상품 안내 확인",C:"C · 공식 소개 자료",D:"D · 약관 원문 미검증·미확보"}[audit.grade]||"근거 확인 필요"):"근거 확인 필요";
     const auditContext=audit?
       '<p class="pjm026-source-meta">검토 기준: '+esc(audit.version)+'</p>'+
       '<p class="pjm026-version-warning">주의 · '+esc(audit.warning)+'</p>':"";
