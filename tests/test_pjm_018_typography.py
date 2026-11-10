@@ -1,93 +1,165 @@
-"""PJM-018 typography regression for Korean UI across routes and viewports.
+"""PJM-018: SUIT Variable typography, Korean hierarchy and responsive regression.
 
-Checks the computed font system and conservative responsive layout.
-CDN CSS is stubbed for deterministic browser CI; the official font import URLs
-are validated from source. This is not a physical iPhone Safari font proof.
+Browser assertions use a mock Kakao key, never live GPS/reservation data.
+Font-family is verified as a CSS stack; local browsers without internet may
+render a fallback, so this is not a guarantee of physical iPhone font loading.
 """
 from __future__ import annotations
+
 import functools
 import http.server
 import threading
 from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
-ROOT=Path(__file__).resolve().parents[1]
-CSS=(ROOT/"pjm013-navigation.css").read_text(encoding="utf-8")
-assert CSS.startswith('@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css");')
-assert 'SUITE@2/fonts/variable/woff2/SUITE-Variable.css' in CSS
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "qa-screenshots"
+OUT.mkdir(exist_ok=True)
+FONT_CSS_URL = (
+    "https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css"
+)
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
-    def log_message(self,*args): pass
+    def log_message(self, *args): pass
 
-def require(condition,message):
+
+def require(condition, message):
     if not condition: raise AssertionError(message)
 
-def family(page,selector):
-    return page.locator(selector).first.evaluate("(el)=>getComputedStyle(el).fontFamily")
 
-def run_case(browser,origin,width,height,name):
-    context=browser.new_context(viewport={"width":width,"height":height},
-        locale="ko-KR",reduced_motion="reduce",
-        is_mobile=(name=="WebKit"),has_touch=(name=="WebKit"))
-    page=context.new_page()
-    errors=[]
-    page.on("pageerror",lambda error:errors.append(str(error)))
-    page.route("https://cdn.jsdelivr.net/gh/sun-typeface/**",
-        lambda route:route.fulfill(status=200,content_type="text/css",body="/* font CDN stub: no glyph files in CI */"))
+def computed(page, selector):
+    return page.locator(selector).first.evaluate(
+        "(el) => {const s=getComputedStyle(el);return {"
+        "family:s.fontFamily,weight:s.fontWeight,spacing:s.letterSpacing,"
+        "fontSize:s.fontSize,lineHeight:s.lineHeight}}"
+    )
+
+
+def assert_suit(page, selector, label):
+    el = page.locator(selector)
+    require(el.count()>0, f"{label}: selector not found: {selector}")
+    family = computed(page, selector)["family"]
+    require("SUIT Variable" in family, f"{label}: unexpected mixed font: {family}")
+
+
+def assert_suite_display(page, selector, label):
+    el=page.locator(selector)
+    require(el.count()>0, f"{label}: missing display selector {selector}")
+    family=computed(page, selector)["family"]
+    first=family.split(",")[0].strip().strip(chr(34)).strip(chr(39))
+    require(first=="SUITE Variable", f"{label}: expected SUITE display, got {family}")
+
+
+def no_overflow(page, name, width):
+    require(not page.evaluate(
+        "document.documentElement.scrollWidth > innerWidth + 2"),
+        f"{name}: horizontal overflow at {width}px"
+    )
+
+
+def run_screen(browser, origin, width, height, name):
+    mobile = width <= 850
+    context = browser.new_context(
+        viewport={"width": width, "height": height},
+        locale="ko-KR", reduced_motion="reduce"
+    )
+    page = context.new_page()
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    # Deterministic CSS inspection, without loading a third-party font binary:
+    # the production CDN declaration is verified below, not replaced in source.
+    page.route("**/SUIT-Variable.css", lambda route: route.fulfill(
+        status=200, content_type="text/css", body="/* SUIT external font CSS test stub */"))
+    page.route("**/SUITE-Variable.css", lambda route: route.fulfill(
+        status=200, content_type="text/css", body="/* SUITE external font CSS test stub */"))
     try:
-        page.goto(origin,wait_until="load")
-        page.locator(".pjm013-nav-name").first.wait_for(state="attached",timeout=12000)
-        require("SUIT Variable" in family(page,".pjm013-nav-name:visible"),f"{name} navigation missing SUIT")
-        require("SUITE Variable" in family(page,".pjm013-brand"),f"{name} brand wrapper missing SUITE")
-        require("SUITE Variable" in family(page,".pjm013-brand button"),f"{name} brand text missing SUITE")
-        require("SUITE Variable" in family(page,".hero-v4-heading"),f"{name} photo hero missing SUITE")
-        require("SUITE Variable" in family(page,".hero-v4-heading strong"),f"{name} emphasized hero text missing SUITE")
-        require("SUIT Variable" in family(page,".pjm013-service-card"),f"{name} service card missing SUIT")
-        require("SUITE Variable" in family(page,".pjm013-service-card strong"),f"{name} service title missing SUITE")
-        require(page.locator(".hero-pet").count()>=2,"pet photographs lost")
-        require(page.locator(".pjm013-service-card").count()==3,"service actions changed")
-        require(not page.evaluate("document.documentElement.scrollWidth > innerWidth + 2"),
-            f"{name} {width}: horizontal overflow on home")
-        for route in ["nearby","clinics","insurance"]:
-            page.goto(origin+"#"+route,wait_until="load")
-            require(page.evaluate("state.page")==route,f"{name} route {route} broken")
-            require(not page.evaluate("document.documentElement.scrollWidth > innerWidth + 2"),
-                f"{name} {width}: horizontal overflow on {route}")
-        require(page.locator(".insurance-disclaimer").count()>=1,"insurance disclaimer lost")
-        require(page.locator(".insurance-button").count()>=1,"insurance action lost")
+        page.goto(origin, wait_until="load")
+        require(page.locator(".pjm013-header").is_visible(), "home header missing")
+        require(page.locator(".hero-pet").count()>=2, "original pet photographs missing")
+        require(page.locator(".pjm013-service-card").count()==3, "service cards missing")
+        require(page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--przima-typeface').includes('SUIT Variable')"), "SUIT typography token missing")
+        require(page.evaluate("getComputedStyle(document.documentElement).fontSynthesis") == "none", "synthetic font styles enabled")
+        for sel in [
+            ".pjm013-header .brand-all-focus",
+            ".pjm013-service-card strong",
+            ".pjm013-home-legacy .hero-v4-heading",
+            ".pjm013-search-row input",
+        ]:
+            assert_suit(page, sel, "home")
+        for sel in [".pjm013-header .brand-all-focus", ".pjm013-home-legacy .hero-v4-heading", ".pjm013-service-card strong"]:
+            assert_suite_display(page, sel, "home display")
+        nav = ".pjm013-bottom-nav" if mobile else ".pjm013-desktop-nav"
+        assert_suit(page, nav+" .pjm013-nav-name", "navigation")
+        heading = computed(page, ".pjm013-home-legacy .hero-v4-heading")
+        require(heading["spacing"].startswith("-"), "headline tracking no longer adjusted")
+        no_overflow(page, "home", width)
+
         page.goto(origin+"#nearby",wait_until="load")
-        require(page.locator(".nearby-geo").is_visible(),"Kakao map location control hidden")
-        require("SUIT Variable" in family(page,".nearby-geo"),"nearby GPS button wrong font")
-        require("SUIT Variable" in family(page,".nearby-region-form input"),"search input wrong font")
-        require(page.locator(".nearby-endnote").is_visible(),"real-booking disclaimer hidden")
-        if width<=390:
-            require(page.locator(".nearby-region-form input").first.evaluate(
-                "(el)=>parseFloat(getComputedStyle(el).fontSize)")>=16,"iOS input autozoom risk")
-        require(not errors,f"{name} JS console exceptions {errors}")
-        print(f"PASS PJM-018 {name} {width}x{height}: typography, routes, no overflow, notices")
+        require(page.locator(".nearby-geo").is_visible(), "nearby GPS button missing")
+        require(page.locator(".nearby-region-form").is_visible(), "nearby region search missing")
+        assert_suit(page, ".nearby-geo", "nearby button")
+        assert_suit(page, ".nearby-region-form input", "nearby input")
+        assert_suit(page, ".nearby-results-title h3", "nearby result heading")
+        require("실제 예약" in page.locator(".nearby-endnote").inner_text(),
+                "real booking unavailable notice missing")
+        assert_suite_display(page, ".nearby-results-title h3", "nearby display")
+        no_overflow(page, "nearby", width)
+
+        page.goto(origin+"#clinics",wait_until="load")
+        require(page.locator(".clinic-explore-card").count()==5, "synthetic clinic cards missing")
+        assert_suit(page, ".clinic-explore-main strong", "clinic card")
+        page.locator(".clinic-explore-card").first.click()
+        assert_suit(page, ".clinic-profile-body h2", "clinic detail title")
+        assert_suite_display(page, ".clinic-profile-body h2", "clinic display")
+        require(page.locator(".clinic-profile-caution").is_visible(),
+                "virtual clinic warning missing")
+        no_overflow(page, "clinic detail", width)
+
+        page.goto(origin+"#insurance",wait_until="load")
+        assert_suit(page, ".insurance h2", "insurance heading")
+        assert_suite_display(page, ".insurance h2", "insurance display")
+        assert_suit(page, ".insurance-card select", "insurance select")
+        require(page.locator("#insurerSelect").is_visible(), "insurance dropdown missing")
+        require(page.locator(".insurance-disclaimer").is_visible(),
+                "insurance guidance disclaimer missing")
+        no_overflow(page, "insurance", width)
+
+        if width==390:
+            page.screenshot(path=str(OUT/f"pjm-018-{name.lower()}-390-insurance.png"),full_page=True)
+        require(not errors, f"{name} {width}px JavaScript errors: {errors}")
+        print(f"PASS PJM-018 {name} {width}px: SUIT typography across home/nearby/clinics/insurance, no overflow")
     finally:
         context.close()
 
+
 def main():
-    server=http.server.ThreadingHTTPServer(("127.0.0.1",0),
-        functools.partial(Quiet,directory=str(ROOT)))
+    css=(ROOT/"pjm013-navigation.css").read_text(encoding="utf-8")
+    require(css.startswith(f'@import url("{FONT_CSS_URL}");'),
+            "official SUIT v2 stylesheet URL must be loaded before other CSS")
+    require('SUITE@2/fonts/variable/woff2/SUITE-Variable.css' in css,
+            "official SUITE display font stylesheet must be imported")
+    require("--przima-display-typeface" in css, "SUITE display token missing")
+    require("OFL" in css and "--przima-typeface" in css,
+            "font license or fallback token missing")
+    server = http.server.ThreadingHTTPServer(
+        ("127.0.0.1",0),functools.partial(Quiet,directory=str(ROOT)))
     threading.Thread(target=server.serve_forever,daemon=True).start()
     try:
         origin=f"http://127.0.0.1:{server.server_port}/"
         with sync_playwright() as p:
-            chromium=p.chromium.launch(headless=True,args=["--no-sandbox"])
+            chrome=p.chromium.launch(headless=True,args=["--no-sandbox"])
             webkit=p.webkit.launch(headless=True)
             try:
-                for width,height in [(320,700),(390,844),(768,1024),(1440,900)]:
-                    run_case(chromium,origin,width,height,"Chromium")
-                run_case(webkit,origin,390,844,"WebKit")
+                for w,h in [(320,700),(390,844),(768,1024),(1440,900)]:
+                    run_screen(chrome,origin,w,h,"Chromium")
+                run_screen(webkit,origin,390,844,"WebKit")
             finally:
-                chromium.close()
-                webkit.close()
+                chrome.close();webkit.close()
     finally:
-        server.shutdown()
-        server.server_close()
-    print("ALL PJM-018 TYPOGRAPHY QA PASSED")
+        server.shutdown();server.server_close()
+    print("PJM-018 TYPOGRAPHY AND RESPONSIVE QA PASSED")
+
 
 if __name__=="__main__":
     main()

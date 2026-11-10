@@ -6,6 +6,7 @@ on:
       - feature/pjm-015-remove-duplicate-headers
       - feature/pjm-016-map-marker-selection
       - feature/pjm-017-subtle-map-selection
+      - feature/pjm-018-suit-typography
       - feature/pjm-018-typography-system
   pull_request:
     branches:
@@ -17,7 +18,6 @@ on:
       - pjm012-nearby.js
       - pjm012-nearby.css
       - tests/test_pjm_016_marker_selection.py
-      - tests/test_pjm_018_typography.py
       - tests/test_pjm_012_mobile.py
       - tests/test_pjm_012.py
       - tests/test_pjm_012_live.py
@@ -32,6 +32,7 @@ on:
       - tests/test_pjm_012_live.py
       - .github/workflows/pjm-014-qa.yml
       - tests/test_pjm_014_compact_ui.py
+      - tests/test_pjm_018_typography.py
 permissions:
   contents: read
 jobs:
@@ -58,10 +59,10 @@ jobs:
         run: python tests/test_pjm_013_accessibility.py
       - name: PJM-014 minimal functional UI, safety labels, responsive Chromium WebKit
         run: python tests/test_pjm_014_compact_ui.py
+      - name: PJM-018 Korean typography and responsive Chromium WebKit
+        run: python tests/test_pjm_018_typography.py
       - name: PJM-016 map marker selected-card feedback Chromium WebKit
         run: python tests/test_pjm_016_marker_selection.py
-      - name: PJM-018 responsive typography SUIT/SUITE Chromium WebKit
-        run: python tests/test_pjm_018_typography.py
       - name: PJM-012 Kakao mock responsive and GPS
         run: python tests/test_pjm_012.py
       - name: PJM-012 iPhone and iPad WebKit
