@@ -82,7 +82,7 @@
 .pjm013-nav-item:focus-visible,.pjm013-mode-switch button:focus-visible,
 .pjm013-search-row button:focus-visible,.pjm013-search-row input:focus-visible,
 .pjm013-locate:focus-visible,.pjm013-service-card:focus-visible,
-.pjm013-condition-chips button:focus-visible{outline:3px solid #9ba96f;outline-offset:3px}
+.pjm013-condition-chips button:focus-visible{outline:3px solid #355c40;outline-offset:3px}
 .pjm013-search-row:focus-within{border-color:#708b77;box-shadow:0 0 0 3px #8ea18d25}
 @media(max-width:1100px){
   .pjm013-header-grid{gap:10px}
@@ -261,7 +261,7 @@
   border:0;
   cursor:pointer;
 }
-.pjm013-footer-row button:focus-visible{outline:3px solid #97a77b;outline-offset:3px}
+.pjm013-footer-row button:focus-visible{outline:3px solid #355c40;outline-offset:3px}
 @media(max-width:850px){
   .pjm013-home{padding:25px 0 55px}
   .pjm013-home-top{margin-bottom:13px}

@@ -21,7 +21,7 @@
   font-size:16px!important;font-weight:510;border-radius:11px!important;
   color:#2e4235;background:#f8faf7;border:1px solid #d8e2d9!important;appearance:auto;
 }
-.pjm020-card label select:focus-visible{outline:2px solid #527a5c;outline-offset:2px}
+.pjm020-card label select:focus-visible{outline:3px solid #355c40;outline-offset:3px}
 .pjm020-card .insurance-button{
   display:flex;align-items:center;justify-content:center;width:100%;min-height:53px;
   border-radius:11px!important;background:#395d46!important;
@@ -32,7 +32,7 @@
 .pjm020-output{margin-top:19px;min-width:0;scroll-margin-top:102px}
 /* PJM-034: show the beginning of the result below the sticky 69px mobile header. */
 @media(max-width:850px){.pjm020-output{scroll-margin-top:86px}}
-.pjm020-result h3:focus-visible{outline:2px solid #527a5c;outline-offset:4px;border-radius:3px}
+.pjm020-result h3:focus-visible{outline:3px solid #355c40;outline-offset:3px;border-radius:3px}
 .pjm020-instruction{margin:0;padding:15px;color:#748074;background:#f7faf6;
   border:1px solid #e4ebe3;border-radius:10px;font-size:12px;line-height:1.65}
 .pjm020-insurance .insurance-result.pjm020-result{
@@ -171,7 +171,7 @@
   color:#59685b!important;word-break:keep-all}
 .pjm023-more a{color:#3f6850;text-decoration:underline;text-underline-offset:3px;
   overflow-wrap:anywhere;font-weight:650}
-.pjm023-more a:focus-visible{outline:2px solid #2e5a3b;outline-offset:2px}
+.pjm023-more a:focus-visible{outline:3px solid #355c40;outline-offset:3px}
 
 /* PJM-026: concise source provenance, no distracting chip or external redirect. */
 .pjm026-source-meta{margin:3px 0 7px!important;font-size:11px!important;line-height:1.6!important;color:#607369!important;word-break:keep-all}
@@ -216,7 +216,7 @@
 .pjm020-result .pjm030-fineprint>summary::after{content:"+";font-size:16px;font-weight:400;line-height:1;color:#849285}
 .pjm020-result .pjm030-fineprint[open]>summary::after{content:"−"}
 .pjm020-result .pjm030-fineprint>summary:focus-visible{
-  outline:2px solid #427050;outline-offset:5px;border-radius:3px
+  outline:3px solid #355c40;outline-offset:3px;border-radius:3px
 }
 .pjm030-fineprint-content{
   padding:13px 0 2px!important;margin:0!important;font-size:11px!important;
@@ -328,7 +328,7 @@
   font-size:11px!important;color:#426d53!important;text-decoration:underline!important;
   text-underline-offset:2px
 }
-.pjm030-note-group .pjm032-sources a:focus-visible{outline:2px solid #3b6551;outline-offset:3px}
+.pjm030-note-group .pjm032-sources a:focus-visible{outline:3px solid #355c40;outline-offset:3px}
 
 
 /* PJM-035 · Keep long treatment breakdowns available without dominating the result. */
@@ -345,6 +345,6 @@
 }
 .pjm020-result .pjm035-procedure-disclosure[open]>summary:after{content:'−'}
 .pjm020-result .pjm035-procedure-disclosure>summary:focus-visible{
-  outline:2px solid #527a5c;outline-offset:3px
+  outline:3px solid #355c40;outline-offset:3px
 }
 .pjm020-result .pjm035-procedure-disclosure .pjm031-procedure-list{margin-top:12px}
