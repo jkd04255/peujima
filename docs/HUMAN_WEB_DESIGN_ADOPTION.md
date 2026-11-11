@@ -9,3 +9,11 @@
 - QA: 이번 PR은 Skill/문서만 추가하므로 화면/기능 회귀를 새로 통과했다고 간주하지 않음. PR에 Actions가 없으면 "자동 QA 미실행"으로 기록.
 - 실제 iPhone Safari/Instagram 브라우저 수동 QA 미검증. 추후 UI 변경에 대한 통과로 대체 불가.
 - 다음 후보: 실제 배포 화면에서 중복 안내가 보이는 지점 한 건을 먼저 찾고 디자인 승인 후 수정.
+
+## 추가로 저장한 원본 Frontend Design Skill
+
+- 사용자가 첨부한 `SKILL.md`를 글자 내용 수정 없이 `.agents/skills/frontend-design/SKILL.md`에 저장했습니다.
+- Anthropic `frontend-design`의 Apache-2.0 라이선스를 `.agents/skills/frontend-design/LICENSE.txt`에 동봉했습니다. 참고: https://github.com/anthropics/skills/tree/main/skills/frontend-design
+- 기존 `.agents/skills/human-web-design/SKILL.md`와 병행합니다. **승인된 디자인·프로젝트별 운영/Gate·QA 정책 > Human Web Design 프로젝트 보호 규칙 > 원본 Frontend Design 일반 심미 지침** 순으로 적용합니다.
+- 이 변경은 문서·에이전트 지침 추가일 뿐이며 기존 UI·제품 코드·테스트·배포를 변경하거나 기존 HOLD를 해제하지 않습니다.
+- 사용자가 본 PR의 병합을 별도로 승인하기 전에는 main 반영 및 공개 배포를 진행하지 않습니다.
