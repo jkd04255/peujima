@@ -29,7 +29,10 @@
   margin:3px 0 0!important;
 }
 .pjm020-card .insurance-button:hover{background:#4c7157!important}
-.pjm020-output{margin-top:19px;min-width:0}
+.pjm020-output{margin-top:19px;min-width:0;scroll-margin-top:102px}
+/* PJM-034: show the beginning of the result below the sticky 69px mobile header. */
+@media(max-width:850px){.pjm020-output{scroll-margin-top:86px}}
+.pjm020-result h3:focus-visible{outline:2px solid #527a5c;outline-offset:4px;border-radius:3px}
 .pjm020-instruction{margin:0;padding:15px;color:#748074;background:#f7faf6;
   border:1px solid #e4ebe3;border-radius:10px;font-size:12px;line-height:1.65}
 .pjm020-insurance .insurance-result.pjm020-result{

@@ -74,6 +74,22 @@ def run_case(browser,origin,width,height,name):
         verify_summary_engine(page)
 
         page.locator(".insurance-button").click()
+        # PJM-034: explicitly opening a long summary must announce its heading
+        # and show the top of the result below the sticky mobile header.
+        require(page.evaluate("""() => {
+            const result=document.querySelector(".pjm020-result");
+            return !!result && document.activeElement===result.querySelector("h3") &&
+                result.querySelector("h3").tabIndex===-1;
+        }"""),f"{name} {width}: result heading did not receive accessible focus")
+        if width<=850:
+            page.wait_for_function("""() => {
+                const result=document.querySelector("#pjm020Output");
+                const header=document.querySelector(".pjm013-header");
+                if(!result || !header)return false;
+                const top=result.getBoundingClientRect().top;
+                const headerBottom=header.getBoundingClientRect().bottom;
+                return top>=headerBottom+2 && top<=headerBottom+45;
+            }""",timeout=4000)
         reveal_notes(page)
         require(page.locator(".insurance-result").is_visible(),"summary not rendered after click")
         result=page.locator(".insurance-result").inner_text()
@@ -104,7 +120,12 @@ def run_case(browser,origin,width,height,name):
 
         page.locator("#insurerSelect").select_option("meritz-cat")
         page.locator("#careSelect").select_option("illness")
-        page.locator(".insurance-button").click()
+        page.locator(".insurance-button").focus()
+        page.locator(".insurance-button").press("Enter")
+        require(page.evaluate("""() => {
+            const result=document.querySelector(".pjm020-result");
+            return !!result && document.activeElement===result.querySelector("h3");
+        }"""),f"{name} {width}: keyboard submit did not focus the answer heading")
         reveal_notes(page)
         require("반려묘" in page.locator(".pjm020-result").inner_text(),"cat warning missing")
         # A cat estimate may legitimately include 30만원; verify species-specific
@@ -132,7 +153,7 @@ def main():
             chromium=p.chromium.launch(headless=True,args=["--no-sandbox"])
             webkit=p.webkit.launch(headless=True)
             try:
-                for width,height in [(320,700),(390,844),(1440,900)]:
+                for width,height in [(320,700),(390,844),(768,1024),(1440,900)]:
                     run_case(chromium,origin,width,height,"Chromium")
                 run_case(webkit,origin,390,844,"WebKit")
             finally:
