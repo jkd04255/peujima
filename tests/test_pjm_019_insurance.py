@@ -92,6 +92,15 @@ def run_case(browser,origin,width,height,name):
             }""",timeout=4000)
         reveal_notes(page)
         require(page.locator(".insurance-result").is_visible(),"summary not rendered after click")
+        require(page.locator(".insurance-result").get_attribute("role") is None,
+                f"{name}: long insurance article must not be announced as a live status")
+        require(page.locator(".insurance-result").get_attribute("aria-live") is None,
+                f"{name}: procedure/evidence details must not be one large live region")
+        require(page.evaluate("""() => {
+            const article=document.querySelector(".insurance-result");
+            const heading=article?.querySelector("h3");
+            return article?.tagName==="ARTICLE" && heading && document.activeElement===heading;
+        }"""),f"{name}: concise article heading should receive focus after submit")
         result=page.locator(".insurance-result").inner_text()
         require("질병 통원·입원 의료비" in result,"wrong first default summary")
         require("50~70%" in result,"range should be concise and labeled")
