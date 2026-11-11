@@ -75,8 +75,8 @@
         <label class="nearby-radius">반경 <select id="nearbyRadius" aria-label="주변 동물병원 검색 반경">${[1000,3000,5000].map(d=>`<option value="${d}" ${n.radius===d?'selected':''}>${d/1000}km</option>`).join('')}</select></label>
       </div><p class="nearby-status ${n.status==='error'?'error':''}" role="status" aria-live="polite">${icon('pin',15)} ${escapeHtml(statusText)}${n.originLabel?' · '+escapeHtml(n.originLabel):''}</p>
       <div class="nearby-map-wrap"><div id="nearbyKakaoMap" role="region" aria-label="카카오맵 주변 동물병원 지도"><div class="nearby-map-placeholder">${icon('pin',25)}<strong>주변 동물병원 지도</strong><span>API 연결 및 검색 후 실제 장소 마커가 표시됩니다.</span></div></div></div>
-      <div class="nearby-results-title"><h3>검색된 동물병원</h3><span>${n.status==='ready'?n.results.length+'곳 · 가까운 순':'카카오맵 검색 결과'}</span></div>
-      <div class="nearby-results" aria-live="polite">${list}</div>
+      <div class="nearby-results-title"><h3>검색된 동물병원</h3><span role="status" aria-live="polite" aria-atomic="true">${n.status==='ready'?n.results.length+'곳 · 가까운 순':'카카오맵 검색 결과'}</span></div>
+      <div class="nearby-results">${list}</div>
       <div class="nearby-settings">${!window.PRZIMA_KAKAO_JS_KEY?`<details ${n.status==='key-required'?'open':''}><summary>개발용 JavaScript 키 설정</summary>
         <p>카카오맵 JavaScript SDK 도메인 등록 후 JavaScript 키만 입력하세요. 이 입력값은 현재 브라우저 탭에만 보관합니다. Admin/REST 키는 입력하지 마세요.</p>
         <form id="nearbyKeyForm" class="nearby-key-form"><input id="nearbyKeyInput" aria-label="카카오맵 JavaScript 키" placeholder="JavaScript 키" pattern="[A-Za-z0-9]{20,64}" autocomplete="off" required><button type="submit">키 적용</button></form>
