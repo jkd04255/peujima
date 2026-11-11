@@ -52,8 +52,16 @@ def run_case(browser, origin, width, height, name):
         status=200, content_type="application/javascript", body=MOCK_CLICKABLE))
     try:
         page.goto(origin + "#nearby", wait_until="load")
+        count_status=page.locator("#nearby-hospitals .nearby-results-title [role='status']")
+        must(count_status.count()==1 and count_status.get_attribute("aria-live")=="polite" and
+             count_status.get_attribute("aria-atomic")=="true",
+             "result count should be announced politely and as one complete message")
+        must(page.locator("#nearby-hospitals .nearby-results").get_attribute("aria-live") is None,
+             "screen reader should not announce every hospital card as a live update")
         page.locator(".nearby-geo").click()
         page.locator(".nearby-place").first.wait_for(timeout=10000)
+        must(count_status.inner_text()=="2곳 · 가까운 순",
+             "result count announcement missing or stale")
         must(page.locator(".nearby-place").count()==2, "two synthetic hospitals not rendered")
         must(page.evaluate("window.__testMarkers?.length")==2, "two clickable markers not created")
         must(page.locator(".nearby-place.is-selected").count()==0, "premature selection before marker click")
