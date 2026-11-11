@@ -97,5 +97,19 @@
     const title = accessiblePageTitles[page];
     return title ? '<h1 id="pjm013PageTitle" class="pjm014-sr-only" tabindex="-1">' + title + '</h1>' : "";
   }
+  // PJM-042: The SPA owns the URL hash for routes (#home/#insurance/...).
+  // Using a native #main-content jump would overwrite that route and can
+  // cause browser history to reopen the wrong screen.
+  document.addEventListener("click", (event) => {
+    const skip = event.target.closest?.(".pjm013-skip");
+    if (!skip) return;
+    const main = document.getElementById("main-content");
+    if (!main) return;
+    event.preventDefault();
+    main.focus({ preventScroll: true });
+    const headerHeight = document.querySelector(".pjm013-header")?.getBoundingClientRect().height || 0;
+    const targetY = window.scrollY + main.getBoundingClientRect().top - headerHeight;
+    window.scrollTo({ top: Math.max(0, targetY), behavior: "instant" });
+  });
   window.PJM013 = {pages, route, header, bottom, home, pageHeading};
 })();
