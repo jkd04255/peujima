@@ -71,7 +71,9 @@
        terms.ratio<=0||terms.ratio>1||!Number.isFinite(terms.deductible)||
        terms.deductible<0||row.multiDay)return null;
     // One eligible service on one day. No stacking of riders, no other claims.
-    const beforeCap = Math.floor(Math.max(0,bill-terms.deductible)*terms.ratio);
+    // Integer micro-ratio avoids 0.7 floating-point rounding a payable won down to 118,999.
+    const numerator = Math.round(terms.ratio * 1000000);
+    const beforeCap = Math.floor(Math.max(0,bill-terms.deductible) * numerator / 1000000);
     const cap = row.type==="surgery" && terms.surgery!=null ? terms.surgery : terms.daily;
     const limits = [bill, beforeCap];
     if(Number.isFinite(cap))limits.push(cap);
