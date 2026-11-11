@@ -79,6 +79,8 @@ jobs:
       - run: python -m playwright install --with-deps chromium webkit
       - name: Install test-only axe-core
         run: npm install --no-save --no-package-lock --ignore-scripts axe-core@4.10.3
+      - name: PJM-045 G2 insurance payout and self-payment matrix Chromium WebKit
+        run: python tests/test_pjm_045_settlement.py
       - name: Release output and manual G3-only gate regression
         run: python tests/test_pjm_012_build.py
       - name: Offline LAN HTTPS access policy regression
@@ -129,8 +131,6 @@ jobs:
         run: python tests/test_pjm_043_mobile_nav_readability.py
       - name: PJM-044 concise home location disclosure Chromium WebKit
         run: python tests/test_pjm_044_home_location_note.py
-      - name: PJM-045 G2 insurance payout and self-payment matrix Chromium WebKit
-        run: python tests/test_pjm_045_settlement.py
       - name: REAL Kakao SDK, fixed nonpersonal Seoul coordinate (feature push only)
         if: github.event_name == 'push'
         env:
