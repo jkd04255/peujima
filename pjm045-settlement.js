@@ -42,7 +42,7 @@
   });
   const fmt = n => Number(n).toLocaleString("ko-KR") + "원";
   const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  let selection = {scope:null, index:0, planKey:null, deductible:30000, manual:false, custom:null};
+  let selection = {scope:null, index:-1, planKey:null, deductible:30000, manual:false, custom:null};
   function medicalRow(insurer, care, row, index) {
     const cat = insurer.endsWith("-cat");
     const medians = window.PJM019?.medianCosts || {};
@@ -83,7 +83,7 @@
   function activeData(insurer,care) {
     const scope=insurer+":"+care, spec=specs[insurer]||{description:"선택한 상품의 계약 조건 미확인",plans:[]};
     if(scope!==selection.scope) {
-      selection={scope,index:0,planKey:spec.defaultKey||null,deductible:spec.deductible??30000,manual:false,custom:null};
+      selection={scope,index:-1,planKey:spec.defaultKey||null,deductible:spec.deductible??30000,manual:false,custom:null};
     }
     const rows=rowsFor(insurer,care);
     if(!rows.some(r=>r.index===selection.index)) {
@@ -118,9 +118,9 @@
     const low=!isPreventive?calculate(row.low,terms,row):null;
     const high=!isPreventive?calculate(row.high,terms,row):null;
     const valid=!!low&&!!high;
-    const bounded=!!terms&&Number.isFinite(terms.daily)&&Number.isFinite(terms.annual)&&
+    const bounded=!!terms&&data.preset?.verified===true&&Number.isFinite(terms.daily)&&Number.isFinite(terms.annual)&&
       (row.type!=="scan"||Number.isFinite(terms.scan))&&!selection.manual;
-    const mode=selection.manual?"사용자가 입력한 조건으로 계산한 예시":bounded?"공식 공개 플랜 조건을 적용한 가상 예시":"한도 일부 미확인 · 가상 산식 예시";
+    const mode=selection.manual?"사용자가 입력한 계약 조건으로 계산한 가상 예시":bounded?"공식 공개 플랜 조건을 적용한 가상 예시":data.preset?.provenance?.includes("2607")?"구버전 2607 참고 플랜 · 2610 계약에 적용 불가":"한도 일부 미확인 · 지급액 확정 불가";
     const ranges=valid?'<div class="pjm045-totals" aria-label="예상 진료비와 가정 보험금 및 부담금">'+
       '<div><span>선택한 처치의 참고 비용</span><strong>'+fmt(row.low)+(row.low!==row.high?' ~ '+fmt(row.high):"")+'</strong></div>'+
       '<div><span>'+(bounded?"가정상 보험금":"한도 적용 전·조건부 보험금")+'</span><strong>'+fmt(low.payout)+(low.payout!==high.payout?' ~ '+fmt(high.payout):"")+'</strong></div>'+
@@ -144,7 +144,7 @@
       numberField("daily","1일 보상한도 (원, 선택)",manual.daily,"미확인 시 비워두기")+
       numberField("annual","남은 연간 한도 (원, 선택)",manual.annual,"미확인 시 비워두기")+
       '<button type="button" class="pjm045-apply" data-pjm045-apply>직접 입력한 조건으로 계산</button></div>';
-    const source=spec.source?'<a class="pjm045-source" href="'+esc(spec.source)+'" rel="noopener noreferrer" target="_blank">보험사 공개 상품 안내</a>':"";
+    const source=spec.source?'<span class="pjm045-source">보험사 공개 상품 안내 확인 기준</span>':"";
     return '<section class="pjm045-settlement" aria-label="보험금 및 본인부담금 가상 계산">'+
       '<h4>진료비에서 얼마를 부담할까요?</h4>'+
       '<p class="pjm045-summary">대표 처치 <b>한 가지</b>를 선택해 보험금과 직접 부담할 금액을 함께 확인합니다.</p>'+
@@ -179,7 +179,7 @@
     if(b.hasAttribute("data-pjm045-apply")){
       const fields=Object.fromEntries(Array.from(root.querySelectorAll("[data-pjm045-input]")).map(el=>[el.dataset.pjm045Input,el.value.trim()]));
       const percent=Number(fields.percent),deduct=Number(fields.deductible);
-      if(!fields.percent||!fields.deductible||!Number.isFinite(percent)||percent<=0||percent>100||
+      if(fields.percent===""||fields.deductible===""||!Number.isFinite(percent)||percent<=0||percent>100||
         !Number.isFinite(deduct)||deduct<0||deduct>10000000){
         const input=root.querySelector('[data-pjm045-input="percent"]');if(input)input.focus();
         return;
