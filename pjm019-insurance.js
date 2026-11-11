@@ -489,7 +489,21 @@
     if(!event.target.closest("#insurance .insurance-button"))return;
     event.preventDefault();event.stopImmediatePropagation();
     state.showResult=true;
-    const out=document.getElementById("pjm020Output");if(out){out.innerHTML=output();out.scrollIntoView({behavior:"smooth",block:"nearest"});}
+    const out=document.getElementById("pjm020Output");
+    if(out){
+      out.innerHTML=output();
+      // PJM-034: put the new answer, not the end of its long procedure list,
+      // into view on mobile. Focus the answer heading only after a deliberate
+      // submit; selector changes still clear stale results without jumping.
+      const heading=out.querySelector(".pjm020-result h3");
+      if(heading){
+        heading.tabIndex=-1;
+        heading.focus({preventScroll:true});
+      }
+      const mobile=window.matchMedia("(max-width: 850px)").matches;
+      const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      out.scrollIntoView({behavior:reducedMotion?"auto":"smooth",block:mobile?"start":"nearest"});
+    }
   },true);
   window.PJM019=Object.freeze({section,summarize,insurers:INSURERS,careTypes:CARES,sample,guidance,procedureBreakdown,medianCosts:MEDIANS,policyRules:PLAN_RULES});
 })();
