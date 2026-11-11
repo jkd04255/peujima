@@ -90,10 +90,13 @@ def run_case(browser,url,w,h,engine,full):
                  "cancer procedure estimate must not be official statistic")
         need(page.locator(".pjm021-plan-amounts").count()==0,
              "cancer treatment cost must never become automatic insurer payout")
-        need(page.locator(".pjm021-fee-guide").count()==0 and
-             "신뢰할 수 있는 공개 진료비 자료가 없습니다." not in
+        need(page.locator(".pjm021-fee-guide").count()==1 and
+             "공식 공개 진료비 참고" in page.locator(".pjm021-fee-guide").inner_text() and
+             "10,000원" in page.locator(".pjm021-fee-guide").inner_text(),
+             "cancer may show the separate 2025 first-visit median, not a blank guide")
+        need("신뢰할 수 있는 공개 진료비 자료가 없습니다." not in
              page.locator(".pjm020-result").inner_text(),
-             "estimate-only treatment must not show a duplicate empty fee card")
+             "cancer estimate must not be confused with missing national surgery statistics")
         footer=page.locator(".pjm030-fineprint")
         need(footer.count()==1 and not page.locator(".pjm032-sources").is_visible(),
              "source links should stay in the single collapsed footer")
@@ -121,9 +124,11 @@ def run_case(browser,url,w,h,engine,full):
         need("약 10만~25만원" in p.inner_text() and
              "약 15만~35만원" in p.inner_text(),
              "cat neuter planning amounts should not copy dog prices")
-        p=set_care(page,"fip")
         need(page.locator(".pjm021-fee-guide").count()==0,
-             "FIP planning price must not generate an empty official price panel")
+             "neuter has no official fee median and must not show an empty official card")
+        p=set_care(page,"fip")
+        need(page.locator(".pjm021-fee-guide").count()==1,
+             "FIP may show the 2025 first-visit median without mislabeling antiviral course price")
         need("약 100만~1,500만원" in p.inner_text() and
              "전체 치료 과정" in p.inner_text(),
              "FIP course estimate must specify longer unit")
