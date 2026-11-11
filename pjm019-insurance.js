@@ -106,7 +106,9 @@
     CARE_GUIDES[c.id]={
       caption:c.label+" 관련 공개 비용 항목",items:c.items,
       others:[c.other+" (전국 공개 중간값 확인 불가)"],scenario:false,
-      caveat:"표시된 항목별 공개 중간값은 "+c.label+" 진료의 평균 총비용이나 필수 검사 목록이 아닙니다."
+      caveat:c.items.length?
+        "표시된 항목별 공개 중간값은 "+c.label+" 진료의 평균 총비용이나 필수 검사 목록이 아닙니다.":
+        "이 진료 주제의 정부 공개 단일 항목 중간값은 확인되지 않았습니다. 위 세부 금액은 공개 사례 참고 또는 서비스 예산 추정으로, 실제 청구액이 아닙니다."
     };
   }
   const PLAN_RULES=[
@@ -213,22 +215,27 @@
       ?"2026년 2610(CM) 공개 안내의 의료비 특약은 50% 또는 70% 보상비율과 3만/5만원 자기부담금을 제시합니다. 산식은 (부담 의료비 - 적용 자기부담금) × 보상비율, 이후 일일 한도 이내 지급입니다. 질병은 계약일부터 30일 경과 후, 슬관절·고관절 탈구 및 유사 질환·상해는 1년 경과 후 개시합니다. 치과·특정피부 약물·영상검사 확대는 별도 특약 조건을 확인해야 합니다. 개인 계약의 일일·연간 한도 및 다른 지급 제한은 확인되지 않았습니다."
       :"해당 보험사의 반려견·반려묘 가입 계약에 적용되는 지급비율, 특약, 면책기간과 한도는 아직 검증되지 않았습니다. 다른 보험사의 조건을 대신 적용하지 않습니다.";
     const unsupported=!(meritz||db)?
-      '<p class="pjm021-pending">이 보험 상품의 가입 버전별 지급 규칙은 아직 검증하지 않아 예상 보험금을 표시하지 않습니다. 공개 진료비 자료만 안내합니다.</p>':"";
+      '<p class="pjm021-pending">이 보험 상품의 가입 버전별 지급 규칙은 아직 검증하지 않아 예상 보험금을 표시하지 않습니다. 공개 진료비와 별도 참고 예산 범위만 안내합니다.</p>':"";
     const specialPending=db&&!s?
       '<p class="pjm021-pending">이 항목은 처치 비용 또는 특약·한도 자료가 부족하여 지급액을 계산하지 않습니다. 가입한 계약의 보장 내용에 따라 달라집니다.</p>':"";
-    return '<section class="pjm021-fee-guide" aria-label="대표 진료 항목과 보장 예시">'+
-      '<h4>이런 진료 항목을 확인해 보세요</h4>'+
+    // If no exact government-published line item applies, show the PJM-032
+    // per-procedure estimates above without repeating an empty official-fee card.
+    // Supporting references still move to the single optional bottom disclosure.
+    const hasPublishedFee=visibleIds.length>0;
+    return (hasPublishedFee?
+      '<section class="pjm021-fee-guide" aria-label="공식 공개 진료비와 가상 보장 예시">'+
+      '<h4>공식 공개 진료비 참고</h4>'+
       '<p class="pjm021-subhead">'+esc(g.caption)+'</p>'+
-      '<div class="pjm021-fees">'+(unitRows||'<p>신뢰할 수 있는 공개 진료비 자료가 없습니다.</p>')+other+'</div>'+
-      '<p class="pjm021-cost-notice">표시 금액은 2025년 전국 동물병원 <b>개별 항목 중간값</b>입니다. 질환별 총 치료비·수술비 또는 진료 권장 목록이 아닙니다.</p>'+
-      scenario+imaging+specialPending+unsupported+
+      '<div class="pjm021-fees">'+unitRows+other+'</div>'+
+      '<p class="pjm021-cost-notice">이 금액은 2025년 전국 동물병원 <b>개별 항목 중간값</b>입니다. 질환별 총 치료비·수술비 또는 진료 권장 목록이 아닙니다.</p>':
+      other)+scenario+imaging+specialPending+unsupported+
       '<details class="pjm021-policy-details"><summary>근거와 확인할 조건 보기</summary>'+
       '<div><b>보험 보장 자료</b><p>'+esc(policyName)+'</p>'+
       '<p>'+esc(policyConditions)+'</p>'+
       '<b>진료비 자료</b><p>'+esc(GOV_SOURCE)+'</p>'+
       '<p>'+esc(g.caveat)+'</p>'+
       '<small>원문 약관 PDF 전문과 가입한 증권을 자동 판독한 결과는 아닙니다. 가입 시기·특약·진단·잔여 한도에 따라 지급 여부가 달라집니다.</small></div></details>'+
-      '</section>';
+      (hasPublishedFee?'</section>':'');
   }
   const planDetails='<details class="pjm020-details"><summary>플랜별 보장 한도 자세히 보기</summary>'+
     '<div class="pjm020-table-wrap"><table><thead><tr>'+
@@ -375,7 +382,7 @@
     if(!result)return markup;
     const groups=[
       {label:"진료비·가상 계산 기준",selectors:[
-        ".pjm021-cost-notice",".pjm021-fees .pjm021-unpriced",
+        ".pjm021-cost-notice",".pjm021-unpriced",
         ".pjm021-example .pjm021-calc-note",
         ".pjm021-imaging small",".pjm021-pending",
         ".pjm031-procedure-caution",".pjm032-sources"
