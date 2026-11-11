@@ -8,7 +8,8 @@
   const meritzCatSource = "https://www.meritzdirect.com/pet/product-cat.do";
   const dbDogSource = "https://www.directdb.co.kr/ltm/prd/cpnm/custInfoView.do?pdcDvcd=l_pet_dog&searchPdcCd=31119&searchPdcTrtHistCd=00";
   const dbCatSource = "https://www.directdb.co.kr/ltm/prd/cpnmcat/custInfoView.do?pdcDvcd=l_pet_cat&searchPdcCd=31121&searchPdcTrtHistCd=00";
-  const samsungSource = "https://direct.samsungfire.com/m/fp/pet.html";
+  const samsungSource = "https://d.samsungfire.com/m/mall/MP030706_001.html";
+  const samsungCatSource = "https://direct.samsungfire.com/m/mall/MP030705_001.html";
   const kakaoSource = "https://kakaopayinscorp.co.kr/blog/kang-hyungwook-pet-insurance-must-check";
   const plan = (key, name, ratio, daily, annual, surgery, scan, provenance, verified) =>
     Object.freeze({key, name, ratio, daily, annual, surgery, scan, provenance, verified});
@@ -43,7 +44,7 @@
     "db-dog": {source:dbDogSource, description:"DB 반려견 2610은 50/70% 및 공제금 3/5만원까지 공식 소개로 확인했습니다. 일·연간·수술 한도는 2610 가입증권을 확인해야 합니다. 구버전 2607 플랜은 2610에 적용하지 않습니다.", plans:[...db2610Rates,...dbDog2607], defaultKey:null, deductible:30000},
     "db-cat": {source:dbCatSource, description:"DB 반려묘 2610 공식 소개에 50/70% 및 공제 3/5만원이 명시되어 있습니다. 2607 가입안내·상단 보장예시와 플랜별 한도는 직접 대응시키지 않았습니다.", plans:db2610Rates, defaultKey:null, deductible:null},
     "samsung-dog": {source:samsungSource, description:"삼성화재 착한펫 반려견 2026 공식 상세의 의료비 비율은 50/70%입니다. 공제금·가입금액은 미확인으로, 해당 비율을 고르고 증권의 공제금을 직접 입력해야 가상 계산할 수 있습니다.", plans:samsungRates, defaultKey:null, deductible:null},
-    "samsung-cat": {source:samsungSource, description:"삼성화재 반려묘 2026 공식 상세의 의료비 비율은 50/70%입니다. 공제금·가입금액은 미확인으로, 해당 비율을 고르고 증권의 공제금을 직접 입력해야 가상 계산할 수 있습니다.", plans:samsungRates, defaultKey:null, deductible:null},
+    "samsung-cat": {source:samsungCatSource, description:"삼성화재 반려묘 2026 공식 상세의 의료비 비율은 50/70%입니다. 공제금·가입금액은 미확인으로, 해당 비율을 고르고 증권의 공제금을 직접 입력해야 가상 계산할 수 있습니다.", plans:samsungRates, defaultKey:null, deductible:null},
     "hyundai-dog": {source:null, description:"현대해상 Hi2601 계약별 보상비율·자기부담금·특약별 한도는 이 계산에서 확정하지 않았습니다.", plans:[], defaultKey:null},
     "hyundai-cat": {source:null, description:"현대해상 반려묘 보험의 계약별 지급비율·공제금·한도 자료가 부족합니다.", plans:[], defaultKey:null},
     "kb-dog": {source:null, description:"KB 26.01 약관 일부와 26.07 상품은 서로 다른 버전입니다. 계약의 보상 조건 확인이 필요합니다.", plans:[], defaultKey:null},
