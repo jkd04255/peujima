@@ -59,7 +59,7 @@
 .nearby-region-form input:focus-visible,.nearby-radius select:focus-visible,
 .nearby-geo:focus-visible,.nearby-region-form button:focus-visible,
 .nearby-place-links a:focus-visible,.nearby-settings summary:focus-visible{
-  outline:3px solid #ae8259;outline-offset:3px
+  outline:3px solid #355c40;outline-offset:3px
 }
 
 /* PJM-012 axe contrast findings: muted metadata must remain WCAG-readable. */
@@ -78,4 +78,4 @@
   outline-offset:-2px;
   box-shadow:0 5px 18px rgba(42,78,48,.1);
 }
-.nearby-place:focus-visible{outline:3px solid #355c40;outline-offset:2px}
+.nearby-place:focus-visible{outline:3px solid #355c40;outline-offset:3px}
