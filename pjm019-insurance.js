@@ -445,7 +445,9 @@
     const x=summarize(state.insurer,state.care);
     const extra=guidance(state.insurer,state.care);
     const pts=x.points.map(s=>'<li>'+esc(s)+'</li>').join("");
-    return compactSupplementalNotes('<article class="insurance-result pjm020-result" role="status" aria-live="polite">'+
+    // PJM-037: the submit handler focuses the concise result heading below.
+    // Keep the long evidence and procedure breakdown out of a live region.
+    return compactSupplementalNotes('<article class="insurance-result pjm020-result">'+
       '<span class="pjm020-status">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3>'+
       '<p>'+esc(x.description)+'</p>'+coverageInfo(state.insurer,state.care)+procedureBreakdown(state.insurer,state.care)+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
       (x.showPlans?planDetails:"")+(x.showDBDetails?dbDetails:"")+
