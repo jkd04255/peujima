@@ -348,3 +348,65 @@
   outline:3px solid #355c40;outline-offset:3px
 }
 .pjm020-result .pjm035-procedure-disclosure .pjm031-procedure-list{margin-top:12px}
+
+
+/* PJM-045 / G2-INS-01 — quiet editorial settlement preview, not a claims decision. */
+.pjm020-result .pjm045-settlement{
+  margin:18px 0 24px;padding:21px 19px 22px;
+  border:1px solid #d6e2d6;border-radius:14px;background:#f7faf5;
+  min-width:0;max-width:100%;color:#314739;
+}
+.pjm045-settlement h4{
+  font-family:var(--przima-display-typeface,var(--przima-typeface))!important;
+  font-size:21px;line-height:1.35;letter-spacing:-.045em;font-weight:760;
+  color:#2c4936;margin:0 0 6px;
+}
+.pjm020-result .pjm045-settlement p{color:#516455;font-size:12px;line-height:1.67;word-break:keep-all;margin:0 0 13px}
+.pjm020-result .pjm045-settlement .pjm045-subtitle{
+  margin:18px 0 9px;color:#314a39;font-weight:740;font-size:12px;
+}
+.pjm045-choices{display:flex;flex-wrap:wrap;gap:7px}
+.pjm045-choice{
+  font:inherit;min-height:40px;border:1px solid #d8e2d7;border-radius:9px;
+  background:#fff;color:#46604a;padding:9px 11px;font-size:12px;font-weight:650;
+  line-height:1.4;cursor:pointer;text-align:left;
+}
+.pjm045-choice.is-selected,.pjm045-choice[aria-pressed="true"]{
+  background:#345941;color:#fff;border-color:#345941;
+}
+.pjm045-deduct{display:flex;align-items:center;gap:7px;margin:11px 0 0;flex-wrap:wrap}
+.pjm045-deduct>span{font-size:11px;font-weight:680;color:#5e7062;margin-right:3px}
+.pjm045-deduct .pjm045-choice{min-height:36px;padding:7px 10px}
+.pjm020-result .pjm045-settlement .pjm045-cost-source,
+.pjm020-result .pjm045-settlement .pjm045-conditions{
+  font-size:11px;margin-top:10px;color:#64766a;
+}
+.pjm045-manual-toggle{border:0;border-bottom:1px solid #627b66;background:transparent;color:#345941;font:inherit;font-size:12px;font-weight:740;padding:7px 0;cursor:pointer}
+.pjm045-manual-fields{margin:11px 0 0;padding:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;border:1px solid #dbe3d9;background:#fff;border-radius:12px}
+.pjm045-manual-fields label{display:flex!important;flex-direction:column;gap:5px;min-width:0;margin:0!important;color:#526657!important;font-size:11px!important;font-weight:670!important}
+.pjm045-manual-fields input{font:inherit;min-width:0;width:100%;padding:10px 11px;border:1px solid #cad6ca;background:#fff;border-radius:7px;font-size:13px;color:#314b37}
+.pjm045-manual-fields .pjm045-apply{grid-column:1 / -1;padding:12px 15px;min-height:42px;background:#355d42;color:#fff;border:0;border-radius:8px;font:inherit;font-weight:720;font-size:13px}
+.pjm020-result .pjm045-settlement .pjm045-mode{
+  margin:21px 0 9px;font-size:11px;color:#46624f;font-weight:730;
+}
+.pjm045-totals{display:grid;grid-template-columns:1fr;gap:0;border:1px solid #d7e3d8;background:#fff;border-radius:11px;overflow:hidden}
+.pjm045-totals>div{display:flex;justify-content:space-between;align-items:center;gap:12px;min-width:0;padding:14px;border-bottom:1px solid #e7ece6}
+.pjm045-totals>div:last-child{border-bottom:0}
+.pjm045-totals span{font-size:12px;color:#57705b;line-height:1.5}
+.pjm045-totals strong{font-size:clamp(14px,3.5vw,19px);letter-spacing:-.04em;line-height:1.35;color:#253f2e;font-weight:770;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.pjm045-totals .pjm045-pay{background:#eaf2e9}
+.pjm045-totals .pjm045-pay strong{font-size:clamp(15px,3.8vw,21px);color:#264f33}
+.pjm020-result .pjm045-settlement .pjm045-assumption,
+.pjm020-result .pjm045-settlement .pjm045-unknown{
+  font-size:11px;line-height:1.7;color:#647166;margin:11px 0 0;
+}
+.pjm020-result .pjm045-settlement .pjm045-fine-note{font-size:10px;color:#6c796e;margin:15px 0 0;line-height:1.7}
+.pjm045-settlement :is(button,input):focus-visible{outline:3px solid #355c40;outline-offset:3px}
+@media(max-width:620px){
+  .pjm020-result .pjm045-settlement{padding:16px 12px;margin:16px 0 20px}
+  .pjm045-settlement h4{font-size:19px}
+  .pjm045-choice{font-size:11px;padding:8px 10px}
+  .pjm045-totals>div{flex-direction:column;align-items:flex-start;gap:3px;padding:12px}
+  .pjm045-totals strong{text-align:left}
+  .pjm045-manual-fields{grid-template-columns:minmax(0,1fr);padding:12px}
+}
