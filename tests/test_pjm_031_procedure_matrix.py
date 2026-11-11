@@ -33,6 +33,15 @@ def result_for(page,care):
     page.locator(".insurance-button").click()
     need(page.locator(".pjm020-result").is_visible(),
          "insurance result failed for "+care)
+    disclosure=page.locator(".pjm035-procedure-disclosure")
+    need(disclosure.count()==1 and disclosure.get_attribute("open") is None,
+         "long procedure list should start collapsed")
+    need(disclosure.locator("summary").is_visible(),
+         "procedure disclosure control missing")
+    disclosure.locator("summary").click()
+    need(disclosure.get_attribute("open") is not None and
+         disclosure.locator(".pjm031-procedure-item").first.is_visible(),
+         "procedure disclosure should expand accessibly")
     return page.locator(".pjm031-procedures")
 
 def check_examples(page):
