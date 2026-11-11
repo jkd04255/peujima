@@ -22,15 +22,28 @@
     plan("db2607-standard", "2607 70% · 일 15만원", .7, 150000, 20000000, 2500000, null, "2607 가입안내 (2610 계약 아님)", false),
     plan("db2607-premium", "2607 70% · 일 30만원", .7, 300000, 20000000, 2500000, null, "2607 가입안내 (2610 계약 아님)", false)
   ]);
+  // 2610 public product introductions (dog and cat) verify rates and deductions,
+  // but NOT a complete 2610 plan-specific daily/surgery/annual table.
+  // The rate choices below are NOT named or capped insurance plans.
+  const db2610Rates = Object.freeze([
+    plan("db2610-50", "2610 공개 비율 50% · 한도 미확인", .5, null, null, null, null, "2610 공식 상품 소개 · 한도 미확인", false),
+    plan("db2610-70", "2610 공개 비율 70% · 한도 미확인", .7, null, null, null, null, "2610 공식 상품 소개 · 한도 미확인", false)
+  ]);
+  // Samsung's 2026 specific dog/cat pages list 50/70%, NOT generic 80%.
+  // Deductible and payout caps are not verified: selecting a rate opens manual terms.
+  const samsungRates = Object.freeze([
+    plan("samsung-50", "2026 공개 비율 50% · 공제금 미확인", .5, null, null, null, null, "2026 공식 반려견/묘 상품 상세 · 50%", false),
+    plan("samsung-70", "2026 공개 비율 70% · 공제금 미확인", .7, null, null, null, null, "2026 공식 반려견/묘 상품 상세 · 70%", false)
+  ]);
   // Do NOT map DB cat's 2607 benefit tiers to a particular ratio without the signed schedule.
   // Unknown insurer contract details never receive automatically invented deductible/cap.
   const specs = Object.freeze({
     "meritz-dog": {source:meritzSource, description:"메리츠 2026 반려견 의료비Ⅲ · 통원/입원 각각 특약 필요", plans:meritz, defaultKey:"premium", deductible:30000},
     "meritz-cat": {source:meritzCatSource, description:"메리츠 2026 반려묘 의료비Ⅲ · 통원/입원 각각 특약 필요", plans:meritz, defaultKey:"premium", deductible:30000},
-    "db-dog": {source:dbDogSource, description:"DB 2610 상품 소개와 2607 가입안내가 혼재되어 있습니다. 아래 2607 플랜은 직접 선택한 경우에만 참고 계산합니다.", plans:dbDog2607, defaultKey:null, deductible:30000},
-    "db-cat": {source:dbCatSource, description:"DB 2607 반려묘 안내에서 50/70% 및 3/5만원을 확인했으나 선택 플랜과 한도의 정확한 대응은 미검증입니다.", plans:[], defaultKey:null},
-    "samsung-dog": {source:samsungSource, description:"삼성화재 공개 안내에는 50/70/80%가 소개되나 가입 버전의 자기부담금·잔여한도가 확인되지 않았습니다.", plans:[], defaultKey:null},
-    "samsung-cat": {source:samsungSource, description:"삼성화재 반려묘 공개 비율은 확인되나 계약의 공제금과 보상한도는 확인되지 않았습니다.", plans:[], defaultKey:null},
+    "db-dog": {source:dbDogSource, description:"DB 반려견 2610은 50/70% 및 공제금 3/5만원까지 공식 소개로 확인했습니다. 일·연간·수술 한도는 2610 가입증권을 확인해야 합니다. 구버전 2607 플랜은 2610에 적용하지 않습니다.", plans:[...db2610Rates,...dbDog2607], defaultKey:null, deductible:30000},
+    "db-cat": {source:dbCatSource, description:"DB 반려묘 2610 공식 소개에 50/70% 및 공제 3/5만원이 명시되어 있습니다. 2607 가입안내·상단 보장예시와 플랜별 한도는 직접 대응시키지 않았습니다.", plans:db2610Rates, defaultKey:null, deductible:null},
+    "samsung-dog": {source:samsungSource, description:"삼성화재 착한펫 반려견 2026 공식 상세의 의료비 비율은 50/70%입니다. 공제금·가입금액은 미확인으로, 해당 비율을 고르고 증권의 공제금을 직접 입력해야 가상 계산할 수 있습니다.", plans:samsungRates, defaultKey:null, deductible:null},
+    "samsung-cat": {source:samsungSource, description:"삼성화재 반려묘 2026 공식 상세의 의료비 비율은 50/70%입니다. 공제금·가입금액은 미확인으로, 해당 비율을 고르고 증권의 공제금을 직접 입력해야 가상 계산할 수 있습니다.", plans:samsungRates, defaultKey:null, deductible:null},
     "hyundai-dog": {source:null, description:"현대해상 Hi2601 계약별 보상비율·자기부담금·특약별 한도는 이 계산에서 확정하지 않았습니다.", plans:[], defaultKey:null},
     "hyundai-cat": {source:null, description:"현대해상 반려묘 보험의 계약별 지급비율·공제금·한도 자료가 부족합니다.", plans:[], defaultKey:null},
     "kb-dog": {source:null, description:"KB 26.01 약관 일부와 26.07 상품은 서로 다른 버전입니다. 계약의 보상 조건 확인이 필요합니다.", plans:[], defaultKey:null},
@@ -85,7 +98,7 @@
   function activeData(insurer,care) {
     const scope=insurer+":"+care, spec=specs[insurer]||{description:"선택한 상품의 계약 조건 미확인",plans:[]};
     if(scope!==selection.scope) {
-      selection={scope,index:-1,planKey:spec.defaultKey||null,deductible:spec.deductible??30000,manual:false,custom:null};
+      selection={scope,index:-1,planKey:spec.defaultKey||null,deductible:spec.deductible??null,manual:false,custom:null};
     }
     const rows=rowsFor(insurer,care);
     if(!rows.some(r=>r.index===selection.index)) {
@@ -135,7 +148,7 @@
       '" aria-pressed="'+(r.index===selection.index)+'" data-pjm045-row="'+r.index+'">'+esc(r.title)+'</button>').join("");
     const plans=(spec.plans||[]).map(p=>'<button type="button" class="pjm045-choice'+(!selection.manual&&p.key===selection.planKey?' is-selected':'')+
       '" aria-pressed="'+(!selection.manual&&p.key===selection.planKey)+'" data-pjm045-plan="'+esc(p.key)+'">'+esc(p.name)+'</button>').join("");
-    const premiumChoice=(!selection.manual&&data.preset&&["meritz-dog","meritz-cat","db-dog"].includes(insurer))?
+    const premiumChoice=(!selection.manual&&data.preset&&["meritz-dog","meritz-cat","db-dog","db-cat"].includes(insurer))?
       '<div class="pjm045-deduct"><span>공제금 가정</span>'+
       [30000,50000].map(d=>'<button type="button" data-pjm045-deduct="'+d+'" aria-pressed="'+(selection.deductible===d)+
         '" class="pjm045-choice'+(selection.deductible===d?' is-selected':'')+'">'+(d/10000)+'만원</button>').join("")+'</div>':"";
@@ -175,7 +188,20 @@
     const root=b.closest(".pjm045-settlement");if(!root)return;
     e.preventDefault();e.stopPropagation();
     if(b.hasAttribute("data-pjm045-row"))selection.index=Number(b.dataset.pjm045Row);
-    if(b.hasAttribute("data-pjm045-plan")){selection.planKey=b.dataset.pjm045Plan;selection.manual=false;}
+    if(b.hasAttribute("data-pjm045-plan")){
+      selection.planKey=b.dataset.pjm045Plan;
+      selection.manual=false;
+      const insurer=document.querySelector("#insurerSelect")?.value||"";
+      const selected=specs[insurer]?.plans?.find(p=>p.key===selection.planKey);
+      if(selected?.key.startsWith("db2610"))selection.deductible=null;
+      if(selected?.key.startsWith("samsung")){
+        // A public ratio alone is not enough to estimate money. Require the
+        // owner's explicit contract deductible instead of inventing 30,000.
+        selection.manual=true;
+        selection.custom={percent:Math.round(selected.ratio*100),
+          ratio:selected.ratio,deductible:null,daily:null,annual:null,surgery:null,scan:null};
+      }
+    }
     if(b.hasAttribute("data-pjm045-deduct"))selection.deductible=Number(b.dataset.pjm045Deduct);
     if(b.hasAttribute("data-pjm045-manual"))selection.manual=!selection.manual;
     if(b.hasAttribute("data-pjm045-apply")){
