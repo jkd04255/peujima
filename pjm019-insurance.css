@@ -329,3 +329,22 @@
   text-underline-offset:2px
 }
 .pjm030-note-group .pjm032-sources a:focus-visible{outline:2px solid #3b6551;outline-offset:3px}
+
+
+/* PJM-035 · Keep long treatment breakdowns available without dominating the result. */
+.pjm020-result .pjm035-procedure-disclosure{margin:12px 0 0;min-width:0}
+.pjm020-result .pjm035-procedure-disclosure>summary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:46px;padding:11px 13px;border:1px solid #dfe7dd;border-radius:10px;
+  background:#fff;color:#45664e;font-size:12px;font-weight:680;line-height:1.5;
+  cursor:pointer;list-style:none
+}
+.pjm020-result .pjm035-procedure-disclosure>summary::-webkit-details-marker{display:none}
+.pjm020-result .pjm035-procedure-disclosure>summary:after{
+  content:'+';flex:none;color:#66816a;font-size:18px;font-weight:450;line-height:1
+}
+.pjm020-result .pjm035-procedure-disclosure[open]>summary:after{content:'−'}
+.pjm020-result .pjm035-procedure-disclosure>summary:focus-visible{
+  outline:2px solid #527a5c;outline-offset:3px
+}
+.pjm020-result .pjm035-procedure-disclosure .pjm031-procedure-list{margin-top:12px}

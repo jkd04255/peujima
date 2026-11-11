@@ -180,7 +180,10 @@
     return '<section class="pjm031-procedures" aria-label="선택한 진료의 세부 검사와 치료">'+
       '<div class="pjm031-heading"><h4>'+(isBenefit?'관련 보장·청구 세부 항목':'세부 검사·치료 항목')+'</h4>'+
       '<span>'+rows.length+'개</span></div>'+
-      '<ul class="pjm031-procedure-list">'+sum+'</ul>'+sources+
+      '<details class="pjm035-procedure-disclosure">'+
+      '<summary>세부 항목 펼쳐보기</summary>'+
+      '<ul class="pjm031-procedure-list">'+sum+'</ul>'+
+      '</details>'+sources+
       '<p class="pjm031-procedure-caution">위 금액 중 공식 공개 중간값은 2025년 정부 조사에 포함된 단일 항목에만 해당합니다. 나머지는 일부 병원별 공개 사례·비공식 비용 가이드와 서비스의 넓은 예산 가정을 구분해 표시한 참고 범위로, 전국 통계나 진료 견적이 아닙니다. 체중·질환 정도·수술 부위·마취·입원·약제와 지역에 따라 실제 지불액은 이 범위 밖일 수 있습니다. 수술·항암·방사선 등에는 진찰·검사·마취·입원·퇴원약이 포함되는지 병원에 확인해야 하며, 카드 금액을 합산해 질환별 총액이나 보험금을 계산하면 안 됩니다.</p>'+
       '</section>';
   }
