@@ -40,7 +40,10 @@ def run_case(browser, engine: str, width: int, height: int) -> None:
         ]
         for selector in selectors:
             target = page.locator(selector).first
-            target.evaluate("(el) => el.focus({focusVisible:true})")
+            target.focus()
+            # Exercise keyboard modality so :focus-visible reflects a real Tab path.
+            page.keyboard.press("Tab")
+            page.keyboard.press("Shift+Tab")
             actual = target.evaluate("""(el) => ({
                 visible: el.matches(':focus-visible'),
                 width: getComputedStyle(el).outlineWidth,
