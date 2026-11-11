@@ -62,7 +62,7 @@
               '</div>' +
             '</form>' +
             '<button type="button" class="pjm013-locate" data-act="nav-nearby-locate">' + pin + ' 내 위치로 찾기 ' + arrow + '</button>' +
-            '<p class="pjm013-panel-note">카카오맵 실제 병원 정보 · 위치는 버튼을 누를 때만 확인합니다.</p>' +
+            '<p class="pjm013-panel-note">‘내 위치로 찾기’를 누를 때 위치 확인을 시작합니다.</p>' +
           '</div>' +
         '</div>' +
         '<div class="pjm013-home-services" aria-label="서비스 바로가기">' +
