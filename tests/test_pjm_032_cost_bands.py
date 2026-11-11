@@ -22,6 +22,12 @@ def set_care(page,care):
     page.locator(".insurance-button").click()
     panel=page.locator(".pjm031-procedures")
     need(panel.is_visible(),f"missing selected subprocedure panel: {care}")
+    disclosure=panel.locator(".pjm035-procedure-disclosure")
+    need(disclosure.count()==1 and disclosure.get_attribute("open") is None,
+         f"procedure details should start collapsed: {care}")
+    disclosure.locator("summary").click()
+    need(disclosure.get_attribute("open") is not None,
+         f"procedure details should expand: {care}")
     return panel
 
 def run_case(browser,url,w,h,engine,full):
