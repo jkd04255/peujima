@@ -249,8 +249,9 @@ def run_case(browser,url,w,h,engine):
         page.locator("#careSelect").select_option("hospital")
         page.locator(".insurance-button").click()
         reveal_notes(page)
-        need("반려견 입원비" not in page.locator(".pjm021-fee-guide").inner_text(),
-             "dog-only published admission price must not be offered for a cat")
+        need(page.locator(".pjm021-fee-guide").count()==0 and
+             page.locator(".pjm031-published").count()==0,
+             "cat admission must hide the dog-only median without an empty fee panel")
         page.locator("#careSelect").select_option("feline_cystitis")
         page.locator(".insurance-button").click()
         reveal_notes(page)

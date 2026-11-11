@@ -77,6 +77,8 @@ def run_case(browser,url,w,h,engine,full):
              "approx surgery price must not be styled as government statistic")
         need("병원별 비용 확인" not in p.inner_text(),
              "old generic hospital-only price label must be removed")
+        need(page.locator(".pjm021-fee-guide").count()==1,
+             "the applicable published fee must remain in its own guide")
         p=set_care(page,"cancer")
         for title,band in [("종양 절제·암수술비","약 30만~500만원"),
                            ("항암약물치료비","약 20만~70만원"),
@@ -88,6 +90,13 @@ def run_case(browser,url,w,h,engine,full):
                  "cancer procedure estimate must not be official statistic")
         need(page.locator(".pjm021-plan-amounts").count()==0,
              "cancer treatment cost must never become automatic insurer payout")
+        need(page.locator(".pjm021-fee-guide").count()==1 and
+             "공식 공개 진료비 참고" in page.locator(".pjm021-fee-guide").inner_text() and
+             "10,000원" in page.locator(".pjm021-fee-guide").inner_text(),
+             "cancer may show the separate 2025 first-visit median, not a blank guide")
+        need("신뢰할 수 있는 공개 진료비 자료가 없습니다." not in
+             page.locator(".pjm020-result").inner_text(),
+             "cancer estimate must not be confused with missing national surgery statistics")
         footer=page.locator(".pjm030-fineprint")
         need(footer.count()==1 and not page.locator(".pjm032-sources").is_visible(),
              "source links should stay in the single collapsed footer")
@@ -98,6 +107,9 @@ def run_case(browser,url,w,h,engine,full):
         need(page.locator(".pjm031-procedure-caution").is_visible() and
              "합산" in page.locator(".pjm031-procedure-caution").inner_text(),
              "do not imply adding all individual treatment estimates")
+        need(page.locator(".pjm021-unpriced").count()>0 and
+             page.locator(".pjm021-policy-details").count()==1,
+             "cost-only page must keep supplemental caveats and policy source")
         need(page.locator(".pjm020-result a[target='_blank']").count()==0,
              "do not trigger external browsing by default")
 
@@ -105,12 +117,18 @@ def run_case(browser,url,w,h,engine,full):
         need(p.locator(".pjm031-published").count()==2 and
              "791,500원" in p.inner_text() and "600,000원" in p.inner_text(),
              "real 2025 government single-item MRI/CT medians must remain exact")
+        need(page.locator(".pjm021-fee-guide").count()==1,
+             "exact published MRI/CT figures require the official fee guide")
         page.locator("#insurerSelect").select_option("meritz-cat")
         p=set_care(page,"neuter")
         need("약 10만~25만원" in p.inner_text() and
              "약 15만~35만원" in p.inner_text(),
              "cat neuter planning amounts should not copy dog prices")
+        need(page.locator(".pjm021-fee-guide").count()==0,
+             "neuter has no official fee median and must not show an empty official card")
         p=set_care(page,"fip")
+        need(page.locator(".pjm021-fee-guide").count()==1,
+             "FIP may show the 2025 first-visit median without mislabeling antiviral course price")
         need("약 100만~1,500만원" in p.inner_text() and
              "전체 치료 과정" in p.inner_text(),
              "FIP course estimate must specify longer unit")
