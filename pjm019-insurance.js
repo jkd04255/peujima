@@ -386,7 +386,7 @@
     const groups=[
       {label:"진료비·가상 계산 기준",selectors:[
         ".pjm021-cost-notice",".pjm021-unpriced",
-        ".pjm021-example .pjm021-calc-note",
+        ".pjm021-example",
         ".pjm021-imaging small",".pjm021-pending",
         ".pjm031-procedure-caution",".pjm032-sources"
       ]},
