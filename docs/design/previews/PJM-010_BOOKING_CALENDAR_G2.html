@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f8f6f1" />
+<title>프지마 | 예약 캘린더 G2 디자인 검토</title>
+<style>
+:root { color-scheme: light; --bg:#f8f6f1; --ink:#2b3b32; --ink2:#4c5c4e; --muted:#7f8278; --green:#405b46; --line:#e4e3dc; --soft:#edf2e9; --peach:#b58c77; --card:#fffefa; --shadow:0 20px 45px #43563d12; font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Pretendard','Noto Sans KR','Malgun Gothic',sans-serif; }
+* { box-sizing:border-box; }
+body{margin:0; min-width:320px; background:linear-gradient(160deg,#fcfaf6 0%,#f6f0e8 47%,#f2f2eb 100%);color:var(--ink);-webkit-font-smoothing:antialiased;}
+button{font:inherit;cursor:pointer} button:focus-visible{outline:3px solid #9ebea8;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.5}
+.header{background:#fffdfaeb;border-bottom:1px solid #eeebe5;min-height:68px;display:flex;align-items:center;padding:12px max(32px,calc((100vw - 1210px)/2));justify-content:space-between;gap:12px}
+.brand{font-size:15px;white-space:nowrap;letter-spacing:-.075em;font-weight:620;color:#4b5c4e}.brand strong{font-size:28px;line-height:1;font-weight:850;letter-spacing:-.095em;color:#2b3f30}
+.nav{display:flex;gap:34px;font-size:13px;color:#66756a;font-weight:600}.nav span.current{color:#26392b;border-bottom:2px solid #657b65;padding-bottom:4px}
+.stage{max-width:1210px;margin:auto;padding:34px 24px 44px;}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:11px}.tiny{font-size:11px;letter-spacing:.065em;color:#9b806e;font-weight:750}.tag{font-size:11px;border-radius:999px;padding:7px 11px;background:#f3e9df;color:#8d6e5e;font-weight:720}
+h1{font-size:clamp(27px,3vw,40px);letter-spacing:-.075em;line-height:1.28;margin:0 0 9px;font-weight:790}h1 em{color:#6c806b;font-style:normal} .intro{font-size:13px;color:#777e75;letter-spacing:-.02em;line-height:1.7;margin:0 0 25px}
+.layout{display:grid;grid-template-columns:minmax(255px,.39fr) minmax(520px,1fr);gap:22px;align-items:start}
+.panel{background:var(--card);border:1px solid #eee8e0;border-radius:26px;box-shadow:var(--shadow);}
+.side{padding:27px;position:sticky;top:16px}
+.kicker{font-size:11px;color:#af9280;font-weight:760;letter-spacing:.12em;margin:0 0 16px}
+.hospital{display:flex;align-items:center;gap:13px;padding-bottom:22px;border-bottom:1px solid var(--line)}.hospital-icon{width:51px;height:51px;border-radius:17px;display:grid;place-items:center;flex:none;background:#eaf0e7;color:#47634e}.hospital-icon svg{width:25px;height:25px}.hospital h2{font-size:20px;letter-spacing:-.065em;margin:0 0 6px}.hospital p{font-size:12px;color:#8b8d83;margin:0}
+.field-head{display:flex;align-items:center;justify-content:space-between;margin:24px 0 12px;gap:8px}.field-head h3{font-size:15px;letter-spacing:-.04em;margin:0}.field-head span{font-size:11px;color:#8d9188}
+.doctors{display:flex;flex-direction:column;gap:9px}.doctor{display:flex;align-items:center;gap:12px;text-align:left;width:100%;padding:13px 14px;background:#faf9f6;color:#5c675f;border:1px solid #e4e5de;border-radius:15px;transition:.15s}.doctor[data-selected="true"]{border-color:#657965;background:#edf2e9;color:#294734}.avatar{width:37px;height:37px;border-radius:999px;background:#e8e7df;display:grid;place-items:center;font-size:13px;font-weight:800;color:#7f857d}.doctor[data-selected="true"] .avatar{background:#cedbc8;color:#3d5842}.doctor-title{flex:1;font-size:13px;font-weight:780}.doctor-title small{display:block;font-weight:530;color:#899086;font-size:10px;margin-top:3px}.check{font-size:16px;font-weight:800}
+.note{font-size:12px;line-height:1.7;color:#80867d;margin-top:24px;padding:14px 15px;background:#f9f5ef;border-radius:14px}.note strong{color:#5d685d}
+.calendar{padding:25px 31px 18px;overflow:hidden}.calendar-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}.calendar-top h2{margin:0;font-size:18px;letter-spacing:-.05em}.weeknav{display:flex;align-items:center;gap:10px}.weeknav button{display:grid;place-items:center;background:#faf9f5;border:1px solid #e7e5dc;border-radius:10px;width:32px;height:32px;color:#4d5d4f}.weeknav button svg{width:15px;height:15px}.weeknav small{font-size:11px;color:#8c8e86;min-width:46px;text-align:center}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin-bottom:20px}.date{border:1px solid transparent;border-radius:16px;background:transparent;min-height:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#8b9089}.date .weekday{font-size:11px;font-weight:640}.date .number{width:37px;height:37px;display:grid;place-items:center;border-radius:50%;font-size:19px;font-weight:670;color:#35483c}.date[data-selected="true"]{background:#f0f3ed;border-color:#e4e9dd}.date[data-selected="true"] .number{background:#405a46;color:white}.date[data-closed="true"] .number{color:#b8bcb2}.date[data-closed="true"] .weekday{color:#b8bcb2}
+.daybar{display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid #edebe5;padding:22px 0 16px;gap:12px}.daybar h3{font-size:19px;letter-spacing:-.06em;margin:0 0 5px}.daybar p{font-size:11px;color:#90968a;margin:0}.daybar .stat{font-size:11px;border-radius:999px;background:#eef3eb;padding:8px 12px;font-weight:750;color:#517052;white-space:nowrap}
+.timeline{position:relative}.hourrow{display:grid;grid-template-columns:64px 1fr;min-height:56px;align-items:start;gap:11px}.time-label{font-size:12px;color:#93998e;text-align:right;padding-top:0;font-variant-numeric:tabular-nums}.hourspace{border-top:1px solid #ecece6;min-height:56px;position:relative;padding-top:4px}.time-slot{border:1px solid #cedccc;border-left:4px solid #7c9d7e;display:flex;justify-content:space-between;align-items:center;width:min(360px,100%);font-size:12px;font-weight:720;color:#3f6245;background:#eff5ed;border-radius:12px;padding:10px 12px;min-height:42px;text-align:left;gap:4px;line-height:1.3;transition:background .15s,color .15s}.time-slot .sub{font-weight:590;font-size:10px;color:#839482}.time-slot[data-selected="true"]{background:#405a46;color:#fff;border-color:#405a46;border-left-color:#cadbc9;box-shadow:0 8px 18px #334e3133}.time-slot[data-selected="true"] .sub{color:#dbe8d7}.empty{font-size:12px;color:#8a9288;background:#f6f7f3;border:1px dashed #e1e5db;border-radius:12px;padding:16px}
+.bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:17px;margin-top:4px}.picked small{display:block;font-size:11px;color:#8a938a;margin-bottom:6px}.picked strong{font-size:15px;letter-spacing:-.045em}.next{border:0;background:#405a46;border-radius:12px;color:white;padding:14px 20px;font-weight:720;font-size:13px;white-space:nowrap;display:flex;align-items:center;gap:10px}.next svg{width:16px;height:16px}.next:disabled{background:#93a092;color:#edf2eb}.caption{color:#9b8c7f;font-size:10px;margin-top:16px;line-height:1.6;}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#26362b91;z-index:40;padding:16px}.modal[data-open="true"]{display:flex}.dialog{max-width:370px;width:100%;background:#fffcf7;border-radius:24px;padding:26px;box-shadow:0 20px 70px #0002}.dialog h2{font-size:22px;margin:0 0 15px}.dialog p{font-size:13px;color:#697668;line-height:1.8}.dialog button{background:#405a46;color:white;border:none;border-radius:12px;width:100%;padding:14px;margin-top:12px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static}.doctors{flex-direction:row}.doctor{min-width:0;flex:1}.side .note{margin-top:15px}.header{padding:13px 24px}}
+@media(max-width:600px){.header{height:62px;min-height:62px;padding:10px 20px}.brand{font-size:13px}.brand strong{font-size:25px}.nav{gap:0}.nav span{display:none}.nav span.current{display:block;font-size:12px;border:0;border-radius:20px;background:#edf1e9;padding:9px 11px}.stage{padding:22px 13px 25px}.topline{margin:0 7px 10px}h1{font-size:25px;margin:0 7px 7px;letter-spacing:-.07em}.intro{font-size:11px;margin:0 7px 17px}.layout{gap:12px}.panel{border-radius:21px}.side{padding:18px 17px}.kicker{margin-bottom:9px}.hospital{padding-bottom:13px}.hospital-icon{width:41px;height:41px;border-radius:13px}.hospital h2{font-size:17px;margin-bottom:2px}.hospital p{font-size:11px}.field-head{margin:17px 0 9px}.field-head h3{font-size:13px}.field-head span{font-size:10px}.doctors{gap:6px}.doctor{padding:9px 6px;gap:5px;display:flex;flex-direction:column;text-align:center;border-radius:13px}.avatar{width:31px;height:31px;font-size:12px}.doctor-title{font-size:10px;line-height:1.3}.doctor-title small{font-size:9px;margin-top:2px}.check{display:none}.side .note{font-size:10px;padding:9px 12px;margin-top:14px}.calendar{padding:17px 14px 15px}.calendar-top{margin-bottom:11px}.calendar-top h2{font-size:17px}.week{gap:1px;margin-bottom:14px}.date{min-height:68px;padding:4px 0;gap:4px;border-radius:13px}.date .weekday{font-size:10px}.date .number{width:36px;height:36px;font-size:18px}.daybar{padding:15px 0 14px}.daybar h3{font-size:16px}.daybar p{font-size:10px}.daybar .stat{font-size:10px;padding:7px 9px}.hourrow{grid-template-columns:50px 1fr;gap:6px;min-height:56px}.time-label{font-size:11px}.hourspace{min-height:56px}.time-slot{min-height:41px;padding:9px 11px;font-size:12px}.bottom{position:sticky;bottom:0;z-index:6;background:#fffefaee;backdrop-filter:blur(10px);border-radius:0 0 15px 15px;margin:4px -7px -7px;padding:14px 7px 7px}.picked strong{font-size:13px}.next{font-size:12px;padding:13px 14px}.caption{font-size:10px;margin-top:14px}}
+@media(max-width:350px){.stage{padding-inline:8px}.side{padding-inline:13px}.date .number{width:30px;height:30px;font-size:15px}.date{min-height:63px}.calendar{padding-inline:10px}.doctor-title{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="header"><div class="brand">모두 아<strong>프지마</strong>말자</div><div class="nav" aria-label="검토용 탐색"><span>진료과</span><span>병원 찾기</span><span class="current">진료 예약</span><span>보험 안내</span></div></header>
+<main class="stage">
+<div class="topline"><span class="tiny">PRZIMA · BOOKING DESIGN</span><span class="tag">G2 디자인 검토용</span></div>
+<h1>우리 아이에게 맞는 <em>진료 시간</em>을 찾아보세요.</h1><p class="intro">날짜를 고른 뒤 하루 시간표에서 원하는 시간을 선택하세요. 수의사별 가상 예약 예시입니다.</p>
+<div class="layout">
+<section class="panel side" aria-label="병원과 담당 수의사"><p class="kicker">병원 · 의료진</p><div class="hospital"><span class="hospital-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M2 12h20"/><path d="M4 7h16M4 17h16" opacity=".2"/></svg></span><div><h2>온기24 동물의료센터</h2><p>서울 강남구 · 강아지·고양이 · 가상 병원</p></div></div>
+<div class="field-head"><h3>담당 수의사 선택</h3><span>의료진에 따라 시간이 달라져요</span></div>
+<div class="doctors" id="doctors" aria-label="담당 수의사 선택"></div>
+<div class="note"><strong>예약 시연 안내</strong><br>화면의 병원·수의사·예약 시간은 모두 예시입니다. 실제 병원에 예약이 접수되지 않습니다.</div>
+</section>
+<section class="panel calendar" aria-label="예약 주간 달력 및 시간표">
+<div class="calendar-top"><h2 id="monthTitle">2026년 11월</h2><div class="weeknav"><button id="prevWeek" aria-label="이전 일주일" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button><small>7일 보기</small><button id="nextWeek" aria-label="다음 일주일" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button></div></div>
+<div class="week" id="week" role="group" aria-label="날짜 선택"></div>
+<div class="daybar"><div><h3 id="dayTitle">2026년 11월 13일 금요일</h3><p>시간을 누르면 예약 정보에 반영됩니다</p></div><div class="stat" id="count">예약 가능 3개</div></div>
+<div class="timeline" id="timeline" aria-label="하루 시간표"></div>
+<div class="bottom"><div class="picked" aria-live="polite"><small>선택한 시간</small><strong id="selection">11월 13일 13:00 · 김하나 수의사</strong></div><button class="next" id="continue" type="button">선택 확인 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
+<p class="caption">이 화면은 G2 UX 디자인 시안이며 실제 예약 기능과 연결되어 있지 않습니다. 시간 데이터는 화면 구성 설명을 위해 생성된 예시입니다.</p>
+</section>
+</div></main>
+<div class="modal" id="modal" data-open="false"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">선택한 시간 확인</h2><p id="modalText"></p><p>G2 디자인 검토용 화면입니다. 아직 진료 예약이 접수되거나 저장되지 않습니다.</p><button type="button" id="closeModal">화면으로 돌아가기</button></section></div>
+<script>
+(()=>{
+'use strict';
+const doctors=[{id:'kim',name:'김하나',desc:'내과·건강검진',glyph:'김'},{id:'park',name:'박서준',desc:'외과·정형',glyph:'박'},{id:'lee',name:'이솔',desc:'예방접종·일반진료',glyph:'이'}];
+let doctor='kim',weekOffset=0,selectedDate='2026-11-13',selectedTime='13:00';
+const wk=['일','월','화','수','목','금','토'];
+const d=(iso)=>new Date(iso+'T12:00:00');
+const iso=(date)=>{const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),day=String(date.getDate()).padStart(2,'0');return `${y}-${m}-${day}`;};
+const currentWeek=()=>{const start=d('2026-11-08');start.setDate(start.getDate()+weekOffset*7);return Array.from({length:7},(_,i)=>{const dt=new Date(start);dt.setDate(dt.getDate()+i);return dt;});};
+function avail(date,clinician){if(!clinician)return [];const dt=d(date);const x=dt.getDay();if(x===0)return [];if(date==='2026-11-13'){return {kim:['10:00','13:00','16:00'],park:['09:00','11:00','15:00'],lee:['10:00','14:00','17:00']}[clinician]||[];}
+const shifts={kim:['10:00','13:00','16:00'],park:['09:00','12:00','15:00'],lee:['11:00','14:00','17:00']};return shifts[clinician].filter((_,i)=>(dt.getDate()+i)%4!==0);}
+function draw(){const doc=doctors.find(x=>x.id===doctor);const ds=currentWeek();document.getElementById('doctors').innerHTML=doctors.map(t=>`<button class="doctor" type="button" data-doc="${t.id}" data-selected="${doctor===t.id}" aria-pressed="${doctor===t.id}"><span class="avatar">${t.glyph}</span><span class="doctor-title">${t.name} 수의사<small>${t.desc}</small></span><span class="check">${doctor===t.id?'✓':''}</span></button>`).join('');
+ document.getElementById('monthTitle').textContent=`${ds[0].getFullYear()}년 ${ds[0].getMonth()+1}월`;
+ document.getElementById('week').innerHTML=ds.map(date=>{const dt=iso(date),sel=dt===selectedDate,closed=date.getDay()===0;return `<button class="date" type="button" data-day="${dt}" data-selected="${sel}" data-closed="${closed}" aria-pressed="${sel}" aria-label="${date.getMonth()+1}월 ${date.getDate()}일 ${wk[date.getDay()]}요일${closed?', 예약시간 없음':''}"><span class="weekday">${wk[date.getDay()]}</span><span class="number">${date.getDate()}</span></button>`;}).join('');
+ const dt=d(selectedDate),t=avail(selectedDate,doctor);document.getElementById('dayTitle').textContent=`${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 ${wk[dt.getDay()]}요일`;
+ document.getElementById('count').textContent=t.length?`예약 가능 ${t.length}개`:'예약 가능 시간 없음';
+ document.getElementById('timeline').innerHTML=Array.from({length:10},(_,j)=>{const time=`${String(9+j).padStart(2,'0')}:00`;const available=t.includes(time);return `<div class="hourrow"><span class="time-label">${time}</span><div class="hourspace">${available?`<button class="time-slot" type="button" data-time="${time}" data-selected="${selectedTime===time}" aria-pressed="${selectedTime===time}"><span>${time} ${selectedTime===time?'선택됨':'예약 가능'}</span><span class="sub">${selectedTime===time?'선택한 시간':'30분 예시 슬롯'}</span></button>`:''}</div></div>`;}).join('')+(t.length===0?'<p class="empty">선택한 날짜에 예약 가능한 예시 시간이 없습니다. 다른 날짜 또는 수의사를 선택해 주세요.</p>':'');
+ const s=document.getElementById('selection');s.textContent=selectedTime?`${dt.getMonth()+1}월 ${dt.getDate()}일 ${selectedTime} · ${doc.name} 수의사`:'시간을 선택해 주세요';document.getElementById('continue').disabled=!selectedTime;
+}
+ document.addEventListener('click',event=>{const docBtn=event.target.closest('[data-doc]');if(docBtn){if(doctor!==docBtn.dataset.doc){doctor=docBtn.dataset.doc;selectedTime='';draw();}return;}
+const day=event.target.closest('[data-day]');if(day){selectedDate=day.dataset.day;selectedTime='';draw();return;}
+const time=event.target.closest('[data-time]');if(time){selectedTime=time.dataset.time;draw();return;}});
+ document.getElementById('nextWeek').addEventListener('click',()=>{weekOffset=Math.min(weekOffset+1,3);selectedDate=iso(currentWeek()[0]);selectedTime='';draw();});
+ document.getElementById('prevWeek').addEventListener('click',()=>{weekOffset=Math.max(weekOffset-1,0);selectedDate=iso(currentWeek()[0]);selectedTime='';draw();});
+ document.getElementById('continue').addEventListener('click',()=>{const dt=d(selectedDate),doc=doctors.find(x=>x.id===doctor);document.getElementById('modalText').textContent=`온기24 동물의료센터 · ${doc.name} 수의사 · ${dt.getMonth()+1}월 ${dt.getDate()}일 ${selectedTime}`;document.getElementById('modal').dataset.open='true';});
+ function close(){document.getElementById('modal').dataset.open='false';}
+ document.getElementById('closeModal').addEventListener('click',close);document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))close();});document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+ draw();
+})();
+</script>
+</body></html>

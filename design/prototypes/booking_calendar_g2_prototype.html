@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#f7f5f0" />
+<title>프지마 — G2 예약 캘린더 디자인 시안</title>
+<style>
+:root{--green:#3c4e3e;--greenDark:#26382f;--ink:#27332b;--muted:#7e847d;--tan:#b78a73;--line:#e0e4db;--white:#fffefa;--bg:#f7f5f0;--pale:#e5eee5;--paper:#faf9f6;--shadow:0 12px 42px rgba(61,67,54,.07);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;color:var(--ink);font-size:16px;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+body{margin:0;min-width:320px;background:linear-gradient(180deg,#faf9f6 0%,#f6f4ee 57%,#efeee6 100%)}
+button{font:inherit;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #bd9877;outline-offset:3px}
+.site-header{position:relative;background:#f9f8f5;z-index:10;border-bottom:1px solid #e9e9e1}
+.header-inner{max-width:1330px;margin:auto;height:81px;padding:0 42px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{font-size:17px;white-space:nowrap;font-weight:620;letter-spacing:-.075em;color:#344638}
+.logo strong{font-size:31px;letter-spacing:-.115em;font-weight:840}
+.header-mid{display:flex;align-items:center;gap:38px;font-size:13px;color:#6b766d;font-weight:600}
+.header-mid .current{color:var(--greenDark);font-weight:750}
+.status-label{border:1px solid #dae1d7;border-radius:99px;padding:9px 14px;color:#607267;background:#f0f3ec;font-size:11px;font-weight:700;white-space:nowrap}
+.page{max-width:1328px;margin:0 auto;padding:43px 32px 88px}
+.top-strip{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+.back{display:flex;align-items:center;gap:9px;background:none;border:0;color:#647165;font-size:13px;font-weight:700;padding:8px 0}
+.back svg{width:17px;height:17px}
+.demo-mark{font-size:11px;color:#a37f6d;font-weight:680}
+.page-title{margin:0 0 29px;font-size:39px;letter-spacing:-.078em;line-height:1.32;font-weight:780}
+.page-title strong{color:var(--green);font-weight:790}
+.layout{display:grid;grid-template-columns:minmax(325px,405px) minmax(0,1fr);gap:28px;align-items:start}
+.side{display:flex;flex-direction:column;gap:18px}
+.hospital-card,.doctor-card,.time-card{background:var(--white);border:1px solid #e5e5dd;border-radius:23px;box-shadow:var(--shadow)}
+.hospital-card{padding:25px 25px 26px}
+.overline{font-size:11px;letter-spacing:.045em;font-weight:760;color:#9b806d;margin:0 0 12px}
+.hospital-card h2{font-size:25px;letter-spacing:-.065em;line-height:1.4;margin:0 0 9px;font-weight:775}
+.hospital-sub{font-size:12px;color:#8b9189;margin:0 0 20px;line-height:1.7}
+.hospital-facts{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px}
+.tag{padding:7px 9px;background:#f3f4ef;border:1px solid #e6e8e0;border-radius:9px;font-size:11px;font-weight:660;color:#596c5b}
+.hospital-sep{height:1px;background:#e7e8e1;margin:0 0 19px}
+.hospital-meta{display:grid;grid-template-columns:82px 1fr;gap:12px 10px;font-size:12px;line-height:1.6}
+.hospital-meta b{color:#69756c;font-size:12px}
+.hospital-meta span{color:#536255}
+.doctor-card{padding:24px}
+.section-small-title{margin:0 0 15px;font-size:16px;letter-spacing:-.055em;font-weight:800}
+.section-small-sub{margin:-5px 0 17px;font-size:12px;color:#90948b;line-height:1.6}
+.doctor-list{display:flex;flex-direction:column;gap:9px}
+.doc-btn{border-radius:13px;border:1px solid #e5e8df;background:#fbfcf9;min-height:61px;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;text-align:left;color:#435346}
+.doc-btn strong{display:block;font-size:13px;letter-spacing:-.04em}
+.doc-btn small{display:block;color:#889188;font-size:11px;margin-top:4px}
+.doc-btn.selected{background:#eaf0e7;border-color:#759074;box-shadow:inset 0 0 0 1px #7b9878}
+.doc-btn .radio{width:19px;height:19px;border-radius:50%;border:1.5px solid #adb9ab;display:grid;place-items:center;font-size:10px}
+.doc-btn.selected .radio{background:#445945;color:white;border-color:#445945}
+.doctor-guard{color:#819081;font-size:11px;margin:12px 0 0;line-height:1.5}
+.time-card{overflow:hidden;padding:27px 33px 0;border-radius:24px}
+.time-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.time-top h2{font-size:21px;letter-spacing:-.062em;margin:0;font-weight:790}
+.time-top .top-note{font-size:11px;color:#8b9287}
+.week-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.week-toolbar strong{font-size:17px;font-weight:760;letter-spacing:-.05em}
+.week-nav{display:flex;gap:5px}
+.week-nav button{width:35px;height:35px;border-radius:10px;border:1px solid #e0e6de;background:#fbfcf9;color:#576858;font-size:19px;display:grid;place-items:center}
+.week-nav button:disabled{color:#c1c7c0;background:#f5f6f2;cursor:not-allowed}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin-bottom:23px}
+.day-btn{padding:12px 1px 10px;min-width:0;display:flex;align-items:center;flex-direction:column;gap:8px;border-radius:14px;border:1px solid transparent;background:#f6f7f2;color:#899189}
+.day-btn span{font-size:11px;font-weight:700}
+.day-btn strong{font-size:19px;letter-spacing:-.045em;font-weight:700;width:34px;height:34px;display:grid;place-items:center;border-radius:50%}
+.day-btn b{display:block;height:4px;width:4px;border-radius:50%;background:#93a893}
+.day-btn.closed{opacity:.42}
+.day-btn.closed b{background:transparent}
+.day-btn.selected{background:#e8efe6;border-color:#dde5db;color:#354b39}
+.day-btn.selected strong{background:#405641;color:white}
+.day-btn.selected b{background:#405641}
+.date-label{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid #e7e8df;padding-bottom:20px;margin-bottom:0}
+.date-label h3{font-size:17px;letter-spacing:-.055em;font-weight:770;margin:0}
+.date-label span{font-size:11px;color:#7b8b7c;font-weight:650}
+.timeline-wrap{position:relative;min-height:540px;max-height:610px;overflow:auto;scrollbar-color:#c8d1c4 transparent;scrollbar-width:thin}
+.timeline-wrap::-webkit-scrollbar{width:5px}.timeline-wrap::-webkit-scrollbar-thumb{background:#c7d2c4;border-radius:6px}
+.time-axis{padding-top:16px}
+.hour{height:74px;position:relative;display:grid;grid-template-columns:75px minmax(0,1fr);gap:6px}
+.hour-label{color:#9ba29a;font-size:12px;line-height:1;font-weight:570;transform:translateY(-2px)}
+.hour-line{position:relative;border-top:1px solid #e8ece5;height:74px}
+.slot{position:absolute;left:7px;min-height:45px;border:1px solid #d0dfcc;background:#e5f0e3;color:#3a5b40;border-radius:10px;font-size:12px;font-weight:770;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:16px;letter-spacing:-.02em;box-shadow:0 1px 2px #5c745812}
+.slot i{font-size:11px;font-style:normal;font-weight:600;opacity:.85}
+.slot.active{background:#3f5843;color:white;border-color:#3f5843}
+.slot.active i{opacity:1}
+.slot:disabled{opacity:.5;cursor:not-allowed}
+.empty-state{margin:68px auto 0;max-width:300px;text-align:center;color:#6f806f;font-size:14px;line-height:1.8;padding:24px;background:#f5f6f1;border:1px dashed #dce3d7;border-radius:12px}
+.selection{margin:0 -33px;background:linear-gradient(180deg,#fbfbf7,#f2f2eb);border-top:1px solid #e2e6dc;padding:16px 33px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.selection-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.selection-text small{font-size:11px;color:#8c9589;font-weight:640}
+.selection-text strong{font-size:15px;letter-spacing:-.05em;font-weight:780}
+.next{display:flex;align-items:center;gap:25px;border:0;border-radius:12px;background:var(--green);color:white;font-size:13px;font-weight:760;padding:15px 18px;white-space:nowrap}
+.next[disabled]{background:#d7ddd4;color:#8d978c;cursor:not-allowed}
+.next:hover:not([disabled]){background:#5c6e5b}
+.trust-notice{margin:14px 3px 0;font-size:11px;color:#8b8c84;line-height:1.65;text-align:right}
+.mobile-hospital,.mobile-doctor{display:none}
+.mobile-bottom{display:none}
+.footer-note{max-width:1328px;margin:0 auto;padding:0 32px 22px;color:#999c92;font-size:11px}
+@media(max-width:940px){.page{padding:32px 20px 70px}.layout{grid-template-columns:minmax(270px,330px) minmax(0,1fr);gap:16px}.hospital-card,.doctor-card{padding:21px}.time-card{padding:22px 18px 0}.selection{margin:0 -18px;padding:15px 18px}.header-inner{padding:0 20px}.header-mid{gap:12px}}
+@media(max-width:690px){
+ body{background:#faf9f5}.header-inner{height:66px;padding:0 18px}.header-mid{display:none}.status-label{font-size:10px;padding:7px 9px}.logo{font-size:15px}.logo strong{font-size:27px}
+ .page{padding:16px 16px 122px}.top-strip{margin-bottom:15px}.page-title{font-size:27px;letter-spacing:-.07em;margin:0 0 18px}.demo-mark{font-size:10px}
+ .layout{display:block}.side{display:none}
+ .time-card{border:0;background:transparent;padding:0;box-shadow:none;border-radius:0;overflow:visible}
+ .time-top{display:none}
+ .mobile-hospital{display:block;background:#f1f2e9;border:1px solid #e7e9de;border-radius:16px;padding:16px 17px;margin-bottom:15px}
+ .mobile-hospital .hospital-title{font-size:17px;font-weight:795;letter-spacing:-.06em;margin-bottom:7px}
+ .mobile-hospital .hospital-desc{font-size:11px;color:#819081;line-height:1.6}
+ .mobile-doctor{display:block;margin:0 0 19px}.mobile-doctor label{display:block;font-size:13px;font-weight:760;margin:0 0 8px}.mobile-doctor .select-wrap{position:relative}
+ .mobile-doctor select{display:block;width:100%;appearance:none;border:1px solid #dde3d8;border-radius:12px;background:#fffefa;color:#415344;padding:13px 45px 13px 13px;font-size:13px;font-weight:670;min-height:48px}
+ .mobile-doctor svg{pointer-events:none;position:absolute;right:16px;top:16px;width:17px;height:17px;color:#718473}
+ .time-top{margin-bottom:0}.week-toolbar{margin:0 0 13px}.week-toolbar strong{font-size:17px}.week-nav button{width:35px;height:35px}
+ .week{gap:3px;margin-bottom:17px}.day-btn{background:transparent;border-color:transparent;border-radius:12px;padding:10px 0;gap:7px}.day-btn span{font-size:11px}.day-btn strong{font-size:20px;width:36px;height:36px}.day-btn.selected{background:#edf1ea;border-color:#e2e8df}
+ .date-label{padding:10px 0 16px;margin-bottom:0}.date-label h3{font-size:16px}.date-label span{font-size:10px}
+ .timeline-wrap{max-height:none;overflow:visible;min-height:630px}.time-axis{padding-top:23px}.hour{grid-template-columns:66px minmax(0,1fr);height:72px}.hour-label{font-size:11px}.hour-line{height:72px}
+ .slot{left:4px;padding:8px 11px;min-height:43px;font-size:12px;gap:4px}.slot i{font-size:10px}
+ .selection{display:none}.mobile-bottom{position:fixed;bottom:0;left:0;right:0;z-index:12;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(253,252,247,.97);border-top:1px solid #e2e5dc;box-shadow:0 -6px 24px rgba(36,55,40,.06);padding:13px 16px calc(13px + env(safe-area-inset-bottom))}
+ .mobile-bottom .selection-text small{font-size:10px}.mobile-bottom .selection-text strong{font-size:13px}.mobile-bottom .next{font-size:12px;min-height:44px;padding:12px 15px;gap:9px}
+ .trust-notice{margin:26px 0;text-align:left}.footer-note{display:none}
+}
+@media(max-width:360px){.page{padding:12px 10px 115px}.header-inner{padding:0 12px}.week{gap:1px}.day-btn strong{font-size:17px;width:32px;height:32px}.date-label h3{font-size:15px}.mobile-hospital{padding:13px}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">아<strong>프지마</strong>라멍</div>
+    <nav class="header-mid" aria-label="예약 단계"><span>병원 선택</span><span class="current">예약 시간</span><span>진료 내용</span><span>확인</span></nav>
+    <div class="status-label">디자인 검토용 · 예약되지 않음</div>
+  </div>
+</header>
+<main class="page">
+  <div class="top-strip"><button class="back" type="button" aria-label="병원 목록으로 돌아가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m14 5-7 7 7 7"/></svg> 병원 목록으로</button><span class="demo-mark">프지마 예약 시안</span></div>
+  <h1 class="page-title">우리 아이의 <strong>진료 시간을 선택해 주세요.</strong></h1>
+  <div class="layout">
+    <aside class="side">
+      <section class="hospital-card">
+        <p class="overline">선택한 병원</p><h2>포근한 동물메디컬센터</h2>
+        <p class="hospital-sub">우리 아이의 내일을 위한 세심한 진료</p>
+        <div class="hospital-facts"><span class="tag">강아지 · 고양이</span><span class="tag">내과</span><span class="tag">피부·알레르기</span></div>
+        <div class="hospital-sep"></div>
+        <div class="hospital-meta"><b>위치</b><span>서울 마포구 · 예시 지역</span><b>운영시간</b><span>월–토 09:00–19:00</span><b>휴진일</b><span>일요일</span></div>
+      </section>
+      <section class="doctor-card">
+        <h2 class="section-small-title">담당 수의사 선택</h2>
+        <p class="section-small-sub">선생님에 따라 선택 가능한 시간이 다릅니다.</p>
+        <div class="doctor-list" id="doc-list"></div>
+        <p class="doctor-guard">이름과 일정은 화면 설계를 위한 가상 데이터입니다.</p>
+      </section>
+    </aside>
+    <section class="time-card" aria-label="예약 날짜 및 시간 선택 시안">
+      <div class="time-top"><h2>예약 가능한 날짜와 시간</h2><span class="top-note">1주일씩 확인할 수 있습니다</span></div>
+      <div class="mobile-hospital"><div class="hospital-title">포근한 동물메디컬센터</div><div class="hospital-desc">강아지 · 고양이 / 내과 · 피부·알레르기<br/>월–토 09:00–19:00 · 일요일 휴진</div></div>
+      <div class="mobile-doctor"><label for="mobileDoctor">담당 수의사</label><div class="select-wrap"><select id="mobileDoctor" aria-label="담당 수의사 선택"><option value="lee">이하린 선생님 · 내과·피부</option><option value="park">박도윤 선생님 · 영상진단·내과</option></select><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div></div>
+      <div class="week-toolbar"><strong id="weeklabel">2026년 11월</strong><div class="week-nav"><button id="prev" type="button" aria-label="이전 7일" disabled>‹</button><button id="nextweek" type="button" aria-label="다음 7일">›</button></div></div>
+      <div class="week" id="week" role="group" aria-label="7일 날짜 선택"></div>
+      <div class="date-label"><h3 id="currentday">2026년 11월 9일 월요일</h3><span id="availableCount">예시 예약 시간 2개</span></div>
+      <div class="timeline-wrap" id="scroll-area"><div class="time-axis" id="timeline"></div></div>
+      <div class="selection"><div class="selection-text"><small>선택한 예약 시간</small><strong id="desktopSelection">아래 시간표에서 선택해 주세요</strong></div><button type="button" class="next" id="desktopNext" disabled>진료 내용 입력 <span>→</span></button></div>
+    </section>
+  </div>
+  <p class="trust-notice">이 화면의 병원·의료진·예약 시간은 가상의 시연 자료입니다. 실제 예약이 접수되거나 확정되지 않습니다.</p>
+</main>
+<div class="mobile-bottom"><div class="selection-text"><small>선택한 예약 시간</small><strong id="mobileSelection">시간을 선택해 주세요</strong></div><button type="button" id="mobileNext" class="next" disabled>계속 <span>→</span></button></div>
+<div class="footer-note">프지마 G2 시안 · 화면 구조 및 인터랙션 검토 전용 · 실제 예약 서비스가 아닙니다.</div>
+<script>
+// G2 design mock only: synthetic example, not wired to PRZIMA bookings or storage.
+const data={lee:{name:'이하린',field:'내과·피부',slots:{0:[],1:['10:00','11:30'],2:['09:30','11:00'],3:['10:30','13:00'],4:['10:00'],5:['11:00'],6:['09:30','11:30']}},park:{name:'박도윤',field:'영상진단·내과',slots:{0:[],1:['14:00','16:00'],2:['15:30'],3:['16:30'],4:['14:30','17:00'],5:['15:00','17:30'],6:['14:00']}}};
+const weekday=['토','일','월','화','수','목','금'];
+const fmtWeekday=['토요일','일요일','월요일','화요일','수요일','목요일','금요일'];
+const base=new Date(2026,10,7);
+let state={week:0,day:2,doctor:'lee',time:''};
+const $=id=>document.getElementById(id);
+const dateOf=()=>new Date(base.getFullYear(),base.getMonth(),base.getDate()+state.week*7+state.day);
+const dayNo=()=>dateOf().getDay();
+const times=()=>data[state.doctor].slots[dayNo()]||[];
+function drawDoctors(){ $('doc-list').innerHTML=Object.entries(data).map(([id,d])=>`<button class="doc-btn ${state.doctor===id?'selected':''}" type="button" data-doctor="${id}" aria-pressed="${state.doctor===id}"><div><strong>${d.name} 선생님</strong><small>${d.field}</small></div><span class="radio">${state.doctor===id?'✓':''}</span></button>`).join(''); $('mobileDoctor').value=state.doctor; document.querySelectorAll('[data-doctor]').forEach(btn=>btn.addEventListener('click',()=>setDoctor(btn.dataset.doctor))); }
+function setDoctor(id){state.doctor=id;state.time='';drawDoctors();render();}
+function render(){
+  const d=dateOf(); $('weeklabel').textContent=`${d.getFullYear()}년 ${d.getMonth()+1}월`; $('currentday').textContent=`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${fmtWeekday[state.day]}`;
+  $('prev').disabled=state.week===0;
+  const days=Array.from({length:7},(_,i)=>{let dt=new Date(base.getFullYear(),base.getMonth(),base.getDate()+state.week*7+i);let count=(data[state.doctor].slots[dt.getDay()]||[]).length; return `<button type="button" class="day-btn ${i===state.day?'selected':''} ${count?'':'closed'}" aria-pressed="${i===state.day}" data-day="${i}"><span>${weekday[i]}</span><strong>${dt.getDate()}</strong><b></b></button>`}).join('');$('week').innerHTML=days;
+  document.querySelectorAll('[data-day]').forEach(btn=>btn.addEventListener('click',()=>{state.day=+btn.dataset.day;state.time='';render()}));
+  let s=times();$('availableCount').textContent=s.length?`예시 예약 시간 ${s.length}개`:'선택 가능한 시간 없음';
+  const hours=Array.from({length:11},(_,i)=>9+i);
+  $('timeline').innerHTML=hours.map(h=>{let label=h<12?`오전 ${h}시`:h===12?'낮 12시':`오후 ${h-12}시`;let slot=s.filter(t=>+t.split(':')[0]===h);let content=slot.map((t,k)=>`<button type="button" class="slot ${state.time===t?'active':''}" data-time="${t}" aria-pressed="${state.time===t}" style="top:${t.endsWith(':30')?'32':'5'}px;${slot.length>1?'right:5px;':''}"><span>${t}</span><i>${state.time===t?'선택됨':'예약 가능'}</i></button>`).join('');return `<div class="hour"><div class="hour-label">${label}</div><div class="hour-line">${content}</div></div>`}).join('')+(s.length?'':'<div class="empty-state" role="status">선택 가능한 시간이 없습니다.<br/>다른 날짜나 선생님을 선택해 주세요.</div>');
+  document.querySelectorAll('[data-time]').forEach(btn=>btn.addEventListener('click',()=>{state.time=btn.dataset.time;render()}));
+  let val=state.time?`${d.getMonth()+1}월 ${d.getDate()}일 ${state.time}`:'시간을 선택해 주세요';$('desktopSelection').textContent=val;$('mobileSelection').textContent=val;
+  for(let id of ['desktopNext','mobileNext'])$(id).disabled=!state.time;
+}
+$('mobileDoctor').addEventListener('change',e=>setDoctor(e.target.value));
+$('nextweek').addEventListener('click',()=>{state.week++;state.day=0;state.time='';render()});
+$('prev').addEventListener('click',()=>{if(state.week>0){state.week--;state.day=0;state.time='';render()}});
+for(let id of ['desktopNext','mobileNext'])$(id).addEventListener('click',()=>{if(!state.time)return;const d=dateOf();alert(`G2 디자인 시안입니다.\n\n${data[state.doctor].name} 선생님\n${d.getMonth()+1}월 ${d.getDate()}일 ${state.time}\n\n실제 예약으로 이어지지 않습니다.`)});
+drawDoctors();render();
+</script>
+</body>
+</html>
