@@ -1133,12 +1133,14 @@ function goPage(page,{focusRegion=false}={}){
   if(window.location.hash!==('#'+page))history.pushState({pjmPage:page},'', '#'+page);
   render();
   window.scrollTo({top:0,behavior:'instant'});
+  document.getElementById('main-content')?.focus({preventScroll:true});
   if(focusRegion)document.getElementById('nearbyRegionInput')?.focus({preventScroll:true});
 }
 window.addEventListener('popstate',()=>{
   const page=PJM013.route();
   if(page!==state.page){state.page=page;state.booking=null;state.map=false;render();}
   window.scrollTo({top:0,behavior:'instant'});
+  document.getElementById('main-content')?.focus({preventScroll:true});
 });
 let loaderTimeout;
 function changeMode(m){if(state.mode===m)return;state.mode=m;state.activeClinic=null;state.bookingClinic=null;state.specialty='전체';state.search='';state.weekOffset=0;state.clinicWeeks={};state.selectedDates={};state.selectedDoctors={};state.selectedSlots={};state.insurer=m==='cat'?'meritz-cat':'meritz-dog';state.insuranceEvaluated=false;state.loading=true;state.phrase=0;render();clearTimeout(loaderTimeout);loaderTimeout=setTimeout(()=>{state.loading=false;render();},window.matchMedia('(prefers-reduced-motion:reduce)').matches?50:1100)}

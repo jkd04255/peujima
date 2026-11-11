@@ -16,6 +16,7 @@ on:
       - feature/pjm-030-compact-footer-notes
       - feature/pjm-031-comprehensive-care-breakdown
       - feature/pjm-032-approximate-cost-ranges
+      - feature/pjm-041-route-focus
   pull_request:
     branches:
       - main
@@ -56,6 +57,7 @@ on:
       - tests/test_pjm_038_calendar_targets.py
       - tests/test_pjm_039_calendar_focus.py
       - tests/test_pjm_040_global_focus_visibility.py
+      - tests/test_pjm_041_route_focus.py
 permissions:
   contents: read
 jobs:
@@ -114,6 +116,8 @@ jobs:
         run: python tests/test_pjm_039_calendar_focus.py
       - name: PJM-040 global keyboard focus Chromium WebKit
         run: python tests/test_pjm_040_global_focus_visibility.py
+      - name: PJM-041 SPA route focus Chromium WebKit
+        run: python tests/test_pjm_041_route_focus.py
       - name: REAL Kakao SDK, fixed nonpersonal Seoul coordinate (feature push only)
         if: github.event_name == 'push'
         env:
