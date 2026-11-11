@@ -101,7 +101,7 @@
   .pjm013-bottom-nav .pjm013-nav-item.is-current{background:#edf1eb;color:#2f5138}
   .pjm013-bottom-nav .pjm013-nav-icon{display:flex}
   .pjm013-bottom-nav .pjm013-nav-icon svg{width:20px;height:20px}
-  .pjm013-bottom-nav .pjm013-nav-name{font-size:11px;letter-spacing:-.055em}
+  .pjm013-bottom-nav .pjm013-nav-name{font-size:12px;line-height:1.25;letter-spacing:-.055em}
   .app:has(.pjm013-bottom-nav){padding-bottom:calc(76px + env(safe-area-inset-bottom))}
   .pjm013-home{padding:43px 0 60px}
   .pjm013-home-top{grid-template-columns:1fr;gap:22px}
@@ -147,7 +147,7 @@
   .pjm013-mode-switch button{padding:8px 8px}
   .pjm013-home-title h1{font-size:33px}
   .pjm013-service-card strong{font-size:19px}
-  .pjm013-bottom-nav .pjm013-nav-name{font-size:10px}
+  .pjm013-bottom-nav .pjm013-nav-name{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.pjm013-service-card,.pjm013-nav-item{transition:none}}
 
