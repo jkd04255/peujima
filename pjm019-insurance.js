@@ -386,7 +386,7 @@
     const groups=[
       {label:"진료비·가상 계산 기준",selectors:[
         ".pjm021-cost-notice",".pjm021-unpriced",
-        ".pjm021-example .pjm021-calc-note",
+        ".pjm021-example",
         ".pjm021-imaging small",".pjm021-pending",
         ".pjm031-procedure-caution",".pjm032-sources"
       ]},
@@ -449,7 +449,7 @@
     // Keep the long evidence and procedure breakdown out of a live region.
     return compactSupplementalNotes('<article class="insurance-result pjm020-result">'+
       '<span class="pjm020-status">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3>'+
-      '<p>'+esc(x.description)+'</p>'+coverageInfo(state.insurer,state.care)+procedureBreakdown(state.insurer,state.care)+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
+      '<p>'+esc(x.description)+'</p>'+(window.PJM045?.render(state.insurer,state.care)||'')+coverageInfo(state.insurer,state.care)+procedureBreakdown(state.insurer,state.care)+extra+(pts?'<div class="pjm021-conditions"><strong>보장 판단에서 중요한 조건</strong><ul>'+pts+'</ul></div>':"")+
       (x.showPlans?planDetails:"")+(x.showDBDetails?dbDetails:"")+
       '<p class="pjm020-note">해당 상품의 공개 안내를 요약한 내용이며, 가입 계약에 따라 결과가 달라질 수 있습니다.</p>'+
       ''+

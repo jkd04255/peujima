@@ -38,11 +38,14 @@ def run_case(browser,url,width,height,engine):
         need(page.locator(".pjm021-fees").is_visible() and
              "10,000원" in page.locator(".pjm021-fees").inner_text(),
              "actual cost item must stay visible")
-        need(page.locator(".pjm021-plan-amounts").is_visible(),
-             "visible hypothetical payout example regressed")
+        need(page.locator(".pjm045-totals").is_visible(),
+             "new conditional payout / self-payment must be visible")
+        need(page.locator(".pjm021-plan-amounts").count()==1 and
+             not page.locator(".pjm021-plan-amounts").is_visible(),
+             "legacy hypothetical payout should be preserved in optional fine print")
         for sel in [".pjm021-cost-notice",".pjm021-example .pjm021-calc-note",
                     ".pjm026-source-meta",".pjm026-version-warning"]:
-            # calc note is deliberately reparented, no longer inside example.
+            # The entire old scenario and its calculation note now live in fine print.
             check=".pjm021-calc-note" if "calc-note" in sel else sel
             need(page.locator(check).count()==1 and
                  not page.locator(check).is_visible(),
@@ -70,6 +73,8 @@ def run_case(browser,url,width,height,engine):
              "cost median caution inaccessible")
         need("2025년" in page.locator(".pjm021-cost-notice").inner_text(),
              "source year must be preserved")
+        need(page.locator(".pjm021-plan-amounts").is_visible(),
+             "legacy payout illustration must remain readable when expanded")
         need(page.locator(".pjm030-evidence-note").is_visible(),
              "policy evidence grade inaccessible")
         need(page.locator(".pjm021-policy-details").count()==1,

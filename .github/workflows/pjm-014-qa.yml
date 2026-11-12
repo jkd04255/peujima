@@ -30,6 +30,7 @@ on:
       - pjm023-catalog.js
       - pjm031-care-procedures.js
       - pjm032-cost-bands.js
+      - pjm045-settlement.js
       - pjm019-insurance.css
       - tests/test_pjm_016_marker_selection.py
       - tests/test_pjm_012_mobile.py
@@ -61,6 +62,8 @@ on:
       - tests/test_pjm_042_skip_link_route.py
       - tests/test_pjm_043_mobile_nav_readability.py
       - tests/test_pjm_044_home_location_note.py
+      - tests/test_pjm_045_settlement.py
+      - tests/test_pjm_046_ins02_policy_gates.py
 permissions:
   contents: read
 jobs:
@@ -77,6 +80,10 @@ jobs:
       - run: python -m playwright install --with-deps chromium webkit
       - name: Install test-only axe-core
         run: npm install --no-save --no-package-lock --ignore-scripts axe-core@4.10.3
+      - name: PJM-045 G2 insurance payout and self-payment matrix Chromium WebKit
+        run: python tests/test_pjm_045_settlement.py
+      - name: G2-INS-02 DB 2610 Samsung official-rate contract-gated Chromium WebKit QA
+        run: python tests/test_pjm_046_ins02_policy_gates.py
       - name: Release output and manual G3-only gate regression
         run: python tests/test_pjm_012_build.py
       - name: Offline LAN HTTPS access policy regression
